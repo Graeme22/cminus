@@ -1,0 +1,218 @@
+Line 2 Token: CHAR
+Line 2 Token: ID Value: zev
+Line 2 Token: [
+Line 2 Token: NUMCONST Value: 10  Input: 10
+Line 2 Token: ]
+Line 2 Token: :
+Line 2 Token: STRINGCONST Value: "corgis"  Input: "corgis"
+Line 2 Token: ;
+Line 3 Token: CHAR
+Line 3 Token: ID Value: yurt
+Line 3 Token: [
+Line 3 Token: NUMCONST Value: 20  Input: 20
+Line 3 Token: ]
+Line 3 Token: ;
+Line 4 Token: INT
+Line 4 Token: ID Value: x
+Line 4 Token: :
+Line 4 Token: NUMCONST Value: 42  Input: 42
+Line 4 Token: ,
+Line 4 Token: ID Value: y
+Line 4 Token: :
+Line 4 Token: NUMCONST Value: 666  Input: 666
+Line 4 Token: ;
+Line 6 Token: INT
+Line 6 Token: ID Value: ant
+Line 6 Token: (
+Line 6 Token: INT
+Line 6 Token: ID Value: bat
+Line 6 Token: ,
+Line 6 Token: ID Value: cat
+Line 6 Token: [
+Line 6 Token: ]
+Line 6 Token: ;
+Line 6 Token: BOOL
+Line 6 Token: ID Value: dog
+Line 6 Token: ,
+Line 6 Token: ID Value: elk
+Line 6 Token: ;
+Line 6 Token: INT
+Line 6 Token: ID Value: fox
+Line 6 Token: ;
+Line 6 Token: CHAR
+Line 6 Token: ID Value: gnu
+Line 6 Token: )
+Line 7 Token: {
+Line 8 Token: INT
+Line 8 Token: ID Value: goat
+Line 8 Token: ,
+Line 8 Token: ID Value: hog
+Line 8 Token: [
+Line 8 Token: NUMCONST Value: 100  Input: 100
+Line 8 Token: ]
+Line 8 Token: ;
+Line 10 Token: ID Value: gnu
+Line 10 Token: =
+Line 10 Token: CHARCONST Value: 'W'  Input: 'W'
+Line 10 Token: ;
+Line 11 Token: ID Value: goat
+Line 11 Token: =
+Line 11 Token: ID Value: hog
+Line 11 Token: [
+Line 11 Token: NUMCONST Value: 2  Input: 2
+Line 11 Token: ]
+Line 11 Token: =
+Line 11 Token: NUMCONST Value: 3  Input: 3
+Line 11 Token: *
+Line 11 Token: *
+Line 11 Token: ID Value: cat
+Line 11 Token: ;
+Line 12 Token: IF
+Line 12 Token: (
+Line 12 Token: ID Value: dog
+Line 12 Token: &
+Line 12 Token: ID Value: elk
+Line 12 Token: |
+Line 12 Token: ID Value: bat
+Line 12 Token: >
+Line 12 Token: ID Value: cat
+Line 12 Token: [
+Line 12 Token: NUMCONST Value: 3  Input: 3
+Line 12 Token: ]
+Line 12 Token: |
+Line 12 Token: !
+Line 12 Token: ID Value: dog
+Line 12 Token: )
+Line 12 Token: ID Value: dog
+Line 12 Token: =
+Line 12 Token: !
+Line 12 Token: ID Value: dog
+Line 12 Token: ;
+Line 13 Token: ELSE
+Line 13 Token: ID Value: fox
+Line 13 Token: INC
+Line 13 Token: ;
+Line 14 Token: IF
+Line 14 Token: (
+Line 14 Token: ID Value: bat
+Line 14 Token: LEQ
+Line 14 Token: ID Value: fox
+Line 14 Token: )
+Line 14 Token: {
+Line 15 Token: WHILE
+Line 15 Token: (
+Line 15 Token: ID Value: dog
+Line 15 Token: )
+Line 15 Token: {
+Line 16 Token: STATIC
+Line 16 Token: INT
+Line 16 Token: ID Value: hog
+Line 16 Token: ;
+Line 18 Token: ID Value: hog
+Line 18 Token: =
+Line 18 Token: ID Value: fox
+Line 18 Token: ;
+Line 19 Token: ID Value: dog
+Line 19 Token: =
+Line 19 Token: ID Value: fred
+Line 19 Token: (
+Line 19 Token: ID Value: fox
+Line 19 Token: INC
+Line 19 Token: ,
+Line 19 Token: ID Value: cat
+Line 19 Token: )
+Line 19 Token: >
+Line 19 Token: NUMCONST Value: 666  Input: 666
+Line 19 Token: ;
+Line 20 Token: IF
+Line 20 Token: (
+Line 20 Token: ID Value: hog
+Line 20 Token: >
+Line 20 Token: ID Value: bat
+Line 20 Token: )
+Line 20 Token: BREAK
+Line 20 Token: ;
+Line 21 Token: ELSE
+Line 21 Token: IF
+Line 21 Token: (
+Line 21 Token: ID Value: fox
+Line 21 Token: NEQ
+Line 21 Token: NUMCONST Value: 0  Input: 0
+Line 21 Token: )
+Line 21 Token: ID Value: fox
+Line 21 Token: ADDASS
+Line 21 Token: NUMCONST Value: 7  Input: 7
+Line 21 Token: ;
+Line 22 Token: }
+Line 23 Token: }
+Line 25 Token: FOR
+Line 25 Token: (
+Line 25 Token: ID Value: c
+Line 25 Token: IN
+Line 25 Token: ID Value: zev
+Line 25 Token: )
+Line 25 Token: ID Value: outputc
+Line 25 Token: (
+Line 25 Token: ID Value: c
+Line 25 Token: )
+Line 25 Token: ;
+Line 26 Token: IF
+Line 26 Token: (
+Line 26 Token: ID Value: zev
+Line 26 Token: >
+Line 26 Token: STRINGCONST Value: "dog"  Input: "dog"
+Line 26 Token: )
+Line 26 Token: ID Value: outputs
+Line 26 Token: (
+Line 26 Token: STRINGCONST Value: "bark"  Input: "bark"
+Line 26 Token: )
+Line 26 Token: ;
+Line 27 Token: ID Value: yurt
+Line 27 Token: =
+Line 27 Token: ID Value: zev
+Line 27 Token: ;
+Line 28 Token: ID Value: yurt
+Line 28 Token: [
+Line 28 Token: NUMCONST Value: 3  Input: 3
+Line 28 Token: ]
+Line 28 Token: =
+Line 28 Token: ?
+Line 28 Token: ID Value: zev
+Line 28 Token: ;
+Line 30 Token: RETURN
+Line 30 Token: (
+Line 30 Token: ID Value: fox
+Line 30 Token: +
+Line 30 Token: ID Value: bat
+Line 30 Token: *
+Line 30 Token: ID Value: cat
+Line 30 Token: [
+Line 30 Token: ID Value: bat
+Line 30 Token: ]
+Line 30 Token: )
+Line 30 Token: /
+Line 30 Token: -
+Line 30 Token: ID Value: fox
+Line 30 Token: ;
+Line 31 Token: }
+Line 34 Token: INT
+Line 34 Token: ID Value: max
+Line 34 Token: (
+Line 34 Token: INT
+Line 34 Token: ID Value: a
+Line 34 Token: ,
+Line 34 Token: ID Value: b
+Line 34 Token: )
+Line 34 Token: IF
+Line 34 Token: (
+Line 34 Token: ID Value: a
+Line 34 Token: >
+Line 34 Token: ID Value: b
+Line 34 Token: )
+Line 34 Token: RETURN
+Line 34 Token: ID Value: a
+Line 34 Token: ;
+Line 34 Token: ELSE
+Line 34 Token: RETURN
+Line 34 Token: ID Value: b
+Line 34 Token: ;

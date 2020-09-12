@@ -1,0 +1,76 @@
+Line 1 Token: INT
+Line 1 Token: ID Value: main
+Line 1 Token: (
+Line 1 Token: INT
+Line 1 Token: ID Value: a
+Line 1 Token: )
+Line 1 Token: {
+Line 2 Token: CHAR
+Line 2 Token: ID Value: a
+Line 2 Token: =
+Line 2 Token: CHARCONST Value: 't'  Input: '\t'
+Line 2 Token: ;
+Line 3 Token: CHAR
+Line 3 Token: ID Value: t
+Line 3 Token: =
+Line 3 Token: CHARCONST Value: '\'  Input: '\\'
+Line 3 Token: ;
+Line 4 Token: CHAR
+Line 4 Token: ID Value: e
+Line 4 Token: =
+Line 4 Token: CHARCONST Value: 'a'  Input: '\a'
+Line 4 Token: ;
+Line 5 Token: CHAR
+Line 5 Token: ID Value: b
+Line 5 Token: =
+Line 5 Token: CHARCONST Value: 'a'  Input: 'a'
+Line 5 Token: ;
+Line 6 Token: CHAR
+Line 6 Token: ID Value: f
+Line 6 Token: =
+ERROR(6): Invalid or misplaced input character: '''. Character Ignored.
+ERROR(6): Invalid or misplaced input character: '\'. Character Ignored.
+ERROR(6): Invalid or misplaced input character: '''. Character Ignored.
+Line 6 Token: ;
+Line 7 Token: CHAR
+Line 7 Token: ID Value: d
+Line 7 Token: =
+ERROR(7): Empty character ''.  Characters ignored.
+ERROR(7): Invalid or misplaced input character: '''. Character Ignored.
+Line 7 Token: ;
+Line 8 Token: CHAR
+Line 8 Token: ID Value: y
+Line 8 Token: =
+ERROR(8): Invalid or misplaced input character: '\'. Character Ignored.
+ERROR(8): Invalid or misplaced input character: '''. Character Ignored.
+Line 8 Token: ;
+Line 9 Token: CHAR
+Line 9 Token: ID Value: p
+Line 9 Token: =
+ERROR(9): Invalid or misplaced input character: '''. Character Ignored.
+ERROR(9): Invalid or misplaced input character: '\'. Character Ignored.
+Line 9 Token: ;
+Line 10 Token: CHAR
+Line 10 Token: ID Value: b
+Line 10 Token: =
+Line 10 Token: ID Value: a
+ERROR(10): Invalid or misplaced input character: '''. Character Ignored.
+Line 10 Token: ;
+Line 11 Token: CHAR
+Line 11 Token: ID Value: t
+Line 11 Token: =
+ERROR(11): Invalid or misplaced input character: '''. Character Ignored.
+Line 11 Token: ID Value: a
+Line 11 Token: ;
+Line 12 Token: ID Value: string
+Line 12 Token: ID Value: c
+Line 12 Token: =
+Line 12 Token: STRINGCONST Value: "abadddt
+cc"  Input: "abaddd\t\ncc"
+Line 12 Token: ;
+Line 13 Token: ID Value: string
+Line 13 Token: ID Value: d
+Line 13 Token: =
+Line 13 Token: STRINGCONST Value: "bddeecc	dbdd"  Input: "bddeecc	dbdd"
+Line 13 Token: ;
+Line 14 Token: }

@@ -1,0 +1,89 @@
+ERROR(1): Invalid or misplaced input character: '#'. Character Ignored.
+Line 1 Token: ID Value: a
+Line 1 Token: ID Value: comment
+Line 2 Token: /
+Line 2 Token: ID Value: another
+Line 2 Token: ID Value: comment
+Line 3 Token: %
+Line 3 Token: ID Value: more
+Line 3 Token: ID Value: comment
+Line 4 Token: /
+Line 4 Token: *
+Line 4 Token: ID Value: long
+Line 4 Token: ID Value: comment
+Line 4 Token: *
+Line 4 Token: /
+Line 5 Token: ID Value: void
+Line 5 Token: ID Value: main
+Line 5 Token: (
+Line 5 Token: ID Value: float
+Line 5 Token: ID Value: y
+Line 5 Token: )
+Line 5 Token: {
+Line 6 Token: INT
+Line 6 Token: ID Value: x
+Line 6 Token: ,
+Line 6 Token: ID Value: x
+WARNING(6): character is 3 characters long and not a single character: '', x''.  The first char will be used.
+Line 6 Token: CHARCONST Value: ','  Input: ', x'
+ERROR(6): Invalid or misplaced input character: '''. Character Ignored.
+Line 6 Token: ;
+Line 7 Token: ID Value: foreach
+Line 7 Token: ID Value: x
+Line 7 Token: IN
+Line 7 Token: ID Value: y
+Line 7 Token: ID Value: do
+Line 7 Token: NUMCONST Value: 3  Input: 3
+ERROR(7): Invalid or misplaced input character: '.'. Character Ignored.
+Line 7 Token: NUMCONST Value: 14159265  Input: 14159265
+Line 7 Token: ;
+Line 8 Token: ID Value: do
+Line 8 Token: ID Value: until
+Line 8 Token: ID Value: x
+Line 8 Token: <
+Line 8 Token: GEQ
+Line 8 Token: EQ
+Line 8 Token: ID Value: y
+Line 8 Token: ;
+Line 9 Token: IF
+Line 9 Token: ID Value: x
+ERROR(9): Invalid or misplaced input character: '~'. Character Ignored.
+Line 9 Token: =
+Line 9 Token: ID Value: y
+Line 9 Token: ID Value: then
+Line 9 Token: NUMCONST Value: 666  Input: 666
+Line 9 Token: ID Value: elseif
+Line 9 Token: BOOLCONST Value: 1  Input: true
+Line 9 Token: ID Value: then
+Line 9 Token: NUMCONST Value: 667  Input: 667
+Line 9 Token: ELSE
+Line 9 Token: NUMCONST Value: 668  Input: 668
+Line 9 Token: ;
+Line 10 Token: ID Value: loop
+Line 10 Token: ID Value: x
+Line 10 Token: =
+Line 10 Token: NUMCONST Value: 1  Input: 1
+ERROR(10): Invalid or misplaced input character: '.'. Character Ignored.
+ERROR(10): Invalid or misplaced input character: '.'. Character Ignored.
+Line 10 Token: NUMCONST Value: 10  Input: 10
+Line 10 Token: :
+Line 10 Token: NUMCONST Value: 20  Input: 20
+Line 10 Token: ID Value: do
+Line 10 Token: NUMCONST Value: 669  Input: 669
+Line 10 Token: ;
+Line 11 Token: ID Value: loop
+Line 11 Token: ID Value: forever
+ERROR(11): Invalid or misplaced input character: '@'. Character Ignored.
+Line 11 Token: ID Value: DCLXX
+Line 11 Token: ;
+Line 12 Token: ID Value: case
+Line 12 Token: CHARCONST Value: 'y'  Input: 'y'
+Line 12 Token: :
+Line 12 Token: ID Value: x
+Line 12 Token: :
+Line 12 Token: =
+Line 12 Token: CHARCONST Value: 'z'  Input: 'z'
+Line 12 Token: ;
+Line 13 Token: ID Value: continue
+Line 13 Token: ;
+Line 14 Token: }
