@@ -13,7 +13,7 @@ lex.yy.c : $(BIN).l $(BIN).tab.h scanType.h
 	flex $(BIN).l
 
 run :
-	(./$(OUT) < test/everythingS20.c-) > output.txt
+	cat test.c- | ./$(OUT)
 
 tar :
 	tar -cvf $(BIN).tar $(BIN).y $(BIN).l scanType.h makefile

@@ -5,6 +5,7 @@
 #include "scanType.h"
 #include "parser.tab.h"
 
+
 static int line = 1;
 
 // returns an array of ints.
@@ -134,12 +135,12 @@ letdig [a-zA-Z_0-9]
 "--"						{ return buildToken(DEC, yytext); }
 "++"						{ return buildToken(INC, yytext); }
 "//".*						{ return buildToken(COMMENT, yytext); }
-[;,:\[\]\(\)={\<>\+\-\*/%\?}&\|!]		{ return buildToken(SYMBOL, yytext); }
+[;,:\[\]\(\)={\<>\+\-\*/%\?}&\|!]		{ return yytext[0]; }
 {letter}{letdig}*				{ return buildToken(ID, yytext); }
 {digit}+					{ return buildToken(NUMCONST, yytext); }
 '([^\n\\']|\\.)*'				{ return buildToken(CHARCONST, yytext); }
 \"([^\\\"\n]|\\.)*\"				{ return buildToken(STRINGCONST, yytext); }
-[^ \n\t]					{ if(yytext[0] != ' ') printf("ERROR(%d): Invalid or misplaced input character: '%c'. Character Ignored.\n", line, yytext[0]); }
+[^ \n\t]					{ printf("ERROR(%d): Invalid or misplaced input character: '%c'. Character Ignored.\n", line, yytext[0]); }
 \n						{ line++; }
 .						;
 %%

@@ -20,45 +20,137 @@ void yyerror(const char *msg) {
 
 %token <tokenData> BOOLCONST NUMCONST CHARCONST STRINGCONST ID
 %token <tokenData> IF WHILE FOR STATIC INT BOOL CHAR IN ELSE RETURN BREAK COMMENT
-%token <tokenData> SYMBOL EQ ADDASS SUBASS DIVASS MULASS LEQ GEQ NEQ DEC INC
-%start tokenList
+%token <tokenData> EQ ADDASS SUBASS DIVASS MULASS LEQ GEQ NEQ DEC INC
+%start program
 
 %%
-tokenList : token
-	  | token tokenList
-          ;
+/*
 
-token : BOOLCONST	{ printf("Line %d Token: BOOLCONST Value: %d  Input: %s\n", $1->line, $1->nValue, $1->tokenString); }
-      | NUMCONST	{ printf("Line %d Token: NUMCONST Value: %d  Input: %s\n", $1->line, $1->nValue, $1->tokenString); }
-      | CHARCONST	{ printf("Line %d Token: CHARCONST Value: '%c' Input: %s\n", $1->line, $1->cValue, $1->tokenString); }
-      | STRINGCONST	{ printf("Line %d Token: STRINGCONST Value: \"", $1->line);
-			  std::cout << $1->sValue;
-			  printf("\"  Input: %s\n", $1->tokenString); }
-      | ID		{ printf("Line %d Token: ID Value: %s\n", $1->line, $1->tokenString); }
-      | IF		{ printf("Line %d Token: IF\n", $1->line); }
-      | WHILE		{ printf("Line %d Token: WHILE\n", $1->line); }
-      | FOR		{ printf("Line %d Token: FOR\n", $1->line); }
-      | STATIC		{ printf("Line %d Token: STATIC\n", $1->line); }
-      | INT		{ printf("Line %d Token: INT\n", $1->line); }
-      | BOOL		{ printf("Line %d Token: BOOL\n", $1->line); }
-      | CHAR		{ printf("Line %d Token: CHAR\n", $1->line); }
-      | IN		{ printf("Line %d Token: IN\n", $1->line); }
-      | ELSE		{ printf("Line %d Token: ELSE\n", $1->line); }
-      | RETURN		{ printf("Line %d Token: RETURN\n", $1->line); }
-      | BREAK		{ printf("Line %d Token: BREAK\n", $1->line); }
-      | SYMBOL		{ printf("Line %d Token: %s\n", $1->line, $1->tokenString); }
-      | EQ		{ printf("Line %d Token: EQ\n", $1->line); }
-      | ADDASS		{ printf("Line %d Token: ADDASS\n", $1->line); }
-      | SUBASS		{ printf("Line %d Token: SUBASS\n", $1->line); }
-      | DIVASS		{ printf("Line %d Token: DIVASS\n", $1->line); }
-      | MULASS		{ printf("Line %d Token: MULASS\n", $1->line); }
-      | LEQ		{ printf("Line %d Token: LEQ\n", $1->line); }
-      | GEQ		{ printf("Line %d Token: GEQ\n", $1->line); }
-      | NEQ		{ printf("Line %d Token: NEQ\n", $1->line); }
-      | DEC		{ printf("Line %d Token: DEC\n", $1->line); }
-      | INC		{ printf("Line %d Token: INC\n", $1->line); }
-      | COMMENT		{}
-      ;
+structure
+
+*/
+program : declarationList {
+	printf("Program syntax is correct!\n");
+};
+declarationList : declarationList declaration
+		| declaration;
+declaration : varDeclaration
+	    | funDeclaration;
+/*
+
+variables
+
+*/
+varDeclaration : typeSpecifier varDeclList;
+scopedVarDeclaration : STATIC typeSpecifier varDeclList ';'
+		     | typeSpecifier varDeclList ';';
+varDeclList : varDeclList ',' varDeclInitialize
+	    | varDeclInitialize;
+varDeclInitialize : varDeclId
+		  | varDeclId ':' simpleExpression;
+varDeclId : ID
+	  | ID '[' NUMCONST ']';
+typeSpecifier : INT
+	      | BOOL
+	      | CHAR;
+/*
+
+functions
+
+*/
+funDeclaration : typeSpecifier ID '(' params ')' statement
+	       | ID '(' params ')' statement;
+params : paramList
+       | ;
+paramList : paramList ';' paramTypeList
+	  | paramTypeList;
+paramTypeList : typeSpecifier paramIdList;
+paramIdList : paramIdList ',' paramId
+	    | paramId;
+paramId : ID
+	| ID '[' ']';
+/*
+
+	statements
+
+*/
+statement : expressionStmt
+	  | compoundStmt
+	  | selectionStmt
+	  | iterationStmt
+	  | returnStmt
+	  | breakStmt;
+expressionStmt : expression ';'
+	       | ';';
+compoundStmt : '{' localDeclarations statementList '}';
+localDeclarations : localDeclarations scopedVarDeclaration
+		  | ;
+statementList : statementList statement
+	      | ;
+selectionStmt : IF '(' simpleExpression ')' statement
+	      | IF '(' simpleExpression ')' statement ELSE statement;
+iterationStmt : WHILE '(' simpleExpression ')' statement
+	      | FOR '(' ID IN ID ')' statement;
+returnStmt : RETURN ';'
+	   | RETURN expression ';';
+breakStmt : BREAK ';';
+/*
+
+expressions
+
+*/
+expression : mutable '=' expression
+	   | mutable ADDASS expression
+	   | mutable SUBASS expression
+	   | mutable MULASS expression
+	   | mutable DIVASS expression
+	   | mutable INC
+	   | mutable DEC
+	   | simpleExpression;
+simpleExpression : simpleExpression '|' andExpression
+		 | andExpression;
+andExpression : andExpression '&' unaryRelExpression
+	      | unaryRelExpression;
+unaryRelExpression : '!' unaryRelExpression
+		   | relExpression;
+relExpression : sumExpression relop sumExpression
+	      | sumExpression;
+relop : LEQ
+      | '<'
+      | '>'
+      | GEQ
+      | EQ
+      | NEQ;
+sumExpression : sumExpression sumop mulExpression
+	      | mulExpression;
+sumop : '+'
+      | '-';
+mulExpression : mulExpression mulop unaryExpression
+	      | unaryExpression;
+mulop : '*'
+      | '/'
+      | '%';
+unaryExpression : unaryop unaryExpression
+		| factor;
+unaryop : '-'
+	| '*'
+	| '?';
+factor : immutable
+       | mutable;
+mutable : ID
+	| mutable '[' expression ']';
+immutable : '(' expression ')'
+	  | call
+	  | constant;
+call : ID '(' args ')';
+args : argList
+     | ;
+argList : argList ',' expression
+	| expression;
+constant : NUMCONST
+	 | CHARCONST
+	 | STRINGCONST
+	 | BOOLCONST;
 %%
 
 int main(int argc, char *argv[]) {

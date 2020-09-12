@@ -1,0 +1,27 @@
+char zev[10]:"corgis";
+char yurt[20];
+int x:42, y:666;
+
+int ant(int bat, cat[]; bool dog, elk; int fox; char gun) {
+	int goat, hog[100];
+	gnu = 'W';
+	goat = hog[2] = 3**cat;
+	if(dog and elk or bat > cat[3]) dog = not dog;
+	fox++;
+	if(bat <= fox) {
+		while(dog) {
+			static int hog;
+			hog = fox;
+			dog = fred(fox++, cat) > 666;
+			if(hog > bat) break;
+			if(fox != 0) fox += 7;
+		}
+	}
+	for(c in zev) outputc(c);
+	if(zev > "dog") outputs("bark");
+	yurt = zev;
+	yurt[3] = ?zev;
+	return (fox + bat * cat[bat]) / -fox;
+}
+
+int max(int a, b) if(a > b) return a;
