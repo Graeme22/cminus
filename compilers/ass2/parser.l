@@ -5,9 +5,6 @@
 #include "scanType.h"
 #include "parser.tab.h"
 
-
-static int line = 1;
-
 // returns an array of ints.
 std::string sValueFrom(char *raw) {
 	int len = strlen(raw);
@@ -54,7 +51,7 @@ int cValueFrom(char *raw) {
 			c = raw[2];
 		}
 	} else if(len > 3) {
-		printf("WARNING(%d): character is %d characters long and not a single character: '%s'. The first char will be used.\n", line, len - 2, raw);
+		printf("WARNING(%d): character is %d characters long and not a single character: '%s'. The first char will be used.\n", yylineno, len - 2, raw);
 		if(raw[1] == '\\') {
 			switch(raw[2]) {
 			case '0':
@@ -69,7 +66,7 @@ int cValueFrom(char *raw) {
 		} else
 			c = raw[1];
 	} else if(len == 2) {
-		printf("ERROR(%d): Empty character ''. Characters ignored.\n", line);
+		printf("ERROR(%d): Empty character ''. Characters ignored.\n", yylineno);
 		return -1;
 	} else
 		c = raw[1];
@@ -80,7 +77,7 @@ int cValueFrom(char *raw) {
 static int buildToken(int tokenClass, char *tokenString) {
 	yylval.tokenData = new TokenData;
 	yylval.tokenData->tokenClass = tokenClass;
-	yylval.tokenData->line = line;
+	yylval.tokenData->line = yylineno;
 	yylval.tokenData->tokenString = strdup(tokenString);
 
 	switch(tokenClass) {
@@ -106,10 +103,7 @@ static int buildToken(int tokenClass, char *tokenString) {
 %}
 
 %option noyywrap
-
-letter [a-zA-Z_]
-digit [0-9]
-letdig [a-zA-Z_0-9]
+%option yylineno
 
 %%
 "if"						{ return buildToken(IF, yytext); }
@@ -136,11 +130,10 @@ letdig [a-zA-Z_0-9]
 "++"						{ return buildToken(INC, yytext); }
 "//".*						{ return buildToken(COMMENT, yytext); }
 [;,:\[\]\(\)={\<>\+\-\*/%\?}&\|!]		{ return yytext[0]; }
-{letter}{letdig}*				{ return buildToken(ID, yytext); }
-{digit}+					{ return buildToken(NUMCONST, yytext); }
+[a-zA-Z_][a-zA-Z_0-9]*				{ return buildToken(ID, yytext); }
+[0-9]+						{ return buildToken(NUMCONST, yytext); }
 '([^\n\\']|\\.)*'				{ return buildToken(CHARCONST, yytext); }
 \"([^\\\"\n]|\\.)*\"				{ return buildToken(STRINGCONST, yytext); }
-[^ \n\t]					{ printf("ERROR(%d): Invalid or misplaced input character: '%c'. Character Ignored.\n", line, yytext[0]); }
-\n						{ line++; }
+[^ \n\t]					{ printf("ERROR(%d): Invalid or misplaced input character: '%c'. Character Ignored.\n", yylineno, yytext[0]); }
 .						;
 %%
