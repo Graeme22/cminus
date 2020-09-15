@@ -3,8 +3,6 @@
 
 #include <string>
 
-static int line;
-
 struct TokenData {
 	int tokenClass;
 	char *tokenString;
