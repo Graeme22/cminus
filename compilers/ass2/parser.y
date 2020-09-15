@@ -29,9 +29,7 @@ void yyerror(const char *msg) {
 structure
 
 */
-program : declarationList {
-	printf("Program syntax is correct!\n");
-};
+program : declarationList;
 declarationList : declarationList declaration
 		| declaration;
 declaration : varDeclaration
@@ -74,12 +72,16 @@ paramId : ID
 	statements
 
 */
-statement : expressionStmt
-	  | compoundStmt
-	  | selectionStmt
-	  | iterationStmt
-	  | returnStmt
-	  | breakStmt;
+statement : matched
+	  | unmatched;
+matched : expressionStmt
+	| compoundStmt
+	| matchedSelectionStmt
+	| matchedIterationStmt
+	| returnStmt
+	| breakStmt;
+unmatched : unmatchedSelectionStmt
+	  | unmatchedIterationStmt;
 expressionStmt : expression ';'
 	       | ';';
 compoundStmt : '{' localDeclarations statementList '}';
@@ -87,10 +89,13 @@ localDeclarations : localDeclarations scopedVarDeclaration
 		  | ;
 statementList : statementList statement
 	      | ;
-selectionStmt : IF '(' simpleExpression ')' statement
-	      | IF '(' simpleExpression ')' statement ELSE statement;
-iterationStmt : WHILE '(' simpleExpression ')' statement
-	      | FOR '(' ID IN ID ')' statement;
+matchedSelectionStmt : IF '(' simpleExpression ')' matched ELSE matched;
+unmatchedSelectionStmt : IF '(' simpleExpression ')' statement
+		       | IF '(' simpleExpression ')' matched ELSE unmatched;
+matchedIterationStmt : WHILE '(' simpleExpression ')' matched
+		     | FOR '(' ID IN ID ')' matched;
+unmatchedIterationStmt : WHILE '(' simpleExpression ')' unmatched
+		       | FOR '(' ID IN ID ')' unmatched;
 returnStmt : RETURN ';'
 	   | RETURN expression ';';
 breakStmt : BREAK ';';
