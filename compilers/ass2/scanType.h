@@ -2,10 +2,7 @@
 #define _SCANTYPE_H_
 
 #include <string>
-<<<<<<< HEAD
 #include <stdbool.h>
-=======
->>>>>>> 58ccb7e945a25bf7d050b8aa0d87b1b7f00fc668
 
 struct TokenData {
 	int tokenClass;

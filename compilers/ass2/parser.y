@@ -3,14 +3,17 @@
 #include <stdio.h>
 #include <iostream>
 #include "scanType.h"
+#include "parser.tab.h"
 
 #ifdef CPLUSPLUS
 extern int yylex();
 #endif
 extern FILE *yyin;
+extern int yylineno;
+extern char *yytext;
 
 void yyerror(const char *msg) {
-	printf("Error while parsing: %s\n", msg);
+	printf("Error: %s while parsing `%s` on line %d.\n", msg, yytext, yylineno);
 }
 %}
 
@@ -39,7 +42,7 @@ declaration : varDeclaration
 variables
 
 */
-varDeclaration : typeSpecifier varDeclList;
+varDeclaration : typeSpecifier varDeclList ';';
 scopedVarDeclaration : STATIC typeSpecifier varDeclList ';'
 		     | typeSpecifier varDeclList ';';
 varDeclList : varDeclList ',' varDeclInitialize

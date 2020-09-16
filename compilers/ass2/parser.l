@@ -135,5 +135,5 @@ static int buildToken(int tokenClass, char *tokenString) {
 '([^\n\\']|\\.)*'				{ return buildToken(CHARCONST, yytext); }
 \"([^\\\"\n]|\\.)*\"				{ return buildToken(STRINGCONST, yytext); }
 [^ \n\t]					{ printf("ERROR(%d): Invalid or misplaced input character: '%c'. Character Ignored.\n", yylineno, yytext[0]); }
-.						;
+.|\n						;
 %%

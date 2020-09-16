@@ -6,7 +6,7 @@ int ant(int bat, cat[]; bool dog, elk; int fox; char gun) {
 	int goat, hog[100];
 	gnu = 'W';
 	goat = hog[2] = 3**cat;
-	if(dog and elk or bat > cat[3]) dog = not dog;
+	if(dog & elk | bat > cat[3]) dog = ! dog;
 	fox++;
 	if(bat <= fox) {
 		while(dog) {
