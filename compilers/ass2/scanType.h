@@ -1,6 +1,8 @@
 #ifndef _SCANTYPE_H_
 #define _SCANTYPE_H_
 
+#define MAXCHILDREN 4
+
 #include <string>
 #include <stdbool.h>
 

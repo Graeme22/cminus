@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <iostream>
+#include "ourgetopt.h"
 #include "scanType.h"
 #include "parser.tab.h"
 
@@ -18,7 +19,9 @@ void yyerror(const char *msg) {
 %}
 
 %union {
+	//ExpType type;
 	TokenData *tokenData;
+	//TreeNode *tree;
 }
 
 %token <tokenData> BOOLCONST NUMCONST CHARCONST STRINGCONST ID
@@ -162,12 +165,37 @@ constant : NUMCONST
 %%
 
 int main(int argc, char *argv[]) {
-	if(argc == 1)
-		yyparse();
-	else {
-		yyin = fopen(argv[1], "r");
+	// -d: turn on yydebug
+	// -p: print parse tree
+	int dflag = 0, pflag = 0;
+	int c;
+
+	while((c = ourGetopt(argc, argv, (char *)"dp")) != -1) {
+		switch(c) {
+		case 'd':
+			dflag = 1;
+			break;
+		case 'p':
+			pflag = 1;
+			break;
+		case '?':
+			fprintf(stderr, "usage: c- [-d] [-p] file\n");
+			return -1;
+		}
+	}
+
+	if(dflag)
+		yydebug = 1;
+
+	if(optind < argc) {
+		yyin = fopen(argv[optind], "r");
 		yyparse();
 		fclose(yyin);
-	}
+	} else
+		yyparse();
+
+	if(pflag)
+		printf("p flag found!\n");
+
 	return 0;
 }
