@@ -16,6 +16,8 @@ extern char *yytext;
 void yyerror(const char *msg) {
 	printf("Error: %s while parsing `%s` on line %d.\n", msg, yytext, yylineno);
 }
+
+static TreeNode *savedTree;
 %}
 
 %union {
@@ -35,17 +37,46 @@ void yyerror(const char *msg) {
 structure
 
 */
-program : declarationList;
+program : declarationList
+	{
+		savedTree = $1;
+	}
+	;
 declarationList : declarationList declaration
-		| declaration;
+	{
+		TreeNode *t = $1;
+		if(t != NULL) {
+			while(t->sibling != NULL)
+				t = t->sibling;
+			t->sibling = $2;
+			$$ = $1;
+		} else
+			$$ = $2;
+	}
+	| declaration
+	{
+		$$ = $1;
+	}
+	;
 declaration : varDeclaration
-	    | funDeclaration;
+	{
+		$$ = $1;
+	}
+	| funDeclaration
+	{
+		$$ = $1;
+	}
+	;
 /*
 
 variables
 
 */
-varDeclaration : typeSpecifier varDeclList ';';
+varDeclaration : typeSpecifier varDeclList ';'
+	{
+		
+	}
+	;
 scopedVarDeclaration : STATIC typeSpecifier varDeclList ';'
 		     | typeSpecifier varDeclList ';';
 varDeclList : varDeclList ',' varDeclInitialize

@@ -1,7 +1,7 @@
 #ifndef _SCANTYPE_H_
 #define _SCANTYPE_H_
 
-#define MAXCHILDREN 4
+#define MAXCHILDREN 5
 
 #include <string>
 #include <stdbool.h>
@@ -16,34 +16,13 @@ struct TokenData {
 	std::string sValue;
 };
 
-/*typedef struct treeNode {
+typedef struct treeNode {
 	// connectivity
 	struct treeNode *child[MAXCHILDREN];
 	struct treeNode *sibling;
 
-	// node kind
+	int tokenClass;
 	int line;
-	NodeKind node;
-	union {
-		DeclKind decl;
-		StmtKind stmt;
-		ExpKind exp;
-	} kind;
-
-	// extra node properties, varies by node
-	union {
-		OpKind op;
-		int nValue; // for both ints and bools
-		char cValue;
-		std::string sValue;
-		char *name; // ?
-	} attr;
-
-	ExpType type; // for type checking
-	bool isArray;
-	bool isStatic;
-
-	// more semantics here later.
-} TreeNode;*/
+} TreeNode;
 
 #endif
