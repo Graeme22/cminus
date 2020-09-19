@@ -21,9 +21,9 @@ static TreeNode *savedTree;
 %}
 
 %union {
-	//ExpType type;
+	ExpType type;
 	TokenData *tokenData;
-	//TreeNode *tree;
+	TreeNode *tree;
 }
 
 %token <tokenData> BOOLCONST NUMCONST CHARCONST STRINGCONST ID
@@ -39,32 +39,32 @@ structure
 */
 program : declarationList
 	{
-		//savedTree = $1;
+		savedTree = $1;
 	}
 	;
 declarationList : declarationList declaration
 	{
-		/*TreeNode *t = $1;
+		TreeNode *t = $1;
 		if(t != NULL) {
 			while(t->sibling != NULL)
 				t = t->sibling;
 			t->sibling = $2;
 			$$ = $1;
 		} else
-			$$ = $2;*/
+			$$ = $2;
 	}
 	| declaration
 	{
-		//$$ = $1;
+		$$ = $1;
 	}
 	;
 declaration : varDeclaration
 	{
-		//$$ = $1;
+		$$ = $1;
 	}
 	| funDeclaration
 	{
-		//$$ = $1;
+		$$ = $1;
 	}
 	;
 /*
