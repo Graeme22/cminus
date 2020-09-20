@@ -1,46 +1,17 @@
-char zev[10]:"corgis";
-char yurt[20];
-int x:42, y:666;
+bool a;
+int b[100];
 
-int ant(int bat, cat[]; bool dog, elk; int fox; char gun) {
-	int goat, hog[100];
-	gnu = 'W';
-	goat = hog[2] = 3**cat;
-	if(dog & elk | bat > cat[3]) dog = ! dog;
-	fox++;
-	if(bat <= fox) {
-		while(dog) {
-			static int hog;
-			hog = fox;
-			dog = fred(fox++, cat) > 666;
-			if(hog > bat) break;
-			if(fox != 0) fox += 7;
-		}
-	}
-	for(c in zev) outputc(c);
-	if(zev > "dog") outputs("bark");
-	yurt = zev;
-	yurt[3] = ?zev;
-	return (fox + bat * cat[bat]) / -fox;
-}
+int max(int x, y)
+{
+	int z, zz;
+	char c;
 
-int max(int a, b) if(a > b) return a;
+	if(x > y) z = x;
+	else z = y;
 
-fun(bool a) {
-	bool b, c;
-	if(a == true)
-		if(a != false)
-			if(2 > 1)
-				b = true;
-			else
-				b = false;
-	
-	if(b == true) {
-		if(b != false)
-			c = true;
-	} else {
-		c = false;
-		c = true;
-		c = false;
-	}
-}
+	while(666 > 665) break;
+	;
+	b[41] = max(42, 43) + 44 * 55 + b[99];
+
+	return;
+}i

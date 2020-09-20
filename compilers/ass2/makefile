@@ -14,10 +14,13 @@ lex.yy.c : $(BIN).l $(BIN).tab.h scanType.h
 	flex $(BIN).l
 
 run :
-	cat test.c- | ./$(OUT) -p
+	(cat test.c- | ./$(OUT) -p) > output.txt
+
+diff :
+	sdiff output.txt expected.txt
 
 tar :
 	tar -cvf $(BIN).tar $(BIN).y $(BIN).l scanType.h makefile ourgetopt.*
 
 clean :
-	rm $(BIN).tab.c $(BIN).tab.h lex.yy.c $(OUT) $(BIN).output
+	rm $(BIN).tab.c $(BIN).tab.h lex.yy.c $(OUT) $(BIN).output output.txt

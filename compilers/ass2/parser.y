@@ -4,11 +4,10 @@
 #include <iostream>
 #include "ourgetopt.h"
 #include "scanType.h"
+#include "ast.h"
 #include "parser.tab.h"
 
-#ifdef CPLUSPLUS
 extern int yylex();
-#endif
 extern FILE *yyin;
 extern int yylineno;
 extern char *yytext;
@@ -17,13 +16,12 @@ void yyerror(const char *msg) {
 	printf("Error: %s while parsing `%s` on line %d.\n", msg, yytext, yylineno);
 }
 
-static TreeNode *savedTree;
+AST *tree;
 %}
 
 %union {
-	ExpType type;
+	AST *node;
 	TokenData *tokenData;
-	TreeNode *tree;
 }
 
 %token <tokenData> BOOLCONST NUMCONST CHARCONST STRINGCONST ID
@@ -39,23 +37,16 @@ structure
 */
 program : declarationList
 	{
-		savedTree = $1;
+		tree = new AST();
 	}
 	;
 declarationList : declarationList declaration
 	{
-		TreeNode *t = $1;
-		if(t != NULL) {
-			while(t->sibling != NULL)
-				t = t->sibling;
-			t->sibling = $2;
-			$$ = $1;
-		} else
-			$$ = $2;
+		tree->append($2);
 	}
 	| declaration
 	{
-		$$ = $1;
+		tree->append($1);
 	}
 	;
 declaration : varDeclaration
@@ -74,20 +65,43 @@ variables
 */
 varDeclaration : typeSpecifier varDeclList ';'
 	{
-		
+		$$ = new VarDeclaration($1);
 	}
 	;
 scopedVarDeclaration : STATIC typeSpecifier varDeclList ';'
 		     | typeSpecifier varDeclList ';';
 varDeclList : varDeclList ',' varDeclInitialize
-	    | varDeclInitialize;
+	{
+		$$->append($3);
+	}
+	| varDeclInitialize
+	{
+		$$->append($1);
+	}
+	;
 varDeclInitialize : varDeclId
-		  | varDeclId ':' simpleExpression;
+	{
+		$$ = $1;
+	}
+	| varDeclId ':' simpleExpression;
 varDeclId : ID
-	  | ID '[' NUMCONST ']';
+	{
+		$$ = $1;
+	}
+	| ID '[' NUMCONST ']';
 typeSpecifier : INT
-	      | BOOL
-	      | CHAR;
+	{
+		$$ = $1;
+	}
+	| BOOL
+	{
+		$$ = $1;
+	}
+	| CHAR
+	{
+		$$ = $1;
+	}
+	;
 /*
 
 functions
@@ -226,7 +240,7 @@ int main(int argc, char *argv[]) {
 		yyparse();
 
 	if(pflag)
-		printf("p flag found!\n");
+		tree->print(0);
 
 	return 0;
 }
