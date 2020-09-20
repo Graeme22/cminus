@@ -12,7 +12,6 @@ class AST {
 protected:
 	std::vector<AST *> children;
 	int depth = 0;
-	AST *sibling;
 
 public:
 	AST();
@@ -24,22 +23,28 @@ public:
 
 };
 
-class VarDeclaration: public AST {
+class VarDeclId: public AST {
 
-	char *type;
+	bool isArray;
+	int arraySize;
 
 public:
-	VarDeclaration(TokenData *);
+	char *name;
+	VarDeclId(TokenData *);
+	VarDeclId(TokenData *, int);
 
 };
 
-class VarDeclarationList: public AST {
+class VarDeclaration: public AST {
 
-	std::vector<char *> vars;
+	char *type;
+	std::vector<VarDeclId *> vars;
+	int line;
 
 public:
+	VarDeclaration(TokenData *);
 	virtual void print(int);
-	void append(TokenData *);
+	void append(VarDeclId *);
 
 };
 

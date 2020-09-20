@@ -4,18 +4,14 @@
 #include <string>
 #include <stdbool.h>
 
-typedef struct {
-
+struct TokenData {
 	int tokenClass;
 	char *tokenString;
 	int line;
 
-	union {
-		int nValue;
-		char cValue;
-		std::string sValue;
-	};
-
-} TokenData;
+	int nValue;
+	char cValue;
+	std::string sValue;
+};
 
 #endif

@@ -1,13 +1,14 @@
 BIN = parser
 CC = g++
 OUT = c-
-LIBS = ourgetopt.h
+INCLUDES = ourgetopt.h ast.h scanType.h
 FLAGS = -DCPLUSPLUS -g
+LIBS = ourgetopt.cpp ast.cpp
 
-$(BIN) : lex.yy.c $(BIN).tab.c $(BIN).tab.h $(LIBS)
-	$(CC) $(FLAGS) lex.yy.c $(BIN).tab.c ourgetopt.cpp -o $(OUT)
+$(BIN) : lex.yy.c $(BIN).tab.c $(BIN).tab.h $(INCLUDES)
+	$(CC) $(FLAGS) lex.yy.c $(BIN).tab.c $(LIBS) -o $(OUT)
 
-$(BIN).tab.c $(BIN).tab.h : $(BIN).y scanType.h $(LIBS)
+$(BIN).tab.c $(BIN).tab.h : $(BIN).y $(INCLUDES)
 	bison -v -t -d $(BIN).y
 
 lex.yy.c : $(BIN).l $(BIN).tab.h scanType.h
@@ -20,7 +21,7 @@ diff :
 	sdiff output.txt expected.txt
 
 tar :
-	tar -cvf $(BIN).tar $(BIN).y $(BIN).l scanType.h makefile ourgetopt.*
+	tar -cvf $(BIN).tar $(BIN).y $(BIN).l $(INCLUDES) $(LIBS) makefile
 
 clean :
 	rm $(BIN).tab.c $(BIN).tab.h lex.yy.c $(OUT) $(BIN).output output.txt

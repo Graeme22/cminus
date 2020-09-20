@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include "scanType.h"
+#include "ast.h"
 #include "parser.tab.h"
 
 // returns an array of ints.
@@ -106,34 +107,34 @@ static int buildToken(int tokenClass, char *tokenString) {
 %option yylineno
 
 %%
-"if"						{ return buildToken(IF, yytext); }
-"while"						{ return buildToken(WHILE, yytext); }
-"for"						{ return buildToken(FOR, yytext); }
-"static"					{ return buildToken(STATIC, yytext); }
-"int"						{ return buildToken(INT, yytext); }
-"bool"						{ return buildToken(BOOL, yytext); }
-"char"						{ return buildToken(CHAR, yytext); }
-"in"						{ return buildToken(IN, yytext); }
-"else"						{ return buildToken(ELSE, yytext); }
-"return"					{ return buildToken(RETURN, yytext); }
-"break"						{ return buildToken(BREAK, yytext); }
-"true"|"false"					{ return buildToken(BOOLCONST, yytext); }
-"=="						{ return buildToken(EQ, yytext); }
-"+="						{ return buildToken(ADDASS, yytext); }
-"-="						{ return buildToken(SUBASS, yytext); }
-"/="						{ return buildToken(DIVASS, yytext); }
-"*="						{ return buildToken(MULASS, yytext); }
-"<="						{ return buildToken(LEQ, yytext); }
-">="						{ return buildToken(GEQ, yytext); }
-"!="						{ return buildToken(NEQ, yytext); }
-"--"						{ return buildToken(DEC, yytext); }
-"++"						{ return buildToken(INC, yytext); }
-"//".*						{ return buildToken(COMMENT, yytext); }
+"if"									{ return buildToken(IF, yytext); }
+"while"									{ return buildToken(WHILE, yytext); }
+"for"									{ return buildToken(FOR, yytext); }
+"static"								{ return buildToken(STATIC, yytext); }
+"int"									{ return buildToken(INT, yytext); }
+"bool"									{ return buildToken(BOOL, yytext); }
+"char"									{ return buildToken(CHAR, yytext); }
+"in"									{ return buildToken(IN, yytext); }
+"else"									{ return buildToken(ELSE, yytext); }
+"return"								{ return buildToken(RETURN, yytext); }
+"break"									{ return buildToken(BREAK, yytext); }
+"true"|"false"							{ return buildToken(BOOLCONST, yytext); }
+"=="									{ return buildToken(EQ, yytext); }
+"+="									{ return buildToken(ADDASS, yytext); }
+"-="									{ return buildToken(SUBASS, yytext); }
+"/="									{ return buildToken(DIVASS, yytext); }
+"*="									{ return buildToken(MULASS, yytext); }
+"<="									{ return buildToken(LEQ, yytext); }
+">="									{ return buildToken(GEQ, yytext); }
+"!="									{ return buildToken(NEQ, yytext); }
+"--"									{ return buildToken(DEC, yytext); }
+"++"									{ return buildToken(INC, yytext); }
+"//".*									{ return buildToken(COMMENT, yytext); }
 [;,:\[\]\(\)={\<>\+\-\*/%\?}&\|!]		{ return yytext[0]; }
-[a-zA-Z_][a-zA-Z_0-9]*				{ return buildToken(ID, yytext); }
-[0-9]+						{ return buildToken(NUMCONST, yytext); }
-'([^\n\\']|\\.)*'				{ return buildToken(CHARCONST, yytext); }
-\"([^\\\"\n]|\\.)*\"				{ return buildToken(STRINGCONST, yytext); }
-[^ \n\t]					{ printf("ERROR(%d): Invalid or misplaced input character: '%c'. Character Ignored.\n", yylineno, yytext[0]); }
-.|\n						;
+[a-zA-Z_][a-zA-Z_0-9]*					{ return buildToken(ID, yytext); }
+[0-9]+									{ return buildToken(NUMCONST, yytext); }
+'([^\n\\']|\\.)*'						{ return buildToken(CHARCONST, yytext); }
+\"([^\\\"\n]|\\.)*\"					{ return buildToken(STRINGCONST, yytext); }
+[^ \n\t]								{ printf("ERROR(%d): Invalid or misplaced input character: '%c'. Character Ignored.\n", yylineno, yytext[0]); }
+.|\n									;
 %%

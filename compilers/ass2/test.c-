@@ -14,4 +14,4 @@ int max(int x, y)
 	b[41] = max(42, 43) + 44 * 55 + b[99];
 
 	return;
-}i
+}

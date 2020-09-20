@@ -28,21 +28,32 @@ void AST::printPrefix() {
 
 VarDeclaration::VarDeclaration(TokenData *data) {
 	type = strdup(data->tokenString);
+	line = data->line;
 }
 
-// Var Declaration List
-
-/*
-!   !   Child: 0  Var z of type int [line: 6]
-!   !   Sibling: 0  Var zz of type int [line: 6]
-!   !   Sibling: 1  Var c of type char [line: 7]
-*/
-void VarDeclarationList::print(int index) {
-	// The tree itself will need to have a child/sibling structure.
-	// we already have children but siblings don't point to each other.
-	
+void VarDeclaration::print(int index) {
+	for(int i = 0; i < vars.size(); i++) {
+		printPrefix();
+		if(i == 0)
+			printf("Child: %d", index);
+		else
+			printf("Sibling: %d", i - 1);
+		printf("  var %s of type %s [line: %d]\n", vars[i]->name, type, line);
+	}
 }
 
-void VarDeclarationList::append(TokenData *data) {
-	vars.push_back(strdup(data->tokenString));
+void VarDeclaration::append(VarDeclId *vdi) {
+	vars.push_back(vdi);
+}
+
+// Var Decl Id
+
+VarDeclId::VarDeclId(TokenData *data) {
+	name = strdup(data->tokenString);
+	isArray = false;
+}
+
+VarDeclId::VarDeclId(TokenData *data, int n): VarDeclId(data) {
+	arraySize = n;
+	isArray = true;
 }

@@ -29,6 +29,15 @@ AST *tree;
 %token <tokenData> EQ ADDASS SUBASS DIVASS MULASS LEQ GEQ NEQ DEC INC
 %start program
 
+%type <node> program declarationList declaration varDeclaration scopedVarDeclaration varDeclList varDeclInitialize varDeclId
+%type <node> funDeclaration params paramList paramTypeList paramIdList paramId statement matched unmatched expressionStmt
+%type <node> compoundStmt localDeclarations statementList matchedSelectionStmt unmatchedSelectionStmt matchedIterationStmt
+%type <node> unmatchedIterationStmt returnStmt breakStmt expression simpleExpression andExpression unaryRelExpression
+%type <node> relExpression sumExpression sumop mulExpression mulop unaryExpression unaryop factor
+%type <node> mutable immutable call args argList
+
+%type <tokenData> typeSpecifier constant
+
 %%
 /*
 
@@ -86,9 +95,13 @@ varDeclInitialize : varDeclId
 	| varDeclId ':' simpleExpression;
 varDeclId : ID
 	{
-		$$ = $1;
+		$$ = new VarDeclId($1);
 	}
-	| ID '[' NUMCONST ']';
+	| ID '[' NUMCONST ']'
+	{
+		$$ = new VarDeclId($1, $3->nValue);
+	}
+	;
 typeSpecifier : INT
 	{
 		$$ = $1;
@@ -204,9 +217,22 @@ args : argList
 argList : argList ',' expression
 	| expression;
 constant : NUMCONST
-	 | CHARCONST
-	 | STRINGCONST
-	 | BOOLCONST;
+	{
+		$$ = $1;
+	}
+	| CHARCONST
+	{
+		$$ = $1;
+	}
+	| STRINGCONST
+	{
+		$$ = $1;
+	}
+	| BOOLCONST
+	{
+		$$ = $1;
+	}
+	;
 %%
 
 int main(int argc, char *argv[]) {
