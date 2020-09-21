@@ -11,6 +11,7 @@ AST::AST(AST *parent) {
 }
 
 void AST::print(int index) {
+	printf("Printing tree. This layer has %d children.\n", children.size());
 	for(int i = 0; i < children.size(); i++)
 		children[i]->print(i); // we need to know index so we know if we're a sibling
 }
@@ -32,6 +33,7 @@ VarDeclaration::VarDeclaration(TokenData *data) {
 }
 
 void VarDeclaration::print(int index) {
+	printf("Printing tree layer of size %d.\n", vars.size());
 	for(int i = 0; i < vars.size(); i++) {
 		printPrefix();
 		if(i == 0)

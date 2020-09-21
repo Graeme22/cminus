@@ -27,9 +27,9 @@ AST *tree;
 %token <tokenData> BOOLCONST NUMCONST CHARCONST STRINGCONST ID
 %token <tokenData> IF WHILE FOR STATIC INT BOOL CHAR IN ELSE RETURN BREAK COMMENT
 %token <tokenData> EQ ADDASS SUBASS DIVASS MULASS LEQ GEQ NEQ DEC INC
-%start program
+%start declarationList
 
-%type <node> program declarationList declaration varDeclaration scopedVarDeclaration varDeclList varDeclInitialize varDeclId
+%type <node> declarationList declaration varDeclaration scopedVarDeclaration varDeclList varDeclInitialize varDeclId
 %type <node> funDeclaration params paramList paramTypeList paramIdList paramId statement matched unmatched expressionStmt
 %type <node> compoundStmt localDeclarations statementList matchedSelectionStmt unmatchedSelectionStmt matchedIterationStmt
 %type <node> unmatchedIterationStmt returnStmt breakStmt expression simpleExpression andExpression unaryRelExpression
@@ -44,11 +44,6 @@ AST *tree;
 structure
 
 */
-program : declarationList
-	{
-		tree = new AST();
-	}
-	;
 declarationList : declarationList declaration
 	{
 		tree->append($2);
@@ -85,7 +80,7 @@ varDeclList : varDeclList ',' varDeclInitialize
 	}
 	| varDeclInitialize
 	{
-		$$->append($1);
+		$$ = new VarDeclList();
 	}
 	;
 varDeclInitialize : varDeclId
@@ -236,6 +231,8 @@ constant : NUMCONST
 %%
 
 int main(int argc, char *argv[]) {
+	tree = new AST();
+
 	// -d: turn on yydebug
 	// -p: print parse tree
 	int dflag = 0, pflag = 0;
