@@ -102,21 +102,104 @@ public:
 
 };
 
-class Statement: public AST {
-
-};
-
 class FunDeclaration: public AST {
 
 	char *type;
 	char *name;
 	int line;
 	Params *params;
-	Statement *statement;
+	AST *statement;
 
 public:
 	FunDeclaration(TokenData *, TokenData *, AST *, AST *);
 	FunDeclaration(TokenData *, AST *, AST *);
+	virtual void print();
+
+};
+
+class CompoundStatement: public AST {
+
+	AST *localDeclarations;
+	AST *statementList;
+	int line;
+
+public:
+	CompoundStatement(int, AST *, AST *);
+	virtual void print();
+
+};
+
+class If: public AST {
+
+	AST *ifStmt;
+	AST *elseStmt;
+	AST *condition;
+	int line;
+
+public:
+	// if-else
+	If(int, AST *, AST *, AST *);
+	// if
+	If(int, AST *, AST *);
+	virtual void print();
+
+};
+
+class Relation: public AST {
+
+	AST *left;
+	AST *right;
+	int type;
+	char *str;
+	int line;
+
+public:
+	Relation(TokenData *, AST *, AST*);
+	virtual void print();
+
+};
+
+class LogicExpression: public AST {
+
+	AST *left;
+	AST *right;
+	int type;
+	char *str;
+	int line;
+
+public:
+	LogicExpression(TokenData *, AST *, AST *);
+	LogicExpression(TokenData *, AST *);
+	virtual void print();
+
+};
+
+class Operation: public AST {
+
+	AST *left;
+	AST *right;
+	int type;
+	char *str;
+	int line;
+
+public:
+	Operation(TokenData *, AST *, AST *);
+	Operation(TokenData *, AST *);
+	virtual void print();
+
+};
+
+class VarAccess: public AST {
+
+	char *name;
+	bool isArray;
+	int line;
+	// this needs to be an int when we get to type checking
+	AST *location;
+
+public:
+	VarAccess(TokenData *);
+	VarAccess(AST *, AST *);
 	virtual void print();
 
 };

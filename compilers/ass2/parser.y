@@ -19,6 +19,8 @@ void yyerror(const char *msg) {
 AST *tree;
 %}
 
+%locations
+
 %union {
 	TokenData *tokenData;
 	AST *ast;
@@ -27,6 +29,7 @@ AST *tree;
 %token <tokenData> BOOLCONST NUMCONST CHARCONST STRINGCONST ID
 %token <tokenData> IF WHILE FOR STATIC INT BOOL CHAR IN ELSE RETURN BREAK COMMENT
 %token <tokenData> EQ ADDASS SUBASS DIVASS MULASS LEQ GEQ NEQ DEC INC
+%token <tokenData> ADD SUB LT GT MUL DIV MOD RAND ASS AND OR NOT
 %start declarationList
 
 %type <ast> declarationList declaration varDeclaration scopedVarDeclaration varDeclList varDeclInitialize varDeclId
@@ -35,7 +38,7 @@ AST *tree;
 %type <ast> unmatchedIterationStmt returnStmt breakStmt expression simpleExpression andExpression unaryRelExpression
 %type <ast> relExpression sumExpression sumop mulExpression mulop unaryExpression unaryop factor
 %type <ast> mutable immutable call args argList
-%type <tokenData> constant typeSpecifier
+%type <tokenData> constant typeSpecifier relop
 
 %%
 /*
@@ -217,75 +220,198 @@ matched : expressionStmt
 	}
 	;
 unmatched : unmatchedSelectionStmt
-	  | unmatchedIterationStmt;
+	{
+		$$ = $1;
+	}
+	| unmatchedIterationStmt
+	{
+		$$ = $1;
+	}
+	;
 expressionStmt : expression ';'
-	       | ';';
-compoundStmt : '{' localDeclarations statementList '}';
+	{
+		$$ = $1;
+	}
+	| ';'
+	{
+		$$ = NULL;
+	}
+	;
+compoundStmt : '{' localDeclarations statementList '}'
+	{
+		$$ = new CompoundStatement(@1.first_line, $2, $3);
+	}
+	;
 localDeclarations : localDeclarations scopedVarDeclaration
-		  | ;
+	{
+		$$->append($2);
+	}
+	| /* empty */
+	{
+		$$ = new AST();
+	}
+	;
 statementList : statementList statement
-	      | ;
-matchedSelectionStmt : IF '(' simpleExpression ')' matched ELSE matched;
+	{
+		$$->append($2);
+	}
+	| /* empty */
+	{
+		$$ = new AST();
+	}
+	;
+matchedSelectionStmt : IF '(' simpleExpression ')' matched ELSE matched
+	{
+		$$ = new If(@1.first_line, $3, $5, $7);
+	}
+	;
 unmatchedSelectionStmt : IF '(' simpleExpression ')' statement
-		       | IF '(' simpleExpression ')' matched ELSE unmatched;
+	{
+		$$ = new If(@1.first_line, $3, $5);
+	}
+	| IF '(' simpleExpression ')' matched ELSE unmatched
+	{
+		$$ = new If(@1.first_line, $3, $5, $7);
+	}
+	;
 matchedIterationStmt : WHILE '(' simpleExpression ')' matched
-		     | FOR '(' ID IN ID ')' matched;
+	| FOR '(' ID IN ID ')' matched;
 unmatchedIterationStmt : WHILE '(' simpleExpression ')' unmatched
-		       | FOR '(' ID IN ID ')' unmatched;
+	| FOR '(' ID IN ID ')' unmatched;
 returnStmt : RETURN ';'
-	   | RETURN expression ';';
+	| RETURN expression ';';
 breakStmt : BREAK ';';
 /*
 
 expressions
 
 */
-expression : mutable '=' expression
-	   | mutable ADDASS expression
-	   | mutable SUBASS expression
-	   | mutable MULASS expression
-	   | mutable DIVASS expression
-	   | mutable INC
-	   | mutable DEC
-	   | simpleExpression;
-simpleExpression : simpleExpression '|' andExpression
-		 | andExpression;
-andExpression : andExpression '&' unaryRelExpression
-	      | unaryRelExpression;
-unaryRelExpression : '!' unaryRelExpression
-		   | relExpression;
+expression : mutable ASS expression
+	{
+		$$ = new Operation($2, $1, $3);
+	}
+	| mutable ADDASS expression
+	{
+		$$ = new Operation($2, $1, $3);
+	}
+	| mutable SUBASS expression
+	{
+		$$ = new Operation($2, $1, $3);
+	}
+	| mutable MULASS expression
+	{
+		$$ = new Operation($2, $1, $3);
+	}
+	| mutable DIVASS expression
+	{
+		$$ = new Operation($2, $1, $3);
+	}
+	| mutable INC
+	{
+		$$ = new Operation($2, $1);
+	}
+	| mutable DEC
+	{
+		$$ = new Operation($2, $1);
+	}
+	| simpleExpression
+	{
+		$$ = $1;
+	}
+	;
+simpleExpression : simpleExpression OR andExpression
+	{
+		$$ = new LogicExpression($2, $1, $3);
+	}
+	| andExpression
+	{
+		$$ = $1;
+	}
+	;
+andExpression : andExpression AND unaryRelExpression
+	{
+		$$ = new LogicExpression($2, $1, $3);
+	}
+	| unaryRelExpression
+	{
+		$$ = $1;
+	}
+	;
+unaryRelExpression : NOT unaryRelExpression
+	{
+		$$ = new LogicExpression($1, $2);
+	}
+	| relExpression
+	{
+		$$ = $1;
+	}
+	;
 relExpression : sumExpression relop sumExpression
-	      | sumExpression;
+	{
+		$$ = new Relation($2, $1, $3);
+	}
+	| sumExpression
+	{
+		$$ = $1;
+	}
+	;
 relop : LEQ
-      | '<'
-      | '>'
-      | GEQ
-      | EQ
-      | NEQ;
+	{
+		$$ = $1;
+	}
+    | LT
+	{
+		$$ = $1;
+	}
+    | GT
+	{
+		$$ = $1;
+	}
+    | GEQ
+	{
+		$$ = $1;
+	}
+    | EQ
+	{
+		$$ = $1;
+	}
+    | NEQ
+	{
+		$$ = $1;
+	}
+	;
 sumExpression : sumExpression sumop mulExpression
-	      | mulExpression;
-sumop : '+'
-      | '-';
+	| mulExpression;
+sumop : ADD
+    | SUB;
 mulExpression : mulExpression mulop unaryExpression
-	      | unaryExpression;
-mulop : '*'
-      | '/'
-      | '%';
+	| unaryExpression;
+mulop : MUL
+    | DIV
+    | MOD;
 unaryExpression : unaryop unaryExpression
-		| factor;
-unaryop : '-'
-	| '*'
-	| '?';
+	| factor;
+unaryop : SUB
+	| MUL
+	| RAND;
 factor : immutable
-       | mutable;
+    | mutable;
 mutable : ID
-	| mutable '[' expression ']';
+	{
+		$$ = new VarAccess($1);
+	}
+	| mutable '[' expression ']'
+	{
+		$$ = new VarAccess($1, $3);
+	}
+	;
 immutable : '(' expression ')'
-	  | call
-	  | constant;
+	| call
+	| constant;
 call : ID '(' args ')';
 args : argList
-     | ;
+    | /* empty */
+	;
 argList : argList ',' expression
 	| expression;
 constant : NUMCONST

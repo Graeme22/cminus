@@ -6,6 +6,8 @@
 #include "ast.h"
 #include "parser.tab.h"
 
+#define YY_USER_ACTION yylloc.first_line = yylloc.last_line = yylineno;
+
 // returns an array of ints.
 std::string sValueFrom(char *raw) {
 	int len = strlen(raw);
@@ -130,7 +132,19 @@ static int buildToken(int tokenClass, char *tokenString) {
 "--"									{ return buildToken(DEC, yytext); }
 "++"									{ return buildToken(INC, yytext); }
 "//".*									{ return buildToken(COMMENT, yytext); }
-[;,:\[\]\(\)={\<>\+\-\*/%\?}&\|!]		{ return yytext[0]; }
+\+										{ return buildToken(ADD, yytext); }
+\-										{ return buildToken(SUB, yytext); }
+\<										{ return buildToken(LT, yytext); }
+\>										{ return buildToken(GT, yytext); }
+\*										{ return buildToken(MUL, yytext); }
+\/										{ return buildToken(DIV, yytext); }
+%										{ return buildToken(MOD, yytext); }
+\?										{ return buildToken(RAND, yytext); }
+=										{ return buildToken(ASS, yytext); }
+&										{ return buildToken(AND, yytext); }
+\|										{ return buildToken(OR, yytext); }
+!										{ return buildToken(NOT, yytext); }
+[;,:\[\]\(\){}]							{ return yytext[0]; }
 [a-zA-Z_][a-zA-Z_0-9]*					{ return buildToken(ID, yytext); }
 [0-9]+									{ return buildToken(NUMCONST, yytext); }
 '([^\n\\']|\\.)*'						{ return buildToken(CHARCONST, yytext); }

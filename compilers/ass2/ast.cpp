@@ -106,7 +106,7 @@ FunDeclaration::FunDeclaration(TokenData *n, AST *p, AST *s) {
 		params = (Params *)p;
 	else
 		params = NULL;
-	statement = NULL; // statement = (Statement *)s;
+	statement = s;
 	type = (char *)"void";	
 }
 
@@ -118,6 +118,8 @@ void FunDeclaration::print() {
 	printf("Func %s returns type %s [line: %d]\n", name, type, line);
 	if(params != NULL)
 		params->print();
+	if(statement != NULL)
+		statement->print();
 }
 
 // ParamList
@@ -152,4 +154,119 @@ void Params::appendToChild(AST *node) {
 
 void Params::print() {
 	child->print();
+}
+
+// CompoundStatement
+
+CompoundStatement::CompoundStatement(int l, AST *vars, AST *stmts) {
+	line = l;
+	localDeclarations = vars;
+	statementList = stmts;
+}
+
+void CompoundStatement::print() {
+	printf("Compound [line: %d]\n", line);
+	// print children
+	if(localDeclarations != NULL)
+		localDeclarations->print();
+	if(statementList != NULL)
+		statementList->print();
+}
+
+// If
+
+If::If(int l, AST *c, AST *i) {
+	line = l;
+	condition = c;
+	ifStmt = i;
+}
+
+If::If(int l, AST *c, AST *i, AST *e): If(l, c, i) {
+	elseStmt = e;
+}
+
+void If::print() {
+	printf("If [line: %d]\n", line);
+	condition->print();
+	if(ifStmt != NULL)
+		ifStmt->print();
+	if(elseStmt != NULL)
+		elseStmt->print();
+}
+
+// Relation
+
+Relation::Relation(TokenData *data, AST *l, AST *r) {
+	type = data->tokenClass;
+	left = l;
+	right = r;
+	str = strdup(data->tokenString);
+	line = data->line;
+}
+
+void Relation::print() {
+	printf("Op: %s [line: %d]\n", str, line);
+	left->print();
+	right->print();
+}
+
+// Logic Expression
+
+LogicExpression::LogicExpression(TokenData *data, AST *l, AST *r): LogicExpression(data, l) {
+	right = r;
+}
+
+LogicExpression::LogicExpression(TokenData *data, AST *c) {
+	left = c;
+	type = data->tokenClass;
+	str = strdup(data->tokenString);
+	line = data->line;
+}
+
+void LogicExpression::print() {
+	printf("Op: %s [line: %d]\n", str, line);
+	left->print();
+	if(right != NULL)
+		right->print();
+}
+
+// Operation
+
+Operation::Operation(TokenData *data, AST *c) {
+	left = c;
+	type = data->tokenClass;
+	str = strdup(data->tokenString);
+	line = data->line;
+}
+
+Operation::Operation(TokenData *data, AST *l, AST *r): Operation(data, l) {
+	right = r;
+}
+
+void Operation::print() {
+	printf("Op: %s [line %d]\n", str, line);
+	left->print();
+	if(right != NULL)
+		right->print();
+}
+
+// VarAccess
+
+VarAccess::VarAccess(TokenData *data) {
+	name = strdup(data->tokenString);
+	isArray = false;
+	line = data->line;
+}
+
+VarAccess::VarAccess(AST *mut, AST *loc) {
+	//name = strdup(data->tokenString);
+	//line = data->line;
+	location = loc;
+	isArray = true;
+}
+
+void VarAccess::print() {
+	printf("Id: %s [line: %d]\n", name, line);
+	if(location != NULL)
+		location->print();
 }
