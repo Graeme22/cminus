@@ -1,50 +1,37 @@
 #ifndef _AST_H_
 #define _AST_H_
 
-#include <vector>
-#include <iostream>
+#define MAXCHILDREN 3
+
 #include <string>
-#include <string.h>
-#include "scanType.h"
 
-class AST {
-
-protected:
-	std::vector<AST *> children;
-	int depth = 0;
+class TreeNode {
 
 public:
-	AST();
-	AST(AST *);
-	virtual ~AST() {}
-	virtual void print(int);
-	virtual void append(AST *);
-	void printPrefix();
+	TreeNode *children[MAXCHILDREN];
+	TreeNode *sibling;
 
-};
-
-class VarDeclId: public AST {
-
-	bool isArray;
-	int arraySize;
-
-public:
-	char *name;
-	VarDeclId(TokenData *);
-	VarDeclId(TokenData *, int);
-
-};
-
-class VarDeclaration: public AST {
-
-	char *type;
-	std::vector<VarDeclId *> vars;
 	int line;
+	NodeKind nodeKind;
+	union {
+		DeclKind decl;
+		StmtKind stmt;
+		ExpKind exp;
+	} kind;
 
-public:
-	VarDeclaration(TokenData *);
-	virtual void print(int);
-	void append(VarDeclId *);
+	// extra info
+	union {
+		OpKind op;
+		int nValue;
+		char cValue;
+		std::string sValue;
+		char *name;
+	} attr;
+	ExpType expType;
+	bool isArray;
+	bool isStatic;
+
+	void addSibling(TreeNode *);
 
 };
 

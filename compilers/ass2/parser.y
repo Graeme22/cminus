@@ -16,12 +16,13 @@ void yyerror(const char *msg) {
 	printf("Error: %s while parsing `%s` on line %d.\n", msg, yytext, yylineno);
 }
 
-AST *tree;
+TreeNode *tree;
 %}
 
 %union {
-	AST *node;
+	ExpType type;
 	TokenData *tokenData;
+	TreeNode *node;
 }
 
 %token <tokenData> BOOLCONST NUMCONST CHARCONST STRINGCONST ID
@@ -69,7 +70,7 @@ variables
 */
 varDeclaration : typeSpecifier varDeclList ';'
 	{
-		$$ = new VarDeclaration($1);
+		$$ = new VarDeclaration($1, $2);
 	}
 	;
 scopedVarDeclaration : STATIC typeSpecifier varDeclList ';'
@@ -80,21 +81,27 @@ varDeclList : varDeclList ',' varDeclInitialize
 	}
 	| varDeclInitialize
 	{
-		$$ = new VarDeclList();
+		$$ = new AST();
+		$$->append($1);
 	}
 	;
 varDeclInitialize : varDeclId
 	{
 		$$ = $1;
 	}
-	| varDeclId ':' simpleExpression;
+	| varDeclId ':' simpleExpression
+	{
+		$$ = $1; // TODO: make this work
+	}
+	;
 varDeclId : ID
 	{
-		$$ = new VarDeclId($1);
+		$$ = $1;
 	}
 	| ID '[' NUMCONST ']'
 	{
-		$$ = new VarDeclId($1, $3->nValue);
+		$$ = $1;
+		//$$ = new VarDeclId($1, $3->nValue);
 	}
 	;
 typeSpecifier : INT
@@ -263,7 +270,7 @@ int main(int argc, char *argv[]) {
 		yyparse();
 
 	if(pflag)
-		tree->print(0);
+		tree->print();
 
 	return 0;
 }
