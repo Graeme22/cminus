@@ -21,4 +21,4 @@ tar :
 	tar -cvf $(BIN).tar $(BIN).y $(BIN).l $(INCLUDES) $(LIBS) makefile
 
 clean :
-	rm $(BIN).tab.c $(BIN).tab.h lex.yy.c $(OUT) $(BIN).output output.txt
+	rm $(BIN).tab.c $(BIN).tab.h lex.yy.c $(OUT) $(BIN).output

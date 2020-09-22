@@ -16,13 +16,12 @@ void yyerror(const char *msg) {
 	printf("Error: %s while parsing `%s` on line %d.\n", msg, yytext, yylineno);
 }
 
-TreeNode *tree;
+AST *tree;
 %}
 
 %union {
-	ExpType type;
 	TokenData *tokenData;
-	TreeNode *node;
+	AST *ast;
 }
 
 %token <tokenData> BOOLCONST NUMCONST CHARCONST STRINGCONST ID
@@ -30,14 +29,13 @@ TreeNode *tree;
 %token <tokenData> EQ ADDASS SUBASS DIVASS MULASS LEQ GEQ NEQ DEC INC
 %start declarationList
 
-%type <node> declarationList declaration varDeclaration scopedVarDeclaration varDeclList varDeclInitialize varDeclId
-%type <node> funDeclaration params paramList paramTypeList paramIdList paramId statement matched unmatched expressionStmt
-%type <node> compoundStmt localDeclarations statementList matchedSelectionStmt unmatchedSelectionStmt matchedIterationStmt
-%type <node> unmatchedIterationStmt returnStmt breakStmt expression simpleExpression andExpression unaryRelExpression
-%type <node> relExpression sumExpression sumop mulExpression mulop unaryExpression unaryop factor
-%type <node> mutable immutable call args argList
-
-%type <tokenData> typeSpecifier constant
+%type <ast> declarationList declaration varDeclaration scopedVarDeclaration varDeclList varDeclInitialize varDeclId
+%type <ast> funDeclaration params paramList paramTypeList paramIdList paramId statement matched unmatched expressionStmt
+%type <ast> compoundStmt localDeclarations statementList matchedSelectionStmt unmatchedSelectionStmt matchedIterationStmt
+%type <ast> unmatchedIterationStmt returnStmt breakStmt expression simpleExpression andExpression unaryRelExpression
+%type <ast> relExpression sumExpression sumop mulExpression mulop unaryExpression unaryop factor
+%type <ast> mutable immutable call args argList
+%type <tokenData> constant typeSpecifier
 
 %%
 /*
@@ -74,15 +72,21 @@ varDeclaration : typeSpecifier varDeclList ';'
 	}
 	;
 scopedVarDeclaration : STATIC typeSpecifier varDeclList ';'
-		     | typeSpecifier varDeclList ';';
+	{
+		$$ = new ScopedVarDeclaration($2, $3, true);
+	}
+	| typeSpecifier varDeclList ';'
+	{
+		$$ = new ScopedVarDeclaration($1, $2, false);
+	}
+	;
 varDeclList : varDeclList ',' varDeclInitialize
 	{
 		$$->append($3);
 	}
 	| varDeclInitialize
 	{
-		$$ = new AST();
-		$$->append($1);
+		$$ = new VarList($1);
 	}
 	;
 varDeclInitialize : varDeclId
@@ -91,17 +95,17 @@ varDeclInitialize : varDeclId
 	}
 	| varDeclId ':' simpleExpression
 	{
-		$$ = $1; // TODO: make this work
+		$$ = $1;
+		$$->append($3); // TODO: test this
 	}
 	;
 varDeclId : ID
 	{
-		$$ = $1;
+		$$ = new Var($1);
 	}
 	| ID '[' NUMCONST ']'
 	{
-		$$ = $1;
-		//$$ = new VarDeclId($1, $3->nValue);
+		$$ = new Var($1, $3);
 	}
 	;
 typeSpecifier : INT
@@ -123,29 +127,95 @@ functions
 
 */
 funDeclaration : typeSpecifier ID '(' params ')' statement
-	       | ID '(' params ')' statement;
+	{
+		$$ = new FunDeclaration($1, $2, $4, $6);
+	}
+	| ID '(' params ')' statement
+	{
+		$$ = new FunDeclaration($1, $3, $5);
+	}
+	;
 params : paramList
-       | ;
+	{
+		$$ = $1;
+	}
+    | /* empty */
+	{
+		$$ = NULL;
+	}
+	;
 paramList : paramList ';' paramTypeList
-	  | paramTypeList;
-paramTypeList : typeSpecifier paramIdList;
+	{
+		((Params *)$$)->appendToChild($3);
+	}
+	| paramTypeList
+	{
+		$$ = new Params($1);
+	}
+	;
+paramTypeList : typeSpecifier paramIdList
+	{
+		$$ = $2;
+		((ParamList *)$$)->setType($1);
+	}
+	;
 paramIdList : paramIdList ',' paramId
-	    | paramId;
+	{
+		((ParamList *)$$)->appendToChild($3);
+	}
+	| paramId
+	{
+		$$ = new ParamList($1);
+	}
+	;
 paramId : ID
-	| ID '[' ']';
+	{
+		$$ = new Par($1, false);
+	}
+	| ID '[' ']'
+	{
+		$$ = new Par($1, true);
+	}
+	;
 /*
 
 	statements
 
 */
 statement : matched
-	  | unmatched;
+	{
+		$$ = $1;
+	}
+	| unmatched
+	{
+		$$ = $1;
+	}
+	;
 matched : expressionStmt
+	{
+		$$ = $1;
+	}
 	| compoundStmt
+	{
+		$$ = $1;
+	}
 	| matchedSelectionStmt
+	{
+		$$ = $1;
+	}
 	| matchedIterationStmt
+	{
+		$$ = $1;
+	}
 	| returnStmt
-	| breakStmt;
+	{
+		$$ = $1;
+	}
+	| breakStmt
+	{
+		$$ = $1;
+	}
+	;
 unmatched : unmatchedSelectionStmt
 	  | unmatchedIterationStmt;
 expressionStmt : expression ';'
