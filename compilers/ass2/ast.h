@@ -11,9 +11,11 @@ protected:
 	AST *sibling;
 
 public:
+	int depth;
 	AST();
 	virtual void print();
 	virtual void append(AST *);
+	void printPrefix();
 
 };
 
@@ -23,10 +25,12 @@ class Var: public AST {
 	int arraySize;
 	int line;
 	char *name;
+	AST *value;
 
 public:
 	Var(TokenData *);
 	Var(TokenData *, TokenData *);
+	void setValue(AST *);
 	virtual void print(char *);
 
 };
@@ -195,11 +199,68 @@ class VarAccess: public AST {
 	bool isArray;
 	int line;
 	// this needs to be an int when we get to type checking
-	AST *location;
+	AST *var;
+	AST *loc;
 
 public:
 	VarAccess(TokenData *);
-	VarAccess(AST *, AST *);
+	VarAccess(int, AST *, AST *);
+	virtual void print();
+
+};
+
+class While: public AST {
+
+	int line;
+	AST *condition;
+	AST *statement;
+
+public:
+	While(int, AST *, AST *);
+	virtual void print();
+
+};
+
+class Constant: public AST {
+
+	TokenData *data;
+
+public:
+	Constant(TokenData *);
+	virtual void print();
+
+};
+
+class Break: public AST {
+
+	int line;
+
+public:
+	Break(int);
+	virtual void print();
+
+};
+
+class Call: public AST {
+
+	char *name;
+	AST *args;
+	int line;
+
+public:
+	Call(TokenData *, AST *);
+	virtual void print();
+
+};
+
+class Return: public AST {
+
+	AST *stmt;
+	int line;
+
+public:
+	Return(int);
+	Return(int, AST *);
 	virtual void print();
 
 };

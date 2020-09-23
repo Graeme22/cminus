@@ -36,9 +36,8 @@ AST *tree;
 %type <ast> funDeclaration params paramList paramTypeList paramIdList paramId statement matched unmatched expressionStmt
 %type <ast> compoundStmt localDeclarations statementList matchedSelectionStmt unmatchedSelectionStmt matchedIterationStmt
 %type <ast> unmatchedIterationStmt returnStmt breakStmt expression simpleExpression andExpression unaryRelExpression
-%type <ast> relExpression sumExpression sumop mulExpression mulop unaryExpression unaryop factor
-%type <ast> mutable immutable call args argList
-%type <tokenData> constant typeSpecifier relop
+%type <ast> relExpression sumExpression mulExpression unaryExpression factor mutable immutable call args argList
+%type <tokenData> constant typeSpecifier relop unaryop mulop sumop
 
 %%
 /*
@@ -99,7 +98,7 @@ varDeclInitialize : varDeclId
 	| varDeclId ':' simpleExpression
 	{
 		$$ = $1;
-		$$->append($3); // TODO: test this
+		((Var *)$$)->setValue($3);
 	}
 	;
 varDeclId : ID
@@ -275,12 +274,37 @@ unmatchedSelectionStmt : IF '(' simpleExpression ')' statement
 	}
 	;
 matchedIterationStmt : WHILE '(' simpleExpression ')' matched
-	| FOR '(' ID IN ID ')' matched;
+	{
+		$$ = new While(@1.first_line, $3, $5);
+	}
+	| FOR '(' ID IN ID ')' matched
+	{
+		// implement this
+	}
+	;
 unmatchedIterationStmt : WHILE '(' simpleExpression ')' unmatched
-	| FOR '(' ID IN ID ')' unmatched;
+	{
+		$$ = new While(@1.first_line, $3, $5);
+	}
+	| FOR '(' ID IN ID ')' unmatched
+	{
+		// implement this
+	}
+	;
 returnStmt : RETURN ';'
-	| RETURN expression ';';
-breakStmt : BREAK ';';
+	{
+		$$ = new Return(@1.first_line);
+	}
+	| RETURN expression ';'
+	{
+		$$ = new Return(@1.first_line, $2);
+	}
+	;
+breakStmt : BREAK ';'
+	{
+		$$ = new Break(@1.first_line);
+	}
+	;
 /*
 
 expressions
@@ -381,39 +405,122 @@ relop : LEQ
 	}
 	;
 sumExpression : sumExpression sumop mulExpression
-	| mulExpression;
+	{
+		$$ = new Operation($2, $1, $3);
+	}
+	| mulExpression
+	{
+		$$ = $1;
+	}
+	;
 sumop : ADD
-    | SUB;
+	{
+		$$ = $1;
+	}
+    | SUB
+	{
+		$$ = $1;
+	}
+	;
 mulExpression : mulExpression mulop unaryExpression
-	| unaryExpression;
+	{
+		$$ = new Operation($2, $1, $3);
+	}
+	| unaryExpression
+	{
+		$$ = $1;
+	}
+	;
 mulop : MUL
+	{
+		$$ = $1;
+	}
     | DIV
-    | MOD;
+	{
+		$$ = $1;
+	}
+    | MOD
+	{
+		$$ = $1;
+	}
+	;
 unaryExpression : unaryop unaryExpression
-	| factor;
+	{
+		// TODO: implement this
+	}
+	| factor
+	{
+		$$ = $1;
+	}
+	;
 unaryop : SUB
+	{
+		$$ = $1;
+	}
 	| MUL
-	| RAND;
+	{
+		$$ = $1;
+	}
+	| RAND
+	{
+		$$ = $1;
+	}
+	;
 factor : immutable
-    | mutable;
+	{
+		$$ = $1;
+	}
+    | mutable
+	{
+		$$ = $1;
+	}
+	;
 mutable : ID
 	{
 		$$ = new VarAccess($1);
 	}
 	| mutable '[' expression ']'
 	{
-		$$ = new VarAccess($1, $3);
+		$$ = new VarAccess(@2.first_line, $1, $3);
 	}
 	;
 immutable : '(' expression ')'
+	{
+		$$ = $2;
+	}
 	| call
-	| constant;
-call : ID '(' args ')';
+	{
+		$$ = $1;
+	}
+	| constant
+	{
+		$$ = new Constant($1);
+	}
+	;
+call : ID '(' args ')'
+	{
+		$$ = new Call($1, $3);
+	}
+	;
 args : argList
+	{
+		$$ = $1;
+	}
     | /* empty */
+	{
+		$$ = NULL;
+	}
 	;
 argList : argList ',' expression
-	| expression;
+	{
+		$$->append($3);
+	}
+	| expression
+	{
+		$$ = new AST();
+		$$->append($1);
+	}
+	;
 constant : NUMCONST
 	{
 		$$ = $1;

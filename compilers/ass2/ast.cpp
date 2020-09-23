@@ -21,6 +21,11 @@ void AST::print() {
 		itr->print();
 }
 
+void AST::printPrefix() {
+	for(int i = 0; i < depth; i++)
+		printf("!   ");
+}
+
 // VarDeclaration
 
 VarDeclaration::VarDeclaration(TokenData *data, AST *node) {
@@ -72,12 +77,19 @@ Var::Var(TokenData *data, TokenData *size): Var(data) {
 }
 
 void Var::print(char *type) {
+	printPrefix();
 	if(isArray)
 		printf("Var %s is array of type %s [line: %d]\n", name, type, line);
 	else
 		printf("Var %s of type %s [line: %d]\n", name, type, line);
+	if(value != NULL)
+		value->print();
 	if(sibling != NULL)
 		((Var *)sibling)->print(type);
+}
+
+void Var::setValue(AST *v) {
+	value = v;
 }
 
 // Par
@@ -89,6 +101,7 @@ Par::Par(TokenData *data, bool toggle) {
 }
 
 void Par::print(char *type) {
+	printPrefix();
 	if(isArray)
 		printf("Param %s is array of type %s [line: %d]\n", name, type, line);
 	else
@@ -115,6 +128,7 @@ FunDeclaration::FunDeclaration(TokenData *t, TokenData *n, AST *p, AST *s): FunD
 }
 
 void FunDeclaration::print() {
+	printPrefix();
 	printf("Func %s returns type %s [line: %d]\n", name, type, line);
 	if(params != NULL)
 		params->print();
@@ -165,6 +179,7 @@ CompoundStatement::CompoundStatement(int l, AST *vars, AST *stmts) {
 }
 
 void CompoundStatement::print() {
+	printPrefix();
 	printf("Compound [line: %d]\n", line);
 	// print children
 	if(localDeclarations != NULL)
@@ -186,6 +201,7 @@ If::If(int l, AST *c, AST *i, AST *e): If(l, c, i) {
 }
 
 void If::print() {
+	printPrefix();
 	printf("If [line: %d]\n", line);
 	condition->print();
 	if(ifStmt != NULL)
@@ -205,6 +221,7 @@ Relation::Relation(TokenData *data, AST *l, AST *r) {
 }
 
 void Relation::print() {
+	printPrefix();
 	printf("Op: %s [line: %d]\n", str, line);
 	left->print();
 	right->print();
@@ -224,6 +241,7 @@ LogicExpression::LogicExpression(TokenData *data, AST *c) {
 }
 
 void LogicExpression::print() {
+	printPrefix();
 	printf("Op: %s [line: %d]\n", str, line);
 	left->print();
 	if(right != NULL)
@@ -244,6 +262,7 @@ Operation::Operation(TokenData *data, AST *l, AST *r): Operation(data, l) {
 }
 
 void Operation::print() {
+	printPrefix();
 	printf("Op: %s [line %d]\n", str, line);
 	left->print();
 	if(right != NULL)
@@ -258,15 +277,91 @@ VarAccess::VarAccess(TokenData *data) {
 	line = data->line;
 }
 
-VarAccess::VarAccess(AST *mut, AST *loc) {
-	//name = strdup(data->tokenString);
-	//line = data->line;
-	location = loc;
+VarAccess::VarAccess(int l, AST *v, AST *l2) {
+	line = l;
+	var = v;
+	loc = l2;
 	isArray = true;
 }
 
 void VarAccess::print() {
-	printf("Id: %s [line: %d]\n", name, line);
-	if(location != NULL)
-		location->print();
+	printPrefix();
+	if(var == NULL)
+		printf("Id: %s [line: %d]\n", name, line);
+	else {
+		printf("Op: [ [line: %d]\n", line);
+		var->print();
+		loc->print();
+	}
+}
+
+// While
+
+While::While(int l, AST *cond, AST *stmt) {
+	line = l;
+	condition = cond;
+	statement = stmt;
+}
+
+void While::print() {
+	printPrefix();
+	printf("While [line: %d]\n", line);
+	condition->print();
+	if(statement != NULL)
+		statement->print();
+}
+
+// Constant
+
+Constant::Constant(TokenData *td) {
+	data = td;
+}
+
+void Constant::print() {
+	printPrefix();
+	printf("Const: %s [line: %d]\n", data->tokenString, data->line);
+}
+
+// Break
+
+Break::Break(int l) {
+	line = l;
+}
+
+void Break::print() {
+	printPrefix();
+	printf("Break [line: %d]\n", line);
+}
+
+// Call
+
+Call::Call(TokenData *data, AST *a) {
+	name = strdup(data->tokenString);
+	line = data->line;
+	args = a;
+}
+
+void Call::print() {
+	printPrefix();
+	printf("Call: %s [line: %d]\n", name, line);
+	if(args != NULL)
+		args->print();
+}
+
+// Return
+
+Return::Return(int l) {
+	line = l;
+}
+
+Return::Return(int l, AST *s) {
+	stmt = s;
+	line = l;
+}
+
+void Return::print() {
+	printPrefix();
+	printf("Return [line: %d]\n", line);
+	if(stmt != NULL)
+		stmt->print();
 }
