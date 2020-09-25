@@ -5,6 +5,10 @@
 #include "ourgetopt.h"
 #include "scanType.h"
 #include "ast.h"
+#include "exp.h"
+#include "var.h"
+#include "fun.h"
+#include "stmt.h"
 #include "parser.tab.h"
 
 extern int yylex();
@@ -279,7 +283,7 @@ matchedIterationStmt : WHILE '(' simpleExpression ')' matched
 	}
 	| FOR '(' ID IN ID ')' matched
 	{
-		// implement this
+		$$ = new For(@1.first_line, $3, $5, $7);
 	}
 	;
 unmatchedIterationStmt : WHILE '(' simpleExpression ')' unmatched
@@ -288,7 +292,7 @@ unmatchedIterationStmt : WHILE '(' simpleExpression ')' unmatched
 	}
 	| FOR '(' ID IN ID ')' unmatched
 	{
-		// implement this
+		$$ = new For(@1.first_line, $3, $5, $7);
 	}
 	;
 returnStmt : RETURN ';'
@@ -446,7 +450,7 @@ mulop : MUL
 	;
 unaryExpression : unaryop unaryExpression
 	{
-		// TODO: implement this
+		$$ = new Operation($1, $2);
 	}
 	| factor
 	{

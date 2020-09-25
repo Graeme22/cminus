@@ -1,24 +1,27 @@
 BIN = parser
 CC = g++
 OUT = c-
-INCLUDES = ourgetopt.h ast.h scanType.h
+LIBS = ourgetopt.h ast.h scanType.h
 FLAGS = -DCPLUSPLUS -g
-LIBS = ourgetopt.cpp ast.cpp
+OBJS = ourgetopt.o ast.o exp.o stmt.o var.o fun.o
 
-$(BIN) : lex.yy.c $(BIN).tab.c $(BIN).tab.h $(INCLUDES)
-	$(CC) $(FLAGS) lex.yy.c $(BIN).tab.c $(LIBS) -o $(OUT)
+$(BIN) : lex.yy.c $(BIN).tab.c $(BIN).tab.h $(LIBS) $(OBJS)
+	$(CC) $(FLAGS) lex.yy.c $(BIN).tab.c $(OBJS) -o $(OUT)
 
-$(BIN).tab.c $(BIN).tab.h : $(BIN).y $(INCLUDES)
+$(BIN).tab.c $(BIN).tab.h : $(BIN).y $(LIBS)
 	bison -v -t -d $(BIN).y
 
 lex.yy.c : $(BIN).l $(BIN).tab.h scanType.h
 	flex $(BIN).l
 
+%.o: %.c $(LIBS)
+	$(CC) $(FLAGS) -c $<
+
 run :
 	cat test.c- | ./$(OUT) -p
 
 tar :
-	tar -cvf $(BIN).tar $(BIN).y $(BIN).l $(INCLUDES) $(LIBS) makefile
+	tar -cvf $(BIN).tar $(BIN).y $(BIN).l makefile
 
 clean :
-	rm $(BIN).tab.c $(BIN).tab.h lex.yy.c $(OUT) $(BIN).output
+	rm $(BIN).tab.c $(BIN).tab.h lex.yy.c $(OUT) $(BIN).output *.o
