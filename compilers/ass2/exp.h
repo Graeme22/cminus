@@ -6,8 +6,6 @@
 
 class Relation: public AST {
 
-	AST *left;
-	AST *right;
 	int type;
 	char *str;
 	int line;
@@ -20,8 +18,6 @@ public:
 
 class LogicExpression: public AST {
 
-	AST *left;
-	AST *right;
 	int type;
 	char *str;
 	int line;
@@ -35,8 +31,6 @@ public:
 
 class Operation: public AST {
 
-	AST *left;
-	AST *right;
 	int type;
 	char *str;
 	int line;

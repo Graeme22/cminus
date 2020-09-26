@@ -74,16 +74,19 @@ variables
 */
 varDeclaration : typeSpecifier varDeclList ';'
 	{
-		$$ = new VarDeclaration($1, $2);
+		$$ = $2;
+		((Var *)$$)->setTypeAndStatic($1->tokenString, false);
 	}
 	;
 scopedVarDeclaration : STATIC typeSpecifier varDeclList ';'
 	{
-		$$ = new ScopedVarDeclaration($2, $3, true);
+		$$ = $3;
+		((Var *)$$)->setTypeAndStatic($2->tokenString, true);
 	}
 	| typeSpecifier varDeclList ';'
 	{
-		$$ = new ScopedVarDeclaration($1, $2, false);
+		$$ = $2;
+		((Var *)$$)->setTypeAndStatic($1->tokenString, false);
 	}
 	;
 varDeclList : varDeclList ',' varDeclInitialize
@@ -92,7 +95,7 @@ varDeclList : varDeclList ',' varDeclInitialize
 	}
 	| varDeclInitialize
 	{
-		$$ = new VarList($1);
+		$$ = $1;
 	}
 	;
 varDeclInitialize : varDeclId
@@ -102,7 +105,7 @@ varDeclInitialize : varDeclId
 	| varDeclId ':' simpleExpression
 	{
 		$$ = $1;
-		((Var *)$$)->setValue($3);
+		((Var *)$$)->addChild($3);
 	}
 	;
 varDeclId : ID
@@ -152,26 +155,26 @@ params : paramList
 	;
 paramList : paramList ';' paramTypeList
 	{
-		((Params *)$$)->appendToChild($3);
+		$$->append($3);
 	}
 	| paramTypeList
 	{
-		$$ = new Params($1);
+		$$ = $1;
 	}
 	;
 paramTypeList : typeSpecifier paramIdList
 	{
 		$$ = $2;
-		((ParamList *)$$)->setType($1);
+		((Par *)$$)->setType($1->tokenString);
 	}
 	;
 paramIdList : paramIdList ',' paramId
 	{
-		((ParamList *)$$)->appendToChild($3);
+		$$->append($3);
 	}
 	| paramId
 	{
-		$$ = new ParamList($1);
+		$$ = $1;
 	}
 	;
 paramId : ID
@@ -517,12 +520,11 @@ args : argList
 	;
 argList : argList ',' expression
 	{
-		$$->append($3);
+		$$->addChild($3);
 	}
 	| expression
 	{
-		$$ = new AST();
-		$$->append($1);
+		$$ = $1;
 	}
 	;
 constant : NUMCONST
@@ -575,6 +577,8 @@ int main(int argc, char *argv[]) {
 		fclose(yyin);
 	} else
 		yyparse();
+
+	tree->propogateInfo();
 
 	if(pflag)
 		tree->print();

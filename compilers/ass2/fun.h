@@ -9,33 +9,11 @@ class Par: public AST {
 	bool isArray;
 	int line;
 	char *name;
-
-public:
-	Par(TokenData *, bool);
-	virtual void print(char *);
-
-};
-
-class ParamList: public AST {
-
-	Par *child;
 	char *type;
 
 public:
-	ParamList(AST *);
-	virtual void appendToChild(AST *);
-	void setType(TokenData *);
-	virtual void print();
-
-};
-
-class Params: public AST {
-
-	ParamList *child;
-
-public:
-	Params(AST *);
-	virtual void appendToChild(AST *);
+	Par(TokenData *, bool);
+	void setType(char *);
 	virtual void print();
 
 };
@@ -45,8 +23,6 @@ class FunDeclaration: public AST {
 	char *type;
 	char *name;
 	int line;
-	Params *params;
-	AST *statement;
 
 public:
 	FunDeclaration(TokenData *, TokenData *, AST *, AST *);
@@ -58,7 +34,6 @@ public:
 class Call: public AST {
 
 	char *name;
-	AST *args;
 	int line;
 
 public:

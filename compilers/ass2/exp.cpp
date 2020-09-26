@@ -2,58 +2,56 @@
 
 // Relation
 
-Relation::Relation(TokenData *data, AST *l, AST *r) {
+Relation::Relation(TokenData *data, AST *left, AST *right) {
 	type = data->tokenClass;
-	left = l;
-	right = r;
+	addChild(left);
+	addChild(right);
 	str = strdup(data->tokenString);
 	line = data->line;
 }
 
 void Relation::print() {
+	printPrefix();
 	printf("Op: %s [line: %d]\n", str, line);
-	left->print();
-	right->print();
+	AST::print();
 }
 
 // Logic Expression
 
-LogicExpression::LogicExpression(TokenData *data, AST *l, AST *r): LogicExpression(data, l) {
-	right = r;
+LogicExpression::LogicExpression(TokenData *data, AST *left, AST *right): LogicExpression(data, left) {
+	addChild(right);
 }
 
-LogicExpression::LogicExpression(TokenData *data, AST *c) {
-	left = c;
+LogicExpression::LogicExpression(TokenData *data, AST *left) {
+	addChild(left);
 	type = data->tokenClass;
 	str = strdup(data->tokenString);
 	line = data->line;
 }
 
 void LogicExpression::print() {
+	printPrefix();
 	printf("Op: %s [line: %d]\n", str, line);
-	left->print();
-	if(right != NULL)
-		right->print();
+	AST::print();
 }
 
 // Operation
 
-Operation::Operation(TokenData *data, AST *c) {
-	left = c;
+Operation::Operation(TokenData *data, AST *left) {
+	addChild(left);
 	type = data->tokenClass;
 	str = strdup(data->tokenString);
 	line = data->line;
 }
 
-Operation::Operation(TokenData *data, AST *l, AST *r): Operation(data, l) {
-	right = r;
+Operation::Operation(TokenData *data, AST *left, AST *right): Operation(data, left) {
+	addChild(right);
 }
 
 void Operation::print() {
+	printPrefix();
 	printf("Op: %s [line %d]\n", str, line);
-	left->print();
-	if(right != NULL)
-		right->print();
+	AST::print();
 }
 
 // Constant
@@ -63,5 +61,6 @@ Constant::Constant(TokenData *td) {
 }
 
 void Constant::print() {
+	printPrefix();
 	printf("Const: %s [line: %d]\n", data->tokenString, data->line);
 }

@@ -3,17 +3,23 @@
 
 #include <vector>
 #include <string.h>
+#include <stdio.h>
 
 class AST {
 
 protected:
 	std::vector<AST *> children;
 	AST *sibling;
+	int depth;
+	bool isChild;
 
 public:
 	AST();
 	virtual void print();
-	virtual void append(AST *);
+	void append(AST *);
+	void addChild(AST *);
+	void printPrefix();
+	void propogateInfo();
 
 };
 

@@ -1,50 +1,12 @@
 #include "var.h"
 
-// VarDeclaration
-
-VarDeclaration::VarDeclaration(TokenData *data, AST *node) {
-	type = strdup(data->tokenString);
-	children.push_back(node);
-}
-
-void VarDeclaration::print() {
-	((VarList *)children[0])->print(type);
-	if(sibling != NULL)
-		sibling->print();
-}
-
-// ScopedVarDeclaration
-
-ScopedVarDeclaration::ScopedVarDeclaration(TokenData *data, AST *node, bool toggle) {
-	type = strdup(data->tokenString);
-	child = (VarList *)node;
-	isStatic = toggle;
-}
-
-void ScopedVarDeclaration::print() {
-	child->print(type);
-}
-
-// VarList
-
-VarList::VarList(AST *node) {
-	child = (Var *)node;
-}
-
-void VarList::print(char *type) {
-	child->print(type);
-}
-
-void VarList::append(AST *node) {
-	child->append(node);
-}
-
 // Var
 
 Var::Var(TokenData *data) {
 	name = strdup(data->tokenString);
 	line = data->line;
 	isArray = false;
+	isStatic = false;
 }
 
 Var::Var(TokenData *data, TokenData *size): Var(data) {
@@ -52,19 +14,21 @@ Var::Var(TokenData *data, TokenData *size): Var(data) {
 	isArray = true;
 }
 
-void Var::print(char *type) {
+void Var::print() {
+	// add static in here
+	printPrefix();
 	if(isArray)
 		printf("Var %s is array of type %s [line: %d]\n", name, type, line);
 	else
 		printf("Var %s of type %s [line: %d]\n", name, type, line);
-	if(value != NULL)
-		value->print();
-	if(sibling != NULL)
-		((Var *)sibling)->print(type);
+	AST::print();
 }
 
-void Var::setValue(AST *v) {
-	value = v;
+void Var::setTypeAndStatic(char *t, bool s) {
+	type = strdup(t);
+	isStatic = s;
+	if(sibling != NULL)
+		((Var *)sibling)->setTypeAndStatic(t, s);
 }
 
 // VarAccess
@@ -75,19 +39,18 @@ VarAccess::VarAccess(TokenData *data) {
 	line = data->line;
 }
 
-VarAccess::VarAccess(int l, AST *v, AST *l2) {
+VarAccess::VarAccess(int l, AST *var, AST *loc) {
 	line = l;
-	var = v;
-	loc = l2;
+	addChild(var);
+	addChild(loc);
 	isArray = true;
 }
 
 void VarAccess::print() {
-	if(var == NULL)
+	printPrefix();
+	if(children.empty())
 		printf("Id: %s [line: %d]\n", name, line);
-	else {
+	else
 		printf("Op: [ [line: %d]\n", line);
-		var->print();
-		loc->print();
-	}
+	AST::print();
 }

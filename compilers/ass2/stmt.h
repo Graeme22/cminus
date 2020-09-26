@@ -7,8 +7,6 @@
 
 class CompoundStatement: public AST {
 
-	AST *localDeclarations;
-	AST *statementList;
 	int line;
 
 public:
@@ -19,9 +17,6 @@ public:
 
 class If: public AST {
 
-	AST *ifStmt;
-	AST *elseStmt;
-	AST *condition;
 	int line;
 
 public:
@@ -36,8 +31,6 @@ public:
 class While: public AST {
 
 	int line;
-	AST *condition;
-	AST *statement;
 
 public:
 	While(int, AST *, AST *);
@@ -47,7 +40,6 @@ public:
 
 class Return: public AST {
 
-	AST *stmt;
 	int line;
 
 public:
@@ -59,10 +51,9 @@ public:
 
 class For: public AST {
 
-	AST *child1;
-	AST *child2;
 	int line;
-	AST *stmt;
+	char *iterator;
+	char *array;
 
 public:
 	For(int, TokenData *, TokenData *, AST *);

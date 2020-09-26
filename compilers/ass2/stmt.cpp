@@ -4,53 +4,46 @@
 
 CompoundStatement::CompoundStatement(int l, AST *vars, AST *stmts) {
 	line = l;
-	localDeclarations = vars;
-	statementList = stmts;
+	addChild(vars);
+	addChild(stmts);
 }
 
 void CompoundStatement::print() {
+	printPrefix();
 	printf("Compound [line: %d]\n", line);
-	// print children
-	if(localDeclarations != NULL)
-		localDeclarations->print();
-	if(statementList != NULL)
-		statementList->print();
+	AST::print();
 }
 
 // If
 
-If::If(int l, AST *c, AST *i) {
+If::If(int l, AST *condition, AST *stmt) {
 	line = l;
-	condition = c;
-	ifStmt = i;
+	addChild(condition);
+	addChild(stmt);
 }
 
-If::If(int l, AST *c, AST *i, AST *e): If(l, c, i) {
-	elseStmt = e;
+If::If(int l, AST *condition, AST *stmt, AST *elseStmt): If(l, condition, stmt) {
+	addChild(elseStmt);
 }
 
 void If::print() {
+	printPrefix();
 	printf("If [line: %d]\n", line);
-	condition->print();
-	if(ifStmt != NULL)
-		ifStmt->print();
-	if(elseStmt != NULL)
-		elseStmt->print();
+	AST::print();
 }
 
 // While
 
 While::While(int l, AST *cond, AST *stmt) {
 	line = l;
-	condition = cond;
-	statement = stmt;
+	addChild(cond);
+	addChild(stmt);
 }
 
 void While::print() {
+	printPrefix();
 	printf("While [line: %d]\n", line);
-	condition->print();
-	if(statement != NULL)
-		statement->print();
+	AST::print();
 }
 
 // Break
@@ -60,6 +53,7 @@ Break::Break(int l) {
 }
 
 void Break::print() {
+	printPrefix();
 	printf("Break [line: %d]\n", line);
 }
 
@@ -69,30 +63,28 @@ Return::Return(int l) {
 	line = l;
 }
 
-Return::Return(int l, AST *s) {
-	stmt = s;
+Return::Return(int l, AST *stmt) {
+	addChild(stmt);
 	line = l;
 }
 
 void Return::print() {
+	printPrefix();
 	printf("Return [line: %d]\n", line);
-	if(stmt != NULL)
-		stmt->print();
+	AST::print();
 }
 
 // For
 
-For::For(int l, TokenData *data1, TokenData *data2, AST *s) {
+For::For(int l, TokenData *itr, TokenData *arr, AST *stmt) {
 	line = l;
-	child1 = new Var(data1);
-	child2 = new Var(data2);
-	stmt = s;
+	iterator = strdup(itr->tokenString);
+	array = strdup(arr->tokenString);
+	addChild(stmt);
 }
 
 void For::print() {
+	printPrefix();
 	printf("For [line: %d]\n", line);
-	child1->print();
-	child2->print();
-	if(stmt != NULL)
-		stmt->print();
+	AST::print();
 }
