@@ -22,7 +22,8 @@ void AST::append(AST *node) {
 }
 
 void AST::addChild(AST *node) {
-	children.push_back(node);
+	if(node != NULL)
+		children.push_back(node);
 }
 
 void AST::printPrefix() {

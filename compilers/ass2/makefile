@@ -17,9 +17,6 @@ lex.yy.c : $(BIN).l $(BIN).tab.h scanType.h
 %.o: %.c $(LIBS)
 	$(CC) $(FLAGS) -c $<
 
-run :
-	cat test.c- | ./$(OUT) -p
-
 tar :
 	tar -cvf $(BIN).tar $(BIN).y $(BIN).l makefile
 
