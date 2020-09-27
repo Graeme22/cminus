@@ -2,10 +2,11 @@
 
 // CompoundStatement
 
-CompoundStatement::CompoundStatement(int l, AST *vars, AST *stmts) {
+CompoundStatement::CompoundStatement(int l, AST *vars, AST *stmt) {
 	line = l;
-	addChild(vars);
-	addChild(stmts);
+	// append because list has a child and is hidden
+	append(vars);
+	append(stmt);
 }
 
 void CompoundStatement::print() {

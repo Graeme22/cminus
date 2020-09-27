@@ -50,7 +50,10 @@ Operation::Operation(TokenData *data, AST *left, AST *right): Operation(data, le
 
 void Operation::print() {
 	printPrefix();
-	printf("Op: %s [line %d]\n", str, line);
+	if(strcmp(str, "=") == 0)
+		printf("Assign: %s [line %d]\n", str, line);
+	else
+		printf("Op: %s [line %d]\n", str, line);
 	AST::print();
 }
 

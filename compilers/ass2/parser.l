@@ -120,7 +120,7 @@ static int buildToken(int tokenClass, char *tokenString) {
 "else"									{ return buildToken(ELSE, yytext); }
 "return"								{ return buildToken(RETURN, yytext); }
 "break"									{ return buildToken(BREAK, yytext); }
-"true"|"false"								{ return buildToken(BOOLCONST, yytext); }
+"true"|"false"							{ return buildToken(BOOLCONST, yytext); }
 "=="									{ return buildToken(EQ, yytext); }
 "+="									{ return buildToken(ADDASS, yytext); }
 "-="									{ return buildToken(SUBASS, yytext); }
@@ -132,23 +132,23 @@ static int buildToken(int tokenClass, char *tokenString) {
 "--"									{ return buildToken(DEC, yytext); }
 "++"									{ return buildToken(INC, yytext); }
 "//".*									;
-\+									{ return buildToken(ADD, yytext); }
-\-									{ return buildToken(SUB, yytext); }
-\<									{ return buildToken(LT, yytext); }
-\>									{ return buildToken(GT, yytext); }
-\*									{ return buildToken(MUL, yytext); }
-\/									{ return buildToken(DIV, yytext); }
-%									{ return buildToken(MOD, yytext); }
-\?									{ return buildToken(RAND, yytext); }
-=									{ return buildToken(ASS, yytext); }
-&									{ return buildToken(AND, yytext); }
-\|									{ return buildToken(OR, yytext); }
-!									{ return buildToken(NOT, yytext); }
-[;,:\[\]\(\){}]								{ return yytext[0]; }
-[a-zA-Z_][a-zA-Z_0-9]*							{ return buildToken(ID, yytext); }
+\+										{ return buildToken(ADD, yytext); }
+\-										{ return buildToken(SUB, yytext); }
+\<										{ return buildToken(LT, yytext); }
+\>										{ return buildToken(GT, yytext); }
+\*										{ return buildToken(MUL, yytext); }
+\/										{ return buildToken(DIV, yytext); }
+%										{ return buildToken(MOD, yytext); }
+\?										{ return buildToken(RAND, yytext); }
+=										{ return buildToken(ASS, yytext); }
+&										{ return buildToken(AND, yytext); }
+\|										{ return buildToken(OR, yytext); }
+!										{ return buildToken(NOT, yytext); }
+[;,:\[\]\(\){}]							{ return yytext[0]; }
+[a-zA-Z_][a-zA-Z_0-9]*					{ return buildToken(ID, yytext); }
 [0-9]+									{ return buildToken(NUMCONST, yytext); }
-'([^\n\\']|\\.)*'							{ return buildToken(CHARCONST, yytext); }
-\"([^\\\"\n]|\\.)*\"							{ return buildToken(STRINGCONST, yytext); }
+'([^\n\\']|\\.)*'						{ return buildToken(CHARCONST, yytext); }
+\"([^\\\"\n]|\\.)*\"					{ return buildToken(STRINGCONST, yytext); }
 [^ \n\t]								{ printf("ERROR(%d): Invalid or misplaced input character: '%c'. Character Ignored.\n", yylineno, yytext[0]); }
 .|\n									;
 %%

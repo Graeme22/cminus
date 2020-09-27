@@ -12,14 +12,22 @@ protected:
 	AST *sibling;
 	int depth;
 	bool isChild;
+	int index;
 
 public:
 	AST();
 	virtual void print();
-	void append(AST *);
+	virtual void append(AST *);
 	void addChild(AST *);
+	void propagateInfo();
 	void printPrefix();
-	void propogateInfo();
+
+};
+
+class List: public AST {
+
+public:
+	virtual void append(AST *);
 
 };
 

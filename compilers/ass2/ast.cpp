@@ -4,7 +4,7 @@
 
 AST::AST() {
 	sibling = NULL;
-	depth = 0;
+	depth = -1;
 	isChild = false;
 }
 
@@ -27,10 +27,10 @@ void AST::addChild(AST *node) {
 void AST::printPrefix() {
 	for(int i = 0; i < depth; i++)
 		printf("!   ");
-	//if(isChild)
-	//	printf("Child: %d  ", 0);
-	//else
-	//	printf("Sibling: %d  ", 0);
+	if(isChild)
+		printf("Child: %d  ", index);
+	else
+		printf("Sibling: %d  ", index);
 }
 
 void AST::print() {
@@ -40,16 +40,30 @@ void AST::print() {
 		sibling->print();
 }
 
-void AST::propogateInfo() {
+void AST::propagateInfo() {
 	for(AST *child : children)
 		child->depth = depth + 1;
 	for(AST *itr = sibling; itr != NULL; itr = itr->sibling)
 		itr->depth = depth;
 
+	int i = 0;
 	for(AST *child : children) {
 		child->isChild = true;
-		child->propogateInfo();
+		child->index = i++;
+		child->propagateInfo();
 	}
-	for(AST *itr = sibling; itr != NULL; itr = itr->sibling)
-		itr->propogateInfo();
+	i = 0;
+	for(AST *itr = sibling; itr != NULL; itr = itr->sibling) {
+		itr->propagateInfo();
+		itr->index = i++;
+	}
+}
+
+// List
+
+void List::append(AST *item) {
+	if(children.empty())
+		addChild(item);
+	else
+		children[0]->append(item);
 }

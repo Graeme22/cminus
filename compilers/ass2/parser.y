@@ -31,7 +31,7 @@ AST *tree;
 }
 
 %token <tokenData> BOOLCONST NUMCONST CHARCONST STRINGCONST ID
-%token <tokenData> IF WHILE FOR STATIC INT BOOL CHAR IN ELSE RETURN BREAK COMMENT
+%token <tokenData> IF WHILE FOR STATIC INT BOOL CHAR IN ELSE RETURN BREAK
 %token <tokenData> EQ ADDASS SUBASS DIVASS MULASS LEQ GEQ NEQ DEC INC
 %token <tokenData> ADD SUB LT GT MUL DIV MOD RAND ASS AND OR NOT
 %start declarationList
@@ -254,7 +254,7 @@ localDeclarations : localDeclarations scopedVarDeclaration
 	}
 	| /* empty */
 	{
-		$$ = new AST();
+		$$ = new List();
 	}
 	;
 statementList : statementList statement
@@ -263,7 +263,7 @@ statementList : statementList statement
 	}
 	| /* empty */
 	{
-		$$ = new AST();
+		$$ = new List();
 	}
 	;
 matchedSelectionStmt : IF '(' simpleExpression ')' matched ELSE matched
@@ -547,7 +547,7 @@ constant : NUMCONST
 %%
 
 int main(int argc, char *argv[]) {
-	tree = new AST();
+	tree = new List();
 
 	// -d: turn on yydebug
 	// -p: print parse tree
@@ -578,7 +578,7 @@ int main(int argc, char *argv[]) {
 	} else
 		yyparse();
 
-	tree->propogateInfo();
+	tree->propagateInfo();
 
 	if(pflag)
 		tree->print();
