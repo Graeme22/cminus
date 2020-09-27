@@ -15,6 +15,12 @@ void CompoundStatement::print() {
 	AST::print();
 }
 
+void CompoundStatement::propagateInfo() {
+	AST::propagateInfo();
+	if(sibling != NULL && sibling->sibling != NULL && !sibling->sibling->children.empty())
+		sibling->sibling->children[0]->index = 1;
+}
+
 // If
 
 If::If(int l, AST *condition, AST *stmt) {

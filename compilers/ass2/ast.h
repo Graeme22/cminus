@@ -8,19 +8,21 @@
 class AST {
 
 protected:
-	std::vector<AST *> children;
-	AST *sibling;
 	int depth;
 	bool isChild;
-	int index;
+	bool isFirst;
 
 public:
+	std::vector<AST *> children;
+	AST *sibling;
+	int index;
 	AST();
 	virtual void print();
 	virtual void append(AST *);
 	void addChild(AST *);
-	void propagateInfo();
-	void printPrefix();
+	void setFirst();
+	virtual void propagateInfo();
+	virtual void printPrefix();
 
 };
 

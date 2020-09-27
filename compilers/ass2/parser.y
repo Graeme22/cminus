@@ -56,6 +56,7 @@ declarationList : declarationList declaration
 	| declaration
 	{
 		tree->append($1);
+		$1->setFirst();
 	}
 	;
 declaration : varDeclaration
@@ -520,7 +521,7 @@ args : argList
 	;
 argList : argList ',' expression
 	{
-		$$->addChild($3);
+		$$->append($3);
 	}
 	| expression
 	{

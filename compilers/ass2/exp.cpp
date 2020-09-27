@@ -51,9 +51,9 @@ Operation::Operation(TokenData *data, AST *left, AST *right): Operation(data, le
 void Operation::print() {
 	printPrefix();
 	if(strcmp(str, "=") == 0)
-		printf("Assign: %s [line %d]\n", str, line);
+		printf("Assign: %s [line: %d]\n", str, line);
 	else
-		printf("Op: %s [line %d]\n", str, line);
+		printf("Op: %s [line: %d]\n", str, line);
 	AST::print();
 }
 
@@ -66,4 +66,5 @@ Constant::Constant(TokenData *td) {
 void Constant::print() {
 	printPrefix();
 	printf("Const: %s [line: %d]\n", data->tokenString, data->line);
+	AST::print();
 }

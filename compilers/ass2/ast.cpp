@@ -6,6 +6,7 @@ AST::AST() {
 	sibling = NULL;
 	depth = -1;
 	isChild = false;
+	isFirst = false;
 }
 
 void AST::append(AST *node) {
@@ -25,6 +26,8 @@ void AST::addChild(AST *node) {
 }
 
 void AST::printPrefix() {
+	if(isFirst)
+		return;
 	for(int i = 0; i < depth; i++)
 		printf("!   ");
 	if(isChild)
@@ -57,6 +60,10 @@ void AST::propagateInfo() {
 		itr->propagateInfo();
 		itr->index = i++;
 	}
+}
+
+void AST::setFirst() {
+	isFirst = true;
 }
 
 // List

@@ -12,6 +12,7 @@ class CompoundStatement: public AST {
 public:
 	CompoundStatement(int, AST *, AST *);
 	virtual void print();
+	virtual void propagateInfo();
 
 };
 
