@@ -7,6 +7,7 @@ Var::Var(TokenData *data) {
 	line = data->line;
 	isArray = false;
 	isStatic = false;
+	type = (char *)"undefined";
 }
 
 Var::Var(TokenData *data, TokenData *size): Var(data) {
@@ -17,10 +18,13 @@ Var::Var(TokenData *data, TokenData *size): Var(data) {
 void Var::print() {
 	// add static in here
 	printPrefix();
-	if(isArray)
-		printf("Var %s is array of type %s [line: %d]\n", name, type, line);
-	else
-		printf("Var %s of type %s [line: %d]\n", name, type, line);
+	if(strcmp(type, "undefined") != 0){
+		if(isArray)
+			printf("Var %s is array of type %s [line: %d]\n", name, type, line);
+		else
+			printf("Var %s of type %s [line: %d]\n", name, type, line);
+	} else
+		printf("Var %s of undefined type [line: %d]\n", name, line);
 	AST::print();
 }
 

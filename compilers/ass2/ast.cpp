@@ -51,7 +51,6 @@ void AST::print() {
 
 void AST::setFirst() {
 	isFirst = true;
-	index = 0;
 }
 
 void AST::propagateInfo() {

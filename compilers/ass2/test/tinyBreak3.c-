@@ -1,6 +1,0 @@
-// C-F20
-main()
-{
-  int x;
-  while (true) for (x in x) if (x>1) break; else break;
-}

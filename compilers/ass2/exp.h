@@ -3,6 +3,8 @@
 
 #include "ast.h"
 #include "scanType.h"
+#include <iostream>
+#include "parser.tab.h"
 
 class Relation: public AST {
 

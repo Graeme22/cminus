@@ -106,7 +106,7 @@ varDeclInitialize : varDeclId
 	| varDeclId ':' simpleExpression
 	{
 		$$ = $1;
-		$$->children[0] = $3;
+		$$->addChild($3, 0);
 	}
 	;
 varDeclId : ID
@@ -549,6 +549,7 @@ constant : NUMCONST
 
 int main(int argc, char *argv[]) {
 	tree = new AST();
+	tree->index = -1;
 
 	// -d: turn on yydebug
 	// -p: print parse tree

@@ -78,9 +78,9 @@ void Return::print() {
 
 For::For(int l, TokenData *itr, TokenData *arr, AST *stmt) {
 	line = l;
-	iterator = strdup(itr->tokenString);
-	array = strdup(arr->tokenString);
-	addChild(stmt, 0);
+	addChild(new Var(itr), 0);
+	addChild(new VarAccess(arr), 1);
+	addChild(stmt, 2);
 }
 
 void For::print() {

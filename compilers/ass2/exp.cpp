@@ -50,7 +50,8 @@ Operation::Operation(TokenData *data, AST *left, AST *right): Operation(data, le
 
 void Operation::print() {
 	printPrefix();
-	if(strcmp(str, "=") == 0)
+	if(strcmp(str, "=") == 0 || strcmp(str, "++") == 0 || strcmp(str, "--") == 0 || strcmp(str, "+=") == 0 || strcmp(str, "-=") == 0
+|| strcmp(str, "*=") == 0 || strcmp(str, "/=") == 0)
 		printf("Assign: %s [line: %d]\n", str, line);
 	else
 		printf("Op: %s [line: %d]\n", str, line);
@@ -65,6 +66,15 @@ Constant::Constant(TokenData *td) {
 
 void Constant::print() {
 	printPrefix();
-	printf("Const: %s [line: %d]\n", data->tokenString, data->line);
+	switch(data->tokenClass) {
+	case CHARCONST:
+		printf("Const: '%c' [line: %d]\n", data->cValue, data->line);
+		break;
+	case STRINGCONST:
+		std::cout << "Const: '" << data->sValue << "' [line: " << data->line << "]\n";
+		break;
+	default:
+		printf("Const: %s [line: %d]\n", data->tokenString, data->line);
+	}
 	AST::print();
 }

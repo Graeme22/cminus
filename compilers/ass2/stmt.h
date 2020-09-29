@@ -52,8 +52,6 @@ public:
 class For: public AST {
 
 	int line;
-	char *iterator;
-	char *array;
 
 public:
 	For(int, TokenData *, TokenData *, AST *);
