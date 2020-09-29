@@ -18,7 +18,7 @@ lex.yy.c : $(BIN).l $(BIN).tab.h scanType.h
 	$(CC) $(FLAGS) -c $<
 
 tar :
-	tar -cvf $(BIN).tar $(BIN).y $(BIN).l makefile
+	tar -cvf $(BIN).tar $(BIN).y $(BIN).l makefile *.cpp *.h
 
 clean :
 	rm $(BIN).tab.c $(BIN).tab.h lex.yy.c $(OUT) $(BIN).output *.o

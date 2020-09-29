@@ -55,6 +55,7 @@ Break::Break(int l) {
 void Break::print() {
 	printPrefix();
 	printf("Break [line: %d]\n", line);
+	AST::print();
 }
 
 // Return

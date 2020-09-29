@@ -53,6 +53,8 @@ void Operation::print() {
 	if(strcmp(str, "=") == 0 || strcmp(str, "++") == 0 || strcmp(str, "--") == 0 || strcmp(str, "+=") == 0 || strcmp(str, "-=") == 0
 || strcmp(str, "*=") == 0 || strcmp(str, "/=") == 0)
 		printf("Assign: %s [line: %d]\n", str, line);
+	else if(strcmp(str, "-") == 0 && children[1] == NULL) // if there is no right child then it's unary minus
+		printf("Op: chsign [line: %d]\n", line);
 	else
 		printf("Op: %s [line: %d]\n", str, line);
 	AST::print();
