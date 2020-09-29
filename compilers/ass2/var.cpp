@@ -41,14 +41,14 @@ VarAccess::VarAccess(TokenData *data) {
 
 VarAccess::VarAccess(int l, AST *var, AST *loc) {
 	line = l;
-	addChild(var);
-	addChild(loc);
+	addChild(var, 0);
+	addChild(loc, 1);
 	isArray = true;
 }
 
 void VarAccess::print() {
 	printPrefix();
-	if(children.empty())
+	if(children[1] == NULL)
 		printf("Id: %s [line: %d]\n", name, line);
 	else
 		printf("Op: [ [line: %d]\n", line);

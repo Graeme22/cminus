@@ -106,7 +106,7 @@ varDeclInitialize : varDeclId
 	| varDeclId ':' simpleExpression
 	{
 		$$ = $1;
-		((Var *)$$)->addChild($3);
+		$$->children[0] = $3;
 	}
 	;
 varDeclId : ID
@@ -255,7 +255,7 @@ localDeclarations : localDeclarations scopedVarDeclaration
 	}
 	| /* empty */
 	{
-		$$ = new List();
+		$$ = new AST();
 	}
 	;
 statementList : statementList statement
@@ -264,7 +264,7 @@ statementList : statementList statement
 	}
 	| /* empty */
 	{
-		$$ = new List();
+		$$ = new AST();
 	}
 	;
 matchedSelectionStmt : IF '(' simpleExpression ')' matched ELSE matched
@@ -548,7 +548,7 @@ constant : NUMCONST
 %%
 
 int main(int argc, char *argv[]) {
-	tree = new List();
+	tree = new AST();
 
 	// -d: turn on yydebug
 	// -p: print parse tree

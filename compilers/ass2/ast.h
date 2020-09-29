@@ -1,35 +1,26 @@
 #ifndef _AST_H_
 #define _AST_H_
 
-#include <vector>
+#define MAX_CHILDREN 3
+
 #include <string.h>
 #include <stdio.h>
 
 class AST {
 
-protected:
-	int depth;
-	bool isChild;
-	bool isFirst;
-
 public:
-	std::vector<AST *> children;
+	AST *children[MAX_CHILDREN];
 	AST *sibling;
-	int index;
+	int index, depth;
+	bool isChild, isFirst;
+
 	AST();
 	virtual void print();
-	virtual void append(AST *);
-	void addChild(AST *);
+	void append(AST *);
+	void addChild(AST *, int);
 	void setFirst();
-	virtual void propagateInfo();
 	virtual void printPrefix();
-
-};
-
-class List: public AST {
-
-public:
-	virtual void append(AST *);
+	void propagateInfo();
 
 };
 

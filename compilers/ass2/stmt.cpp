@@ -4,9 +4,8 @@
 
 CompoundStatement::CompoundStatement(int l, AST *vars, AST *stmt) {
 	line = l;
-	// append because list has a child and is hidden
-	append(vars);
-	append(stmt);
+	addChild(vars->sibling, 0);
+	addChild(stmt->sibling, 1);
 }
 
 void CompoundStatement::print() {
@@ -15,22 +14,16 @@ void CompoundStatement::print() {
 	AST::print();
 }
 
-void CompoundStatement::propagateInfo() {
-	AST::propagateInfo();
-	if(sibling != NULL && sibling->sibling != NULL && !sibling->sibling->children.empty())
-		sibling->sibling->children[0]->index = 1;
-}
-
 // If
 
 If::If(int l, AST *condition, AST *stmt) {
 	line = l;
-	addChild(condition);
-	addChild(stmt);
+	addChild(condition, 0);
+	addChild(stmt, 1);
 }
 
 If::If(int l, AST *condition, AST *stmt, AST *elseStmt): If(l, condition, stmt) {
-	addChild(elseStmt);
+	addChild(elseStmt, 2);
 }
 
 void If::print() {
@@ -43,8 +36,8 @@ void If::print() {
 
 While::While(int l, AST *cond, AST *stmt) {
 	line = l;
-	addChild(cond);
-	addChild(stmt);
+	addChild(cond, 0);
+	addChild(stmt, 1);
 }
 
 void While::print() {
@@ -71,7 +64,7 @@ Return::Return(int l) {
 }
 
 Return::Return(int l, AST *stmt) {
-	addChild(stmt);
+	addChild(stmt, 0);
 	line = l;
 }
 
@@ -87,7 +80,7 @@ For::For(int l, TokenData *itr, TokenData *arr, AST *stmt) {
 	line = l;
 	iterator = strdup(itr->tokenString);
 	array = strdup(arr->tokenString);
-	addChild(stmt);
+	addChild(stmt, 0);
 }
 
 void For::print() {

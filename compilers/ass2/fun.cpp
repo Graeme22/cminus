@@ -25,11 +25,11 @@ void Par::print() {
 
 // FunDeclaration
 
-FunDeclaration::FunDeclaration(TokenData *n, AST *p, AST *s) {
+FunDeclaration::FunDeclaration(TokenData *n, AST *pars, AST *stmt) {
 	name = strdup(n->tokenString);
 	line = n->line;
-	addChild(p);
-	addChild(s);
+	addChild(pars, 0);
+	addChild(stmt, 1);
 	type = (char *)"void";
 }
 
@@ -48,7 +48,7 @@ void FunDeclaration::print() {
 Call::Call(TokenData *data, AST *args) {
 	name = strdup(data->tokenString);
 	line = data->line;
-	addChild(args);
+	addChild(args, 0);
 }
 
 void Call::print() {

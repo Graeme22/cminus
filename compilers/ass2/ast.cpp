@@ -4,7 +4,8 @@
 
 AST::AST() {
 	sibling = NULL;
-	depth = -1;
+	depth = 0;
+	index = 1;
 	isChild = false;
 	isFirst = false;
 }
@@ -21,16 +22,19 @@ void AST::append(AST *node) {
 	}
 }
 
-void AST::addChild(AST *node) {
-	if(node != NULL)
-		children.push_back(node);
+void AST::addChild(AST *child, int n) {
+	if(child == NULL)
+		return;
+	children[n] = child;
+	child->index = n;
+	child->isChild = true;
 }
 
 void AST::printPrefix() {
 	if(isFirst)
 		return;
 	for(int i = 0; i < depth; i++)
-		printf("!   ");
+		printf(".   ");
 	if(isChild)
 		printf("Child: %d  ", index);
 	else
@@ -38,40 +42,29 @@ void AST::printPrefix() {
 }
 
 void AST::print() {
-	for(AST *child : children)
-		child->print();
+	for(int i = 0; i < MAX_CHILDREN; i++)
+		if(children[i] != NULL)
+			children[i]->print();
 	if(sibling != NULL)
 		sibling->print();
 }
 
-void AST::propagateInfo() {
-	for(AST *child : children)
-		child->depth = depth + 1;
-	for(AST *itr = sibling; itr != NULL; itr = itr->sibling)
-		itr->depth = depth;
-
-	int i = 0;
-	for(AST *child : children) {
-		child->isChild = true;
-		child->index = i++;
-		child->propagateInfo();
-	}
-	i = 0;
-	for(AST *itr = sibling; itr != NULL; itr = itr->sibling) {
-		itr->propagateInfo();
-		itr->index = i++;
-	}
-}
-
 void AST::setFirst() {
 	isFirst = true;
+	index = 0;
 }
 
-// List
-
-void List::append(AST *item) {
-	if(children.empty())
-		addChild(item);
-	else
-		children[0]->append(item);
+void AST::propagateInfo() {
+	for(int i = 0; i < MAX_CHILDREN; i++) {
+		if(children[i] != NULL) {
+			children[i]->depth = depth + 1;
+			children[i]->propagateInfo();
+		}
+	}
+	if(sibling != NULL) {
+		sibling->depth = depth;
+		if(!isChild)
+			sibling->index = index + 1;
+		sibling->propagateInfo();
+	}
 }
