@@ -73,7 +73,7 @@ void Constant::print() {
 		printf("Const: '%c' [line: %d]\n", data->cValue, data->line);
 		break;
 	case STRINGCONST:
-		std::cout << "Const: '" << data->sValue << "' [line: " << data->line << "]\n";
+		std::cout << "Const: \"" << data->sValue << "\" [line: " << data->line << "]\n";
 		break;
 	default:
 		printf("Const: %s [line: %d]\n", data->tokenString, data->line);
