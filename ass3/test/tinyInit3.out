@@ -1,0 +1,31 @@
+====================================
+FILE: tinyInit3.c-
+ERROR(10): Symbol 'output' is not declared.
+ERROR(11): Symbol 'output' is not declared.
+ERROR(12): Symbol 'output' is not declared.
+ERROR(13): Symbol 'outputb' is not declared.
+ERROR(14): Symbol 'outputc' is not declared.
+Var x: type int [line: 2]
+.   Child: 0  Const 111 : type int [line: 2]
+Sibling: 1  Func main: returns type void [line: 4]
+.   Child: 1  Compound [line: 4]
+.   .   Child: 0  Var y: type int [line: 5]
+.   .   .   Child: 0  Const 222 : type int [line: 5]
+.   .   Sibling: 1  Var z: static type int [line: 6]
+.   .   .   Child: 0  Const 333 : type int [line: 6]
+.   .   Sibling: 2  Var b: static type bool [line: 7]
+.   .   .   Child: 0  Const true : type bool [line: 7]
+.   .   Sibling: 3  Var c: static type char [line: 8]
+.   .   .   Child: 0  Const: 'Z' : type char [line: 8]
+.   .   Child: 1  Call output: undefined type [line: 10]
+.   .   .   Child: 0  Id x: type int [line: 10]
+.   .   Sibling: 1  Call output: undefined type [line: 11]
+.   .   .   Child: 0  Id y: type int [line: 11]
+.   .   Sibling: 2  Call output: undefined type [line: 12]
+.   .   .   Child: 0  Id z: static type int [line: 12]
+.   .   Sibling: 3  Call outputb: undefined type [line: 13]
+.   .   .   Child: 0  Id b: static type bool [line: 13]
+.   .   Sibling: 4  Call outputc: undefined type [line: 14]
+.   .   .   Child: 0  Id c: static type char [line: 14]
+Number of warnings: 0
+Number of errors: 5

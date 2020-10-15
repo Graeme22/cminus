@@ -1,4 +1,21 @@
 #include "symbolTable.h"
+
+// // // // // // // // // // // // // // // // // // // // 
+//
+// Introduction
+//
+// This symbol table library supplies basic insert and lookup for
+// symbols linked to void * pointers of data.  Plenty of room for
+// improvement inlcuding: better debugging setup, passing of refs
+// rather than values and purpose built char * routines, and C support.
+// Warning: lookup will return NULL pointer if key is not in table.
+//    This means the void * cannot have zero as a legal value.
+//
+// A main() is commented out and has testing code in it.
+//
+// Robert Heckendorn   Oct 1, 2020
+//
+
    
 // // // // // // // // // // // // // // // // // // // // 
 //
@@ -34,6 +51,10 @@ Scope::Scope(std::string newname) {
 Scope::~Scope() {
 }
 
+// returns char *name of scope
+std::string Scope::scopeName() {
+    return name;
+}
 
 // set scope debugging
 void Scope::debug(bool state) {
@@ -76,11 +97,11 @@ bool Scope::insert(std::string sym, void *ptr) {
 
 void *Scope::lookup(std::string sym) {
     if (symbols.find(sym) != symbols.end()) {
-        if (debugFlg) printf("DEBUG(Scope): lookup in \"%s\" the symbol \"%s\" and found it.\n", name.c_str(), sym.c_str());
+        if (debugFlg) printf("DEBUG(Scope): lookup in \"%s\" for the symbol \"%s\" and found it.\n", name.c_str(), sym.c_str());
         return symbols[sym];
     }
     else {
-        if (debugFlg) printf("DEBUG(Scope): lookup in \"%s\" the symbol \"%s\" and did NOT find it.\n", name.c_str(), sym.c_str());
+        if (debugFlg) printf("DEBUG(Scope): lookup in \"%s\" for the symbol \"%s\" and did NOT find it.\n", name.c_str(), sym.c_str());
         return NULL;
     }
 }
@@ -155,13 +176,19 @@ void SymbolTable::leave()
 void * SymbolTable::lookup(std::string sym)
 {
     void *data;
+    std::string name;
 
     for (std::vector<Scope *>::reverse_iterator it=stack.rbegin(); it!=stack.rend(); it++) {
         data = (*it)->lookup(sym);
+        name = (*it)->scopeName();
         if (data!=NULL) break;
     }
-    if (debugFlg) printf("DEBUG(SymbolTable): lookup the symbol \"%s\" and %s.\n", sym.c_str(),
-                         (data ? (char *)"found it" : (char *)"did NOT find it"));
+
+    if (debugFlg) {
+        printf("DEBUG(SymbolTable): lookup the symbol \"%s\" and ", sym.c_str());
+        if (data) printf("found it in the scope named \"%s\".\n", name.c_str());
+        else printf("did NOT find it!\n");
+    }
 
     return data;
 }
@@ -174,7 +201,7 @@ void * SymbolTable::lookupGlobal(std::string sym)
     void *data;
 
     data = stack[0]->lookup(sym);
-    if (debugFlg) printf("DEBUG(SymbolTable): lookup the symbol \"%s\" and %s.\n", sym.c_str(),
+    if (debugFlg) printf("DEBUG(SymbolTable): lookup the symbol \"%s\" in the Globals and %s.\n", sym.c_str(),
                          (data ? "found it" : "did NOT find it"));
 
     return data;
@@ -237,14 +264,11 @@ void countSymbols(std::string sym, void *ptr) {
  }
 
 
-
-
-
-/*
 int main()
 {
     Scope s("global");
 
+    s.debug(true);
     s.insert("dog", (char *)"woof");
     s.insert("cat", (char *)"meow");
     printf("%s\n", (char *)(s.lookup("cat")));
@@ -256,6 +280,7 @@ int main()
     s.print(pointerPrintStr);
 
     SymbolTable st;
+    st.debug(true);
 
     printf("Print symbol table.\n");
     st.print(pointerPrintStr);
@@ -273,14 +298,17 @@ int main()
     st.print(pointerPrintStr);
 
 
-    st.leave();
-    st.enter((std::string )"New Second");
-    st.insert("charlie", (char *)"cat"); 
+    printf("This is how you might use insert and lookup in your compiler.\n");
+    st.leave();    // second no longer exists
+    st.enter((std::string )"Third");
+    if (st.insert("charlie", (char *)"cat")) printf("success\n"); else  printf("FAIL\n");
+    if (st.insert("charlie", (char *)"pig")) printf("success\n"); else  printf("FAIL\n"); 
+    if (st.lookup("charlie")) printf("success\n"); else  printf("FAIL\n"); 
+    if (st.lookup("mirage")) printf("success\n"); else  printf("FAIL\n"); 
 
     printf("Print symbol table.\n");
     st.print(pointerPrintStr);
     fflush(stdout);
-
 
     printf("\nGeneral Lookup\n");
     for (int i=0; i<wordsLen; i++) {
@@ -312,7 +340,3 @@ int main()
 
     return 0;
 }
-*/
-
-
-

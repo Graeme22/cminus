@@ -1,4 +1,5 @@
 #include "ast.h"
+#include "symbolTable.h"
 
-void analyze(AST *);
+void analyze(AST *, SymbolTable *);
 void printNode(void *);

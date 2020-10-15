@@ -28,7 +28,7 @@ void pointerPrintStr(void *data);
 //
 // A main() is commented out and has testing code in it.
 //
-// Robert Heckendorn   Sep 30, 2015
+// Robert Heckendorn   Oct 1, 2020
 //
 
 
@@ -47,6 +47,7 @@ private:
 public:
     Scope(std::string newname);
     ~Scope();
+    std::string scopeName();                   // returns name of scope
     void debug(bool state);                    // sets the debug flag to new state
     void print(void (*printData)(void *));     // prints the table using the supplied function to print the void *
     void applyToAll(void (*action)(std::string , void *));  // applies func to all symbol/data pairs 
@@ -54,7 +55,6 @@ public:
                                                // returns false if already defined
     void *lookup(std::string sym);             // returns the ptr associated with sym
                                                // returns NULL if symbol not found
-    std::string scopeName() {return name; };   // accessor for name
 };
 
 

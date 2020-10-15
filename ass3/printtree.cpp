@@ -1,5 +1,7 @@
 #include "printtree.h"
 
+void usage();
+
 int main(int argc, char *argv[]) {
 	tree = new AST();
 	tree->index = -1;
@@ -7,26 +9,35 @@ int main(int argc, char *argv[]) {
 	// -d: turn on yydebug
 	// -p: print parse tree
 	// -P: print AST & node types
-	int dflag = 0, pflag = 0, Pflag = 0;
+	int dflag = 0, Pflag = 0, hflag = 0, Sflag = 0;
 	int c;
 	int n_errors = 0, n_warnings = 0;
 
-	while((c = ourGetopt(argc, argv, (char *)"dp")) != -1) {
+	while((c = ourGetopt(argc, argv, (char *)"dPhS")) != -1) {
 		switch(c) {
 		case 'd':
 			dflag = 1;
 			break;
-		case 'p':
-			pflag = 1;
+		case 'P':
+			Pflag = 1;
+			break;
+		case 'h':
+			hflag = 1;
+			break;
+		case 'S':
+			Sflag = 1;
 			break;
 		case '?':
-			fprintf(stderr, "usage: c- [-d] [-p] file\n");
+			usage();
 			return -1;
 		}
 	}
 
 	if(dflag)
 		yydebug = 1;
+
+	if(hflag)
+		usage();
 
 	if(optind < argc) {
 		yyin = fopen(argv[optind], "r");
@@ -38,19 +49,24 @@ int main(int argc, char *argv[]) {
 	if(n_errors == 0) {
 		tree->propagateInfo();
 
-		if(pflag)
-			tree->print();
-
 		// semantic analysis
 		SymbolTable *table = new SymbolTable();
-		analyze(tree);
+		table->debug(Sflag);
+
+		analyze(tree, table);
 
 		if(Pflag)
-			table->print(printNode);
+			tree->print();
+
+		// code generation will go here
 	}
 
 	printf("Number of errors: %d\n", n_errors);
 	printf("Number of warnings: %d\n", n_warnings);
 
 	return 0;
+}
+
+void usage() {
+	printf("Usage: c- [options] [sourceFile]\n  -d  turn on Bison debugging\n  -h  this usage message\n  -P  print abstract syntax tree + types\n  -S  turn on syntax table debugging\n");
 }
