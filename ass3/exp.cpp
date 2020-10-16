@@ -39,9 +39,41 @@ void LogicExpression::print() {
 
 Operation::Operation(TokenData *data, AST *left) {
 	addChild(left, 0);
-	type = data->tokenClass;
 	str = strdup(data->tokenString);
 	line = data->line;
+	id = data->tokenClass;
+
+	printf("operation has class: %d\n", id);
+	switch(id) {
+	case ADDASS:
+	case SUBASS:
+	case DIVASS:
+	case MULASS:
+	case ADD:
+	case SUB:
+	case (int)'*':
+	case (int)'?':
+	case (int)'-':
+	case (int)'+':
+	case (int)'/':
+	case (int)'%':
+		type = (char *)"int";
+		break;
+	case (int)'&':
+	case (int)'|':
+	case (int)'!':
+	case EQ:
+	case NEQ:
+	case GEQ:
+	case LEQ:
+	case (int)'<':
+	case (int)'>':
+		type = (char *)"bool";
+		break;
+	default:
+		type = (char *)"undefined";
+	// case [], =: varies
+	}
 }
 
 Operation::Operation(TokenData *data, AST *left, AST *right): Operation(data, left) {
@@ -54,9 +86,9 @@ void Operation::print() {
 || strcmp(str, "*=") == 0 || strcmp(str, "/=") == 0)
 		printf("Assign: %s [line: %d]\n", str, line);
 	else if(strcmp(str, "-") == 0 && children[1] == NULL) // if there is no right child then it's unary minus
-		printf("Op: chsign [line: %d]\n", line);
+		printf("Op chsign : type %s [line: %d]\n", type, line);
 	else
-		printf("Op: %s [line: %d]\n", str, line);
+		printf("Op %s : type %s [line: %d]\n", str, type, line);
 	AST::print();
 }
 

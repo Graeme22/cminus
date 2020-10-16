@@ -20,11 +20,11 @@ void Var::print() {
 	printPrefix();
 	if(strcmp(type, "undefined") != 0){
 		if(isArray)
-			printf("Var %s is array of type %s [line: %d]\n", name, type, line);
+			printf("Var %s: array of type %s [line: %d]\n", name, type, line);
 		else
-			printf("Var %s of type %s [line: %d]\n", name, type, line);
+			printf("Var %s: type %s [line: %d]\n", name, type, line);
 	} else
-		printf("Var %s of undefined type [line: %d]\n", name, line);
+		printf("Var %s: undefined type [line: %d]\n", name, line);
 	AST::print();
 }
 
@@ -33,6 +33,10 @@ void Var::setTypeAndStatic(char *t, bool s) {
 	isStatic = s;
 	if(sibling != NULL)
 		((Var *)sibling)->setTypeAndStatic(t, s);
+}
+
+char *Var::getType() {
+	return type;
 }
 
 // VarAccess

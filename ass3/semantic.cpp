@@ -23,10 +23,9 @@
 */
 
 void analyze(AST *tree, SymbolTable *table) {
-	// analysis here
+	//tree->propagateScopes(table);
 }
 
 void printNode(void *node) {
 	AST *treeNode = (AST *)node;
-	treeNode->print();
 }

@@ -33,9 +33,10 @@ public:
 
 class Operation: public AST {
 
-	int type;
 	char *str;
 	int line;
+	int id;
+	char *type;
 
 public:
 	Operation(TokenData *, AST *, AST *);

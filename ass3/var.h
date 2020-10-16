@@ -18,6 +18,7 @@ public:
 	Var(TokenData *, TokenData *);
 	void setTypeAndStatic(char *, bool);
 	virtual void print();
+	char *getType();
 
 };
 
