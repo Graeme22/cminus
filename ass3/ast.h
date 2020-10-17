@@ -18,6 +18,8 @@ public:
 	int index, depth, line;
 	bool isChild, isFirst;
 	bool hasScopeException, isFunction;
+	bool isArray, used, initialized;
+	char *type;
 
 	AST();
 	virtual void print();

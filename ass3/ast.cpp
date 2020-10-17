@@ -10,6 +10,9 @@ AST::AST() {
 	isFirst = false;
 	hasScopeException = false;
 	isFunction = false;
+	isArray = false;
+	used = false;
+	initialized = false;
 }
 
 void AST::append(AST *node) {

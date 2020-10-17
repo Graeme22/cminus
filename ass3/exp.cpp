@@ -3,7 +3,7 @@
 // Relation
 
 Relation::Relation(TokenData *data, AST *left, AST *right) {
-	type = data->tokenClass;
+	kind = data->tokenClass;
 	addChild(left, 0);
 	addChild(right, 1);
 	str = strdup(data->tokenString);
@@ -24,7 +24,7 @@ LogicExpression::LogicExpression(TokenData *data, AST *left, AST *right): LogicE
 
 LogicExpression::LogicExpression(TokenData *data, AST *left) {
 	addChild(left, 0);
-	type = data->tokenClass;
+	kind = data->tokenClass;
 	str = strdup(data->tokenString);
 	line = data->line;
 }

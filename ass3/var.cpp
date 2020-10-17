@@ -46,6 +46,8 @@ void Var::propagateScopes(SymbolTable *table) {
 		printf("ERROR(%d): Symbol '%s' is already declared at line %d.\n", line, name, existing->line);
 		n_errors++;
 	}
+	if(children[0] != NULL)
+		initialized = true;
 	AST::propagateScopes(table);
 }
 
@@ -83,7 +85,12 @@ void VarAccess::propagateScopes(SymbolTable *table) {
 		if(node->isFunction) {
 			printf("ERROR(%d): Cannot use function '%s' as a variable.\n", line, name);
 			n_errors++;
+		} else if(!node->initialized) {
+			printf("WARNING(%d): Variable %s may be uninitialized when used here.\n", line, name);
+			n_warnings++;
 		}
+		node->used = true;
+		
 	}
 	AST::propagateScopes(table);
 }

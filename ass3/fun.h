@@ -6,10 +6,8 @@
 
 class Par: public AST {
 
-	bool isArray;
 	char *name;
-	char *type;
-
+	
 public:
 	Par(TokenData *, bool);
 	void setType(char *);
@@ -20,7 +18,6 @@ public:
 
 class FunDeclaration: public AST {
 
-	char *type;
 	char *name;
 
 public:

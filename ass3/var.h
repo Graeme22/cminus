@@ -6,10 +6,8 @@
 
 class Var: public AST {
 
-	bool isArray;
 	int arraySize;
 	char *name;
-	char *type;
 	bool isStatic;
 
 public:
@@ -25,7 +23,6 @@ public:
 class VarAccess: public AST {
 
 	char *name;
-	bool isArray;
 
 public:
 	VarAccess(TokenData *);

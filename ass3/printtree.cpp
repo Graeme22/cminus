@@ -61,8 +61,8 @@ int main(int argc, char *argv[]) {
 		// code generation will go here
 	}
 
-	printf("Number of errors: %d\n", n_errors);
 	printf("Number of warnings: %d\n", n_warnings);
+	printf("Number of errors: %d\n", n_errors);
 
 	return 0;
 }

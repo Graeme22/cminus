@@ -8,7 +8,7 @@
 
 class Relation: public AST {
 
-	int type;
+	int kind;
 	char *str;
 
 public:
@@ -19,7 +19,7 @@ public:
 
 class LogicExpression: public AST {
 
-	int type;
+	int kind;
 	char *str;
 
 public:
@@ -33,7 +33,6 @@ class Operation: public AST {
 
 	char *str;
 	int id;
-	char *type;
 
 public:
 	Operation(TokenData *, AST *, AST *);
