@@ -2,9 +2,10 @@
 #define _SEMANTIC_H_
 
 #include "ast.h"
+#include "var.h"
 #include "symbolTable.h"
 
 void analyze(AST *, SymbolTable *);
-void printNode(void *);
+void checkUsage(std::string, void *);
 
 #endif

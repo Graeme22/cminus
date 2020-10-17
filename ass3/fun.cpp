@@ -52,7 +52,7 @@ FunDeclaration::FunDeclaration(TokenData *t, TokenData *n, AST *p, AST *s): FunD
 
 void FunDeclaration::print() {
 	printPrefix();
-	printf("Func %s returns type %s [line: %d]\n", name, type, line);
+	printf("Func %s: returns type %s [line: %d]\n", name, type, line);
 	AST::print();
 }
 

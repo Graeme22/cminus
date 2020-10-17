@@ -18,8 +18,10 @@ void CompoundStatement::propagateScopes(SymbolTable *table) {
 	if(!hasScopeException)
 		table->enter("Compound");
 	AST::propagateScopesChildren(table);
-	if(!hasScopeException)
+	if(!hasScopeException) {
+		table->applyToAll(checkUsage);
 		table->leave();
+	}
 	AST::propagateScopesSibling(table);
 }
 
@@ -46,6 +48,7 @@ void If::print() {
 void If::propagateScopes(SymbolTable *table) {
 	table->enter("If");
 	AST::propagateScopesChildren(table);
+	table->applyToAll(checkUsage);
 	table->leave();
 	AST::propagateScopesSibling(table);
 }
@@ -69,6 +72,7 @@ void While::print() {
 void While::propagateScopes(SymbolTable *table) {
 	table->enter("While");
 	AST::propagateScopesChildren(table);
+	table->applyToAll(checkUsage);
 	table->leave();
 	AST::propagateScopesSibling(table);
 }
@@ -107,6 +111,7 @@ void Return::print() {
 For::For(int l, TokenData *itr, TokenData *arr, AST *stmt) {
 	line = l;
 	addChild(new Var(itr), 0);
+	children[0]->initialized = true;
 	addChild(new VarAccess(arr), 1);
 	addChild(stmt, 2);
 	if(stmt != NULL)
@@ -122,6 +127,7 @@ void For::print() {
 void For::propagateScopes(SymbolTable *table) {
 	table->enter("For");
 	AST::propagateScopesChildren(table);
+	table->applyToAll(checkUsage);
 	table->leave();
 	AST::propagateScopesSibling(table);
 }

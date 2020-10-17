@@ -38,6 +38,7 @@ public:
 	Operation(TokenData *, AST *, AST *);
 	Operation(TokenData *, AST *);
 	virtual void print();
+	virtual void propagateScopes(SymbolTable *);
 
 };
 

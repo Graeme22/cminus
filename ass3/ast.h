@@ -18,7 +18,7 @@ public:
 	int index, depth, line;
 	bool isChild, isFirst;
 	bool hasScopeException, isFunction;
-	bool isArray, used, initialized;
+	bool isArray, used, initialized, notified;
 	char *type;
 
 	AST();

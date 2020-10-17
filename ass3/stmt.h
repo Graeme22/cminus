@@ -4,6 +4,7 @@
 #include "ast.h"
 #include "scanType.h"
 #include "var.h"
+#include "semantic.h"
 
 class CompoundStatement: public AST {
 

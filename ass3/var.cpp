@@ -68,9 +68,15 @@ VarAccess::VarAccess(int l, AST *var, AST *loc) {
 
 void VarAccess::print() {
 	printPrefix();
-	if(children[1] == NULL)
-		printf("Id: %s [line: %d]\n", name, line);
-	else
+	if(children[1] == NULL) {
+		if(!isArray) {
+			if(strcmp(type, "undefined") == 0)
+				printf("Id %s: undefined type [line: %d]\n", name, line);
+			else
+				printf("Id %s: type %s [line: %d]\n", name, type, line);
+		} else
+			printf("Id %s: array of type %s [line: %d]\n", name, type, line);
+	} else
 		printf("Op: [ [line: %d]\n", line);
 	AST::print();
 }
@@ -85,11 +91,17 @@ void VarAccess::propagateScopes(SymbolTable *table) {
 		if(node->isFunction) {
 			printf("ERROR(%d): Cannot use function '%s' as a variable.\n", line, name);
 			n_errors++;
-		} else if(!node->initialized) {
-			printf("WARNING(%d): Variable %s may be uninitialized when used here.\n", line, name);
-			n_warnings++;
+		} else {
+			if(!node->initialized && !node->notified) {
+				printf("WARNING(%d): Variable %s may be uninitialized when used here.\n", line, name);
+				n_warnings++;
+				node->notified = true;
+			}
+			Var *var = (Var *)node;
+			type = strdup(var->type);
+			isArray = var->isArray;
+			node->used = true;
 		}
-		node->used = true;
 		
 	}
 	AST::propagateScopes(table);

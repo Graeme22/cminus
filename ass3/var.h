@@ -7,10 +7,10 @@
 class Var: public AST {
 
 	int arraySize;
-	char *name;
 	bool isStatic;
 
 public:
+	char *name;
 	Var(TokenData *);
 	Var(TokenData *, TokenData *);
 	void setTypeAndStatic(char *, bool);

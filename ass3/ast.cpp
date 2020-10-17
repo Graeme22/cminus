@@ -13,6 +13,7 @@ AST::AST() {
 	isArray = false;
 	used = false;
 	initialized = false;
+	notified = false;
 }
 
 void AST::append(AST *node) {

@@ -42,8 +42,7 @@ Operation::Operation(TokenData *data, AST *left) {
 	str = strdup(data->tokenString);
 	line = data->line;
 	id = data->tokenClass;
-
-	printf("operation has class: %d\n", id);
+	
 	switch(id) {
 	case ADDASS:
 	case SUBASS:
@@ -90,6 +89,12 @@ void Operation::print() {
 	else
 		printf("Op %s : type %s [line: %d]\n", str, type, line);
 	AST::print();
+}
+
+void Operation::propagateScopes(SymbolTable *table) {
+	if(id == ASS)
+		children[0]->initialized = true;
+	AST::propagateScopes(table);
 }
 
 // Constant
