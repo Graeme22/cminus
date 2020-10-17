@@ -10,7 +10,6 @@ class Relation: public AST {
 
 	int type;
 	char *str;
-	int line;
 
 public:
 	Relation(TokenData *, AST *, AST*);
@@ -22,7 +21,6 @@ class LogicExpression: public AST {
 
 	int type;
 	char *str;
-	int line;
 
 public:
 	LogicExpression(TokenData *, AST *, AST *);
@@ -34,7 +32,6 @@ public:
 class Operation: public AST {
 
 	char *str;
-	int line;
 	int id;
 	char *type;
 

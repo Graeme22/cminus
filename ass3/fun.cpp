@@ -23,6 +23,16 @@ void Par::print() {
 	AST::print();
 }
 
+void Par::propagateScopes(SymbolTable *table) {
+	bool success = table->insert(name, this);
+	if(!success) {
+		AST *existing = (AST *)table->lookup(name);
+		printf("ERROR(%d): Symbol '%s' is already declared at line %d.\n", line, name, existing->line);
+		n_errors++;
+	}
+	AST::propagateScopes(table);
+}
+
 // FunDeclaration
 
 FunDeclaration::FunDeclaration(TokenData *n, AST *pars, AST *stmt) {
@@ -30,6 +40,9 @@ FunDeclaration::FunDeclaration(TokenData *n, AST *pars, AST *stmt) {
 	line = n->line;
 	addChild(pars, 0);
 	addChild(stmt, 1);
+	if(stmt != NULL)
+		stmt->hasScopeException = true;
+	isFunction = true;
 	type = (char *)"void";
 }
 
@@ -41,6 +54,19 @@ void FunDeclaration::print() {
 	printPrefix();
 	printf("Func %s returns type %s [line: %d]\n", name, type, line);
 	AST::print();
+}
+
+void FunDeclaration::propagateScopes(SymbolTable *table) {
+	bool success = table->insert(name, this);
+	if(!success) {
+		AST *existing = (AST *)table->lookup(name);
+		printf("ERROR(%d): Symbol '%s' is already declared at line %d.\n", line, name, existing->line);
+		n_errors++;
+	}
+	table->enter("Function");
+	AST::propagateScopesChildren(table);
+	table->leave();
+	AST::propagateScopesSibling(table);
 }
 
 // Call
@@ -55,4 +81,19 @@ void Call::print() {
 	printPrefix();
 	printf("Call: %s [line: %d]\n", name, line);
 	AST::print();
+}
+
+void Call::propagateScopes(SymbolTable *table) {
+	void *result = table->lookupGlobal(name);
+	if(result == NULL) {
+		printf("ERROR(%d): Symbol '%s' is not declared.\n", line, name);
+		n_errors++;
+	} else {
+		AST *node = (AST *)result;
+		if(!node->isFunction) {
+			printf("ERROR(%d): '%s' is a simple variable and cannot be called.\n", line, name);
+			n_errors++;
+		}
+	}
+	AST::propagateScopes(table);
 }

@@ -5,14 +5,19 @@
 
 #include <string.h>
 #include <stdio.h>
+#include "symbolTable.h"
+
+extern int n_errors;
+extern int n_warnings;
 
 class AST {
 
 public:
 	AST *children[MAX_CHILDREN];
 	AST *sibling;
-	int index, depth;
+	int index, depth, line;
 	bool isChild, isFirst;
+	bool hasScopeException, isFunction;
 
 	AST();
 	virtual void print();
@@ -21,6 +26,11 @@ public:
 	void setFirst();
 	virtual void printPrefix();
 	void propagateInfo();
+	virtual void propagateScopes(SymbolTable *);
+	void propagateScopesChildren(SymbolTable *);
+	void propagateScopesSibling(SymbolTable *);
+	void setScopeException();
+	void setFunction();
 
 };
 

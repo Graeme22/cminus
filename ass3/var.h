@@ -8,7 +8,6 @@ class Var: public AST {
 
 	bool isArray;
 	int arraySize;
-	int line;
 	char *name;
 	char *type;
 	bool isStatic;
@@ -19,6 +18,7 @@ public:
 	void setTypeAndStatic(char *, bool);
 	virtual void print();
 	char *getType();
+	virtual void propagateScopes(SymbolTable *);
 
 };
 
@@ -26,12 +26,12 @@ class VarAccess: public AST {
 
 	char *name;
 	bool isArray;
-	int line;
 
 public:
 	VarAccess(TokenData *);
 	VarAccess(int, AST *, AST *);
 	virtual void print();
+	virtual void propagateScopes(SymbolTable *);
 
 };
 

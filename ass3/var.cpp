@@ -39,6 +39,16 @@ char *Var::getType() {
 	return type;
 }
 
+void Var::propagateScopes(SymbolTable *table) {
+	bool success = table->insert(name, this);
+	if(!success) {
+		AST *existing = (AST *)table->lookup(name);
+		printf("ERROR(%d): Symbol '%s' is already declared at line %d.\n", line, name, existing->line);
+		n_errors++;
+	}
+	AST::propagateScopes(table);
+}
+
 // VarAccess
 
 VarAccess::VarAccess(TokenData *data) {
@@ -61,4 +71,19 @@ void VarAccess::print() {
 	else
 		printf("Op: [ [line: %d]\n", line);
 	AST::print();
+}
+
+void VarAccess::propagateScopes(SymbolTable *table) {
+	void *result = table->lookup(name);
+	if(result == NULL) {
+		printf("ERROR(%d): Symbol '%s' is not declared.\n", line, name);
+		n_errors++;
+	} else {
+		AST *node = (AST *)result;
+		if(node->isFunction) {
+			printf("ERROR(%d): Cannot use function '%s' as a variable.\n", line, name);
+			n_errors++;
+		}
+	}
+	AST::propagateScopes(table);
 }

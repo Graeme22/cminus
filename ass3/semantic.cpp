@@ -1,7 +1,6 @@
 #include "semantic.h"
 
 /*
-"ERROR(%d): '%s' is a simple variable and cannot be called.\n"
 "ERROR(%d): '%s' requires both operands be arrays or not but lhs is%s an array and rhs is%s an array.\n"
 "ERROR(%d): '%s' requires operands of %s but lhs is of %s.\n"
 "ERROR(%d): '%s' requires operands of %s but rhs is of %s.\n"
@@ -11,21 +10,22 @@
 "ERROR(%d): Cannot index nonarray '%s'.\n"
 "ERROR(%d): Cannot index nonarray.\n"
 "ERROR(%d): Cannot return an array.\n"
-"ERROR(%d): Cannot use function '%s' as a variable.\n"
-"ERROR(%d): Symbol '%s' is already declared at line %d.\n"
-"ERROR(%d): Symbol '%s' is not declared.\n"
 "ERROR(%d): The operation '%s' does not work with arrays.\n"
 "ERROR(%d): The operation '%s' only works with arrays.\n"
 "ERROR(%d): Unary '%s' requires an operand of %s but was given %s.\n"
-"ERROR(LINKER): Procedure main is not declared.\n"
+
 "WARNING(%d): The variable %s seems not to be used.\n"
 "WARNING(%d): Variable %s may be uninitialized when used here.\n"
 */
 
 void analyze(AST *tree, SymbolTable *table) {
-	//tree->propagateScopes(table);
+	tree->propagateScopes(table);
+	if(table->lookupGlobal("main") == NULL) {
+		printf("ERROR(LINKER): Procedure main is not declared.\n");
+		n_errors++;
+	}
 }
 
 void printNode(void *node) {
-	AST *treeNode = (AST *)node;
+	//AST *treeNode = (AST *)node;
 }

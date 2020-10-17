@@ -1,6 +1,7 @@
 #include "printtree.h"
 
-void usage();
+int n_errors = 0;
+int n_warnings = 0;
 
 int main(int argc, char *argv[]) {
 	tree = new AST();
@@ -11,7 +12,6 @@ int main(int argc, char *argv[]) {
 	// -P: print AST & node types
 	int dflag = 0, Pflag = 0, hflag = 0, Sflag = 0;
 	int c;
-	int n_errors = 0, n_warnings = 0;
 
 	while((c = ourGetopt(argc, argv, (char *)"dPhS")) != -1) {
 		switch(c) {

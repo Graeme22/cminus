@@ -17,7 +17,7 @@ class Scope {
 private:
     static bool debugFlg;                      // turn on tedious debugging
     std::string name;                          // name of scope
-    std::map<std::string, void *> symbols;    // use an ordered map (not as fast as unordered)
+    std::map<std::string, void *> symbols;     // use an ordered map (not as fast as unordered)
 
 public:
     Scope(std::string);

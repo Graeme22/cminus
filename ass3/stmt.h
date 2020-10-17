@@ -7,17 +7,14 @@
 
 class CompoundStatement: public AST {
 
-	int line;
-
 public:
 	CompoundStatement(int, AST *, AST *);
 	virtual void print();
+	virtual void propagateScopes(SymbolTable *);
 
 };
 
 class If: public AST {
-
-	int line;
 
 public:
 	// if-else
@@ -25,22 +22,20 @@ public:
 	// if
 	If(int, AST *, AST *);
 	virtual void print();
+	virtual void propagateScopes(SymbolTable *);
 
 };
 
 class While: public AST {
 
-	int line;
-
 public:
 	While(int, AST *, AST *);
 	virtual void print();
+	virtual void propagateScopes(SymbolTable *);
 
 };
 
 class Return: public AST {
-
-	int line;
 
 public:
 	Return(int);
@@ -51,17 +46,14 @@ public:
 
 class For: public AST {
 
-	int line;
-
 public:
 	For(int, TokenData *, TokenData *, AST *);
 	virtual void print();
+	virtual void propagateScopes(SymbolTable *);
 
 };
 
 class Break: public AST {
-
-	int line;
 
 public:
 	Break(int);

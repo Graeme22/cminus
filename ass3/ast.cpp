@@ -8,6 +8,8 @@ AST::AST() {
 	index = 1;
 	isChild = false;
 	isFirst = false;
+	hasScopeException = false;
+	isFunction = false;
 }
 
 void AST::append(AST *node) {
@@ -66,4 +68,20 @@ void AST::propagateInfo() {
 			sibling->index = index + 1;
 		sibling->propagateInfo();
 	}
+}
+
+void AST::propagateScopes(SymbolTable *table) {
+	propagateScopesChildren(table);
+	propagateScopesSibling(table);
+}
+
+void AST::propagateScopesChildren(SymbolTable *table) {
+	for(int i = 0; i < MAX_CHILDREN; i++)
+		if(children[i] != NULL)
+			children[i]->propagateScopes(table);
+}
+
+void AST::propagateScopesSibling(SymbolTable *table) {
+	if(sibling != NULL)
+		sibling->propagateScopes(table);
 }
