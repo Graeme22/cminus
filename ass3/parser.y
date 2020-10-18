@@ -54,7 +54,7 @@ declarationList : declarationList declaration
 	| declaration
 	{
 		tree->append($1);
-		$1->setFirst();
+		$1->isFirst = true;
 	}
 	;
 declaration : varDeclaration
@@ -164,7 +164,7 @@ paramList : paramList ';' paramTypeList
 paramTypeList : typeSpecifier paramIdList
 	{
 		$$ = $2;
-		((Par *)$$)->setType($1->tokenString);
+		((Var *)$$)->setTypeAndStatic($1->tokenString, false);
 	}
 	;
 paramIdList : paramIdList ',' paramId
@@ -319,6 +319,7 @@ expressions
 expression : mutable ASS expression
 	{
 		$$ = new Operation($2, $1, $3);
+		$1->initialized = true;
 	}
 	| mutable ADDASS expression
 	{
@@ -351,7 +352,7 @@ expression : mutable ASS expression
 	;
 simpleExpression : simpleExpression OR andExpression
 	{
-		$$ = new LogicExpression($2, $1, $3);
+		$$ = new Operation($2, $1, $3);
 	}
 	| andExpression
 	{
@@ -360,7 +361,7 @@ simpleExpression : simpleExpression OR andExpression
 	;
 andExpression : andExpression AND unaryRelExpression
 	{
-		$$ = new LogicExpression($2, $1, $3);
+		$$ = new Operation($2, $1, $3);
 	}
 	| unaryRelExpression
 	{
@@ -369,7 +370,7 @@ andExpression : andExpression AND unaryRelExpression
 	;
 unaryRelExpression : NOT unaryRelExpression
 	{
-		$$ = new LogicExpression($1, $2);
+		$$ = new Operation($1, $2);
 	}
 	| relExpression
 	{
@@ -378,7 +379,7 @@ unaryRelExpression : NOT unaryRelExpression
 	;
 relExpression : sumExpression relop sumExpression
 	{
-		$$ = new Relation($2, $1, $3);
+		$$ = new Operation($2, $1, $3);
 	}
 	| sumExpression
 	{
@@ -487,7 +488,7 @@ mutable : ID
 	}
 	| mutable '[' expression ']'
 	{
-		$$ = new VarAccess(@2.first_line, $1, $3);
+		$$ = new ArrayAccess(@2.first_line, $1, $3);
 	}
 	;
 immutable : '(' expression ')'

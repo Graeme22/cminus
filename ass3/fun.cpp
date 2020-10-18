@@ -2,16 +2,9 @@
 
 // Par
 
-Par::Par(TokenData *data, bool toggle) {
+Par::Par(TokenData *data, bool array): Var(data) {
 	name = strdup(data->tokenString);
-	line = data->line;
-	isArray = toggle;
-}
-
-void Par::setType(char *t) {
-	type = strdup(t);
-	if(sibling != NULL)
-		((Par *)sibling)->setType(t);
+	isArray = array;
 }
 
 void Par::print() {
@@ -23,16 +16,6 @@ void Par::print() {
 	AST::print();
 }
 
-void Par::propagateScopes(SymbolTable *table) {
-	bool success = table->insert(name, this);
-	if(!success) {
-		AST *existing = (AST *)table->lookup(name);
-		printf("ERROR(%d): Symbol '%s' is already declared at line %d.\n", line, name, existing->line);
-		n_errors++;
-	}
-	AST::propagateScopes(table);
-}
-
 // FunDeclaration
 
 FunDeclaration::FunDeclaration(TokenData *n, AST *pars, AST *stmt) {
@@ -42,7 +25,6 @@ FunDeclaration::FunDeclaration(TokenData *n, AST *pars, AST *stmt) {
 	addChild(stmt, 1);
 	if(stmt != NULL)
 		stmt->hasScopeException = true;
-	isFunction = true;
 	type = (char *)"void";
 }
 
@@ -65,6 +47,7 @@ void FunDeclaration::propagateScopes(SymbolTable *table) {
 	}
 	table->enter("Function");
 	AST::propagateScopesChildren(table);
+	table->applyToAll(checkUsage);
 	table->leave();
 	AST::propagateScopesSibling(table);
 }
@@ -74,12 +57,16 @@ void FunDeclaration::propagateScopes(SymbolTable *table) {
 Call::Call(TokenData *data, AST *args) {
 	name = strdup(data->tokenString);
 	line = data->line;
+	type = (char *)"undefined";
 	addChild(args, 0);
 }
 
 void Call::print() {
 	printPrefix();
-	printf("Call: %s [line: %d]\n", name, line);
+	if(strcmp(type, "undefined") == 0)
+		printf("Call %s: undefined type [line: %d]\n", name, line);
+	else
+		printf("Call %s: type %s [line: %d]\n", name, type, line);
 	AST::print();
 }
 
@@ -89,11 +76,12 @@ void Call::propagateScopes(SymbolTable *table) {
 		printf("ERROR(%d): Symbol '%s' is not declared.\n", line, name);
 		n_errors++;
 	} else {
-		AST *node = (AST *)result;
+		Var *node = (Var *)result;
 		if(!node->isFunction) {
 			printf("ERROR(%d): '%s' is a simple variable and cannot be called.\n", line, name);
 			n_errors++;
-		}
+		} else
+			type = strdup(node->type);
 	}
 	AST::propagateScopes(table);
 }

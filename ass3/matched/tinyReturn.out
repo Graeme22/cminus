@@ -1,3 +1,5 @@
+====================================
+FILE: tinyReturn.c-
 ERROR(13): Symbol 'outputc' is not declared.
 ERROR(37): Symbol 'outnl' is not declared.
 ERROR(39): Symbol 'output' is not declared.
@@ -18,11 +20,11 @@ Sibling: 1  Func fry: returns type int [line: 6]
 Sibling: 2  Func leela: returns type void [line: 11]
 .   Child: 1  Compound [line: 12]
 .   .   Child: 1  Call outputc: undefined type [line: 13]
-.   .   .   Child: 0  Const 'L' : type char [line: 13]
+.   .   .   Child: 0  Const: 'L' : type char [line: 13]
 Sibling: 3  Func zoidberg: returns type char [line: 16]
 .   Child: 1  Compound [line: 17]
 .   .   Child: 1  Return [line: 18]
-.   .   .   Child: 0  Const 'z' : type char [line: 18]
+.   .   .   Child: 0  Const: 'z' : type char [line: 18]
 Sibling: 4  Func zapp: returns type char [line: 21]
 .   Child: 1  Compound [line: 22]
 Sibling: 5  Func amy: returns type bool [line: 25]
@@ -45,7 +47,7 @@ Sibling: 7  Func main: returns type int [line: 34]
 .   .   Sibling: 6  Call outputb: undefined type [line: 44]
 .   .   .   Child: 0  Op == : type bool [line: 44]
 .   .   .   .   Child: 0  Call zapp: type char [line: 44]
-.   .   .   .   Child: 1  Const '0' : type char [line: 44]
+.   .   .   .   Child: 1  Const: '0' : type char [line: 44]
 .   .   Sibling: 7  Call outnl: undefined type [line: 45]
 .   .   Sibling: 8  Call outputb: undefined type [line: 47]
 .   .   .   Child: 0  Call amy: type bool [line: 47]

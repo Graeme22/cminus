@@ -9,7 +9,6 @@
 "ERROR(%d): Array index is the unindexed array '%s'.\n"
 "ERROR(%d): Cannot index nonarray '%s'.\n"
 "ERROR(%d): Cannot index nonarray.\n"
-"ERROR(%d): Cannot return an array.\n"
 "ERROR(%d): The operation '%s' does not work with arrays.\n"
 "ERROR(%d): The operation '%s' only works with arrays.\n"
 "ERROR(%d): Unary '%s' requires an operand of %s but was given %s.\n"
@@ -24,7 +23,7 @@ void analyze(AST *tree, SymbolTable *table) {
 }
 
 void checkUsage(std::string sym, void *node) {
-	AST *treeNode = (AST *)node;
+	Var *treeNode = (Var *)node;
 	if(!treeNode->used && !treeNode->isFunction) {
 		Var *var = (Var *)treeNode;
 		if(!var->notified) {

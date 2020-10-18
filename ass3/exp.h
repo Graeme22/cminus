@@ -6,29 +6,6 @@
 #include <iostream>
 #include "parser.tab.h"
 
-class Relation: public AST {
-
-	int kind;
-	char *str;
-
-public:
-	Relation(TokenData *, AST *, AST*);
-	virtual void print();
-
-};
-
-class LogicExpression: public AST {
-
-	int kind;
-	char *str;
-
-public:
-	LogicExpression(TokenData *, AST *, AST *);
-	LogicExpression(TokenData *, AST *);
-	virtual void print();
-
-};
-
 class Operation: public AST {
 
 	char *str;

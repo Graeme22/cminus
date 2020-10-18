@@ -106,12 +106,19 @@ void Return::print() {
 	AST::print();
 }
 
+void Return::propagateScopes(SymbolTable *table) {
+	//if(children[0] != NULL)//handle array-ness later && children[0]->isArray)
+	//	printf("ERROR(%d): Cannot return an array.\n", line);
+	AST::propagateScopes(table);
+}
+
 // For
 
 For::For(int l, TokenData *itr, TokenData *arr, AST *stmt) {
 	line = l;
-	addChild(new Var(itr), 0);
-	children[0]->initialized = true;
+	Var *var = new Var(itr);
+	var->initialized = true;
+	addChild(var, 0);
 	addChild(new VarAccess(arr), 1);
 	addChild(stmt, 2);
 	if(stmt != NULL)

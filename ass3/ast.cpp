@@ -8,12 +8,10 @@ AST::AST() {
 	index = 1;
 	isChild = false;
 	isFirst = false;
+	line = -1;
+	type = (char *)"undefined";
 	hasScopeException = false;
-	isFunction = false;
-	isArray = false;
-	used = false;
 	initialized = false;
-	notified = false;
 }
 
 void AST::append(AST *node) {
@@ -53,10 +51,6 @@ void AST::print() {
 			children[i]->print();
 	if(sibling != NULL)
 		sibling->print();
-}
-
-void AST::setFirst() {
-	isFirst = true;
 }
 
 void AST::propagateInfo() {

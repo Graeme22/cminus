@@ -2,17 +2,15 @@
 #define _FUN_H_
 
 #include "ast.h"
+#include "semantic.h"
 #include "scanType.h"
+#include "var.h"
 
-class Par: public AST {
+class Par: public Var {
 
-	char *name;
-	
 public:
 	Par(TokenData *, bool);
-	void setType(char *);
 	virtual void print();
-	virtual void propagateScopes(SymbolTable *);
 
 };
 

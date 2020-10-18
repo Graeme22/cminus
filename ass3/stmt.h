@@ -42,6 +42,7 @@ public:
 	Return(int);
 	Return(int, AST *);
 	virtual void print();
+	virtual void propagateScopes(SymbolTable *);
 
 };
 

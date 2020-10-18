@@ -6,11 +6,11 @@
 
 class Var: public AST {
 
-	int arraySize;
-	bool isStatic;
-
 public:
 	char *name;
+	int arraySize;
+	bool isStatic, isFunction, isArray;
+	bool used, notified;
 	Var(TokenData *);
 	Var(TokenData *, TokenData *);
 	void setTypeAndStatic(char *, bool);
@@ -22,11 +22,21 @@ public:
 
 class VarAccess: public AST {
 
+public:
 	char *name;
+	bool isStatic;
+	VarAccess(TokenData *);
+	virtual void print();
+	virtual void propagateScopes(SymbolTable *);
+
+};
+
+class ArrayAccess: public AST {
 
 public:
-	VarAccess(TokenData *);
-	VarAccess(int, AST *, AST *);
+	char *name;
+	bool isStatic; // ?
+	ArrayAccess(int, AST *, AST *);
 	virtual void print();
 	virtual void propagateScopes(SymbolTable *);
 

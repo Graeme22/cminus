@@ -21,6 +21,8 @@ void Var::print() {
 	if(strcmp(type, "undefined") != 0){
 		if(isArray)
 			printf("Var %s: array of type %s [line: %d]\n", name, type, line);
+		else if(isStatic)
+			printf("Var %s: static type %s [line: %d]\n", name, type, line);
 		else
 			printf("Var %s: type %s [line: %d]\n", name, type, line);
 	} else
@@ -55,54 +57,62 @@ void Var::propagateScopes(SymbolTable *table) {
 
 VarAccess::VarAccess(TokenData *data) {
 	name = strdup(data->tokenString);
-	isArray = false;
+	isStatic = false;
 	line = data->line;
-}
-
-VarAccess::VarAccess(int l, AST *var, AST *loc) {
-	line = l;
-	addChild(var, 0);
-	addChild(loc, 1);
-	isArray = true;
 }
 
 void VarAccess::print() {
 	printPrefix();
-	if(children[1] == NULL) {
-		if(!isArray) {
-			if(strcmp(type, "undefined") == 0)
-				printf("Id %s: undefined type [line: %d]\n", name, line);
-			else
-				printf("Id %s: type %s [line: %d]\n", name, type, line);
-		} else
-			printf("Id %s: array of type %s [line: %d]\n", name, type, line);
-	} else
-		printf("Op: [ [line: %d]\n", line);
+	if(strcmp(type, "undefined") == 0)
+		printf("Id %s: undefined type [line: %d]\n", name, line);
+	else if(isStatic)
+		printf("Id %s: static type %s [line: %d]\n", name, type, line);
+	else
+		printf("Id %s: type %s [line: %d]\n", name, type, line);
 	AST::print();
 }
 
 void VarAccess::propagateScopes(SymbolTable *table) {
+	AST::propagateScopesChildren(table);
 	void *result = table->lookup(name);
 	if(result == NULL) {
 		printf("ERROR(%d): Symbol '%s' is not declared.\n", line, name);
 		n_errors++;
 	} else {
-		AST *node = (AST *)result;
+		Var *node = (Var *)result;
 		if(node->isFunction) {
 			printf("ERROR(%d): Cannot use function '%s' as a variable.\n", line, name);
 			n_errors++;
 		} else {
+			type = strdup(node->type);
+			isStatic = node->isStatic;
+			node->used = true;
+			if(initialized)
+				node->initialized = true;
 			if(!node->initialized && !node->notified) {
 				printf("WARNING(%d): Variable %s may be uninitialized when used here.\n", line, name);
 				n_warnings++;
 				node->notified = true;
 			}
-			Var *var = (Var *)node;
-			type = strdup(var->type);
-			isArray = var->isArray;
-			node->used = true;
 		}
 		
 	}
-	AST::propagateScopes(table);
+	AST::propagateScopesSibling(table);
+}
+
+// ArrayAccess
+
+ArrayAccess::ArrayAccess(int l, AST *id, AST *loc) {
+	line = l;
+	addChild(id, 0);
+	addChild(loc, 1);
+}
+
+void ArrayAccess::print() {
+	printf("Op [ : type int [line: %d]\n", line);
+	AST::print();
+}
+
+void ArrayAccess::propagateScopes(SymbolTable *table) {
+
 }
