@@ -5,14 +5,15 @@
 Par::Par(TokenData *data, bool array): Var(data) {
 	name = strdup(data->tokenString);
 	isArray = array;
+	initialized = true;
 }
 
 void Par::print() {
 	printPrefix();
 	if(isArray)
-		printf("Param %s is array of type %s [line: %d]\n", name, type, line);
+		printf("Param %s: array of type %s [line: %d]\n", name, type, line);
 	else
-		printf("Param %s of type %s [line: %d]\n", name, type, line);
+		printf("Param %s: type %s [line: %d]\n", name, type, line);
 	AST::print();
 }
 
@@ -26,10 +27,14 @@ FunDeclaration::FunDeclaration(TokenData *n, AST *pars, AST *stmt) {
 	if(stmt != NULL)
 		stmt->hasScopeException = true;
 	type = (char *)"void";
+	var = new Var(n);
+	var->isFunction = true;
+	var->type = strdup(type);
 }
 
 FunDeclaration::FunDeclaration(TokenData *t, TokenData *n, AST *p, AST *s): FunDeclaration(n, p, s) {
 	type = strdup(t->tokenString);
+	var->type = strdup(type);
 }
 
 void FunDeclaration::print() {
@@ -39,7 +44,7 @@ void FunDeclaration::print() {
 }
 
 void FunDeclaration::propagateScopes(SymbolTable *table) {
-	bool success = table->insert(name, this);
+	bool success = table->insert(name, var);
 	if(!success) {
 		AST *existing = (AST *)table->lookup(name);
 		printf("ERROR(%d): Symbol '%s' is already declared at line %d.\n", line, name, existing->line);

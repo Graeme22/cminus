@@ -75,6 +75,7 @@ varDeclaration : typeSpecifier varDeclList ';'
 	{
 		$$ = $2;
 		((Var *)$$)->setTypeAndStatic($1->tokenString, false);
+		((Var *)$$)->initialized = true;
 	}
 	;
 scopedVarDeclaration : STATIC typeSpecifier varDeclList ';'
@@ -319,7 +320,7 @@ expressions
 expression : mutable ASS expression
 	{
 		$$ = new Operation($2, $1, $3);
-		$1->initialized = true;
+		$1->initialize();
 	}
 	| mutable ADDASS expression
 	{

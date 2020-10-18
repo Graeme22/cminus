@@ -15,20 +15,18 @@ Operation::Operation(TokenData *data, AST *left) {
 	case MULASS:
 	case ADD:
 	case SUB:
+	case MUL:
+	case DIV:
 	case INC:
 	case DEC:
-	case (int)'*':
-	case (int)'?':
-	case (int)'-':
-	case (int)'+':
-	case (int)'/':
-	case (int)'%':
+	case MOD:
+	case RAND:
 	case (int)'[':
 		type = (char *)"int";
 		break;
-	case (int)'&':
-	case (int)'|':
-	case (int)'!':
+	case AND:
+	case OR:
+	case NOT:
 	case EQ:
 	case NEQ:
 	case GEQ:
@@ -48,13 +46,17 @@ Operation::Operation(TokenData *data, AST *left, AST *right): Operation(data, le
 
 void Operation::print() {
 	printPrefix();
-	if(strcmp(str, "=") == 0 || strcmp(str, "++") == 0 || strcmp(str, "--") == 0 || strcmp(str, "+=") == 0 || strcmp(str, "-=") == 0
-|| strcmp(str, "*=") == 0 || strcmp(str, "/=") == 0)
-		printf("Assign %s : type %s [line: %d]\n", str, type, line);
-	else if(strcmp(str, "-") == 0 && children[1] == NULL) // if there is no right child then it's unary minus
-		printf("Op chsign : type %s [line: %d]\n", type, line);
-	else
-		printf("Op %s : type %s [line: %d]\n", str, type, line);
+	if(strcmp(str, "=") == 0 || strcmp(str, "++") == 0 || strcmp(str, "--") == 0 || strcmp(str, "+=") == 0 || strcmp(str, "-=") == 0 || strcmp(str, "*=") == 0 || strcmp(str, "/=") == 0) {
+		if(strcmp(type, "undefined") == 0)
+			printf("Assign %s : undefined type [line: %d]\n", str, line);
+		else
+			printf("Assign %s : type %s [line: %d]\n", str, type, line);
+	} else {
+		if(strcmp(type, "undefined") == 0)
+			printf("Op %s : undefined type [line: %d]\n", str, line);
+		else
+			printf("Op %s : type %s [line: %d]\n", str, type, line);
+	}
 	AST::print();
 }
 

@@ -17,6 +17,7 @@ public:
 class FunDeclaration: public AST {
 
 	char *name;
+	Var *var;
 
 public:
 	FunDeclaration(TokenData *, TokenData *, AST *, AST *);

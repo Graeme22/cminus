@@ -15,16 +15,13 @@ public:
 	Var(TokenData *, TokenData *);
 	void setTypeAndStatic(char *, bool);
 	virtual void print();
-	char *getType();
 	virtual void propagateScopes(SymbolTable *);
 
 };
 
-class VarAccess: public AST {
+class VarAccess: public Var {
 
 public:
-	char *name;
-	bool isStatic;
 	VarAccess(TokenData *);
 	virtual void print();
 	virtual void propagateScopes(SymbolTable *);
@@ -34,8 +31,6 @@ public:
 class ArrayAccess: public AST {
 
 public:
-	char *name;
-	bool isStatic; // ?
 	ArrayAccess(int, AST *, AST *);
 	virtual void print();
 	virtual void propagateScopes(SymbolTable *);

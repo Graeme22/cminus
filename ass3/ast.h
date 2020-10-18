@@ -30,6 +30,7 @@ public:
 	virtual void propagateScopes(SymbolTable *);
 	void propagateScopesChildren(SymbolTable *);
 	void propagateScopesSibling(SymbolTable *);
+	void initialize();
 
 };
 

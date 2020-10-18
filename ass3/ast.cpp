@@ -83,3 +83,12 @@ void AST::propagateScopesSibling(SymbolTable *table) {
 	if(sibling != NULL)
 		sibling->propagateScopes(table);
 }
+
+void AST::initialize() {
+	initialized = true;
+	for(int i = 0; i < MAX_CHILDREN; i++)
+		if(children[i] != NULL)
+			children[i]->initialize();
+	if(sibling != NULL)
+		sibling->initialize();
+}
