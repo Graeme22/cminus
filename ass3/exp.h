@@ -16,6 +16,9 @@ public:
 	Operation(TokenData *, AST *);
 	virtual void print();
 	virtual void propagateScopes(SymbolTable *);
+	bool validateL(char *);
+	bool validateR(char *);
+	bool validate(char *, char *);
 
 };
 

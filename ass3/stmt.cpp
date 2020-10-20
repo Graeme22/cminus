@@ -116,9 +116,9 @@ void Return::propagateScopes(SymbolTable *table) {
 
 For::For(int l, TokenData *itr, TokenData *arr, AST *stmt) {
 	line = l;
-	Var *var = new Var(itr);
-	var->initialized = true;
-	addChild(var, 0);
+	Var *child = new Var(itr);
+	child->initialized = true;
+	addChild(child, 0);
 	addChild(new VarAccess(arr), 1);
 	addChild(stmt, 2);
 	if(stmt != NULL)

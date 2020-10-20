@@ -8,14 +8,22 @@ class Var: public AST {
 
 public:
 	char *name;
-	int arraySize;
-	bool isStatic, isFunction, isArray;
-	bool used, notified;
+	bool isStatic, isArray, isFunction;
+	bool used, notified, initialized;
 	Var(TokenData *);
-	Var(TokenData *, TokenData *);
 	void setTypeAndStatic(char *, bool);
 	virtual void print();
 	virtual void propagateScopes(SymbolTable *);
+
+};
+
+class Array: public Var {
+
+public:
+	int size;
+	Array(TokenData *);
+	Array(TokenData *, TokenData *);
+	virtual void print();
 
 };
 
@@ -28,10 +36,10 @@ public:
 
 };
 
-class ArrayAccess: public AST {
+class ArrayAccess: public Array {
 
 public:
-	ArrayAccess(int, AST *, AST *);
+	ArrayAccess(TokenData *, AST *);
 	virtual void print();
 	virtual void propagateScopes(SymbolTable *);
 

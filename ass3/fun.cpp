@@ -3,7 +3,6 @@
 // Par
 
 Par::Par(TokenData *data, bool array): Var(data) {
-	name = strdup(data->tokenString);
 	isArray = array;
 	initialized = true;
 }

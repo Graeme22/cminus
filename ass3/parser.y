@@ -75,7 +75,6 @@ varDeclaration : typeSpecifier varDeclList ';'
 	{
 		$$ = $2;
 		((Var *)$$)->setTypeAndStatic($1->tokenString, false);
-		((Var *)$$)->initialized = true;
 	}
 	;
 scopedVarDeclaration : STATIC typeSpecifier varDeclList ';'
@@ -105,6 +104,7 @@ varDeclInitialize : varDeclId
 	| varDeclId ':' simpleExpression
 	{
 		$$ = $1;
+		((Var *)$$)->initialized = true;
 		$$->addChild($3, 0);
 	}
 	;
@@ -114,7 +114,7 @@ varDeclId : ID
 	}
 	| ID '[' NUMCONST ']'
 	{
-		$$ = new Var($1, $3);
+		$$ = new Array($1, $3);
 	}
 	;
 typeSpecifier : INT
@@ -320,7 +320,7 @@ expressions
 expression : mutable ASS expression
 	{
 		$$ = new Operation($2, $1, $3);
-		$1->initialize();
+		((Var *)$1)->initialized = true;
 	}
 	| mutable ADDASS expression
 	{
@@ -487,9 +487,9 @@ mutable : ID
 	{
 		$$ = new VarAccess($1);
 	}
-	| mutable '[' expression ']'
+	| ID '[' expression ']'
 	{
-		$$ = new ArrayAccess(@2.first_line, $1, $3);
+		$$ = new ArrayAccess($1, $3);
 	}
 	;
 immutable : '(' expression ')'

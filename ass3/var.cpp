@@ -7,49 +7,34 @@ Var::Var(TokenData *data) {
 	line = data->line;
 	isArray = false;
 	isStatic = false;
-	type = (char *)"undefined";
-}
-
-Var::Var(TokenData *data, TokenData *size): Var(data) {
-	arraySize = size->nValue;
-	isArray = true;
+	isFunction = false;
+	used = false;
+	notified = false;
+	initialized = false;
 }
 
 void Var::print() {
 	printPrefix();
-	if(strcmp(type, "undefined") != 0){
-		if(isArray) {
-			if(isStatic)
-				printf("Var %s: static array of type %s [line: %d]\n", name, type, line);
-			else
-				printf("Var %s: array of type %s [line: %d]\n", name, type, line);
-		} else {
-			if(isStatic)
-				printf("Var %s: static type %s [line: %d]\n", name, type, line);
-			else
-				printf("Var %s: type %s [line: %d]\n", name, type, line);
-		}
-	} else {
-		if(isArray)
-			printf("Var %s: array of undefined type [line: %d]\n", name, line);
+	if(strcmp(type, "undefined") != 0) {
+		if(isStatic)
+			printf("Var %s: static type %s [line: %d]\n", name, type, line);
 		else
-			printf("Var %s: undefined type [line: %d]\n", name, line);
-	}
+			printf("Var %s: type %s [line: %d]\n", name, type, line);
+	} else
+		printf("Var %s: undefined type [line: %d]\n", name, line);
 	AST::print();
 }
 
 void Var::setTypeAndStatic(char *t, bool s) {
 	type = strdup(t);
 	isStatic = s;
-	if(isStatic)
+	if(isStatic) // this may be incorrect
 		initialized = true;
-	if(sibling != NULL)
+	if(sibling != NULL) // we're part of a list, e.g. par list or var list
 		((Var *)sibling)->setTypeAndStatic(t, s);
 }
 
 void Var::propagateScopes(SymbolTable *table) {
-	if(children[0] != NULL)
-		initialized = true;
 	bool success = table->insert(name, this);
 	if(!success) {
 		AST *existing = (AST *)table->lookup(name);
@@ -57,6 +42,30 @@ void Var::propagateScopes(SymbolTable *table) {
 		n_errors++;
 	}
 	AST::propagateScopes(table);
+}
+
+// Array
+
+Array::Array(TokenData *data): Var(data) {
+	isArray = true;
+	size = 0;
+}
+
+Array::Array(TokenData *id, TokenData *exp): Var(id) {
+	isArray = true;
+	size = exp->nValue;
+}
+
+void Array::print() {
+	printPrefix();
+	if(strcmp(type, "undefined") != 0){
+		if(isStatic)
+			printf("Var %s: static array of type %s [line: %d]\n", name, type, line);
+		else
+			printf("Var %s: array of type %s [line: %d]\n", name, type, line);
+	} else // if it's undefined we won't know whether it's static
+		printf("Var %s: array of undefined type [line: %d]\n", name, line);
+	AST::print();
 }
 
 // VarAccess
@@ -113,11 +122,9 @@ void VarAccess::propagateScopes(SymbolTable *table) {
 
 // ArrayAccess
 
-ArrayAccess::ArrayAccess(int l, AST *id, AST *loc) {
-	line = l;
-	addChild(id, 0);
+ArrayAccess::ArrayAccess(TokenData *id, AST *loc): Array(id) {
+	addChild(new VarAccess(id), 0);
 	addChild(loc, 1);
-	type = (char *)"undefined";
 }
 
 void ArrayAccess::print() {
@@ -130,7 +137,22 @@ void ArrayAccess::print() {
 }
 
 void ArrayAccess::propagateScopes(SymbolTable *table) {
+	if(initialized)
+		((Var *)children[0])->initialized = true;
 	AST::propagateScopesChildren(table);
-	type = strdup(children[0]->type);
+	// warning: this will break on a 2D array
+	VarAccess *id = (VarAccess *)children[0];
+	id->initialized = initialized;
+	type = strdup(id->type);
+	void *result = table->lookup(id->name);
+	if(result == NULL) {
+		printf("ERROR(%d): Cannot index nonarray '%s'.\n", line, id->name);
+		n_errors++;
+	} else {
+		type = strdup(id->type);
+		Var *var = (Var *)result;
+		if(!var->isArray)
+			printf("ERROR(%d): Cannot index nonarray '%s'.\n", line, id->name);
+	}
 	AST::propagateScopesSibling(table);
 }
