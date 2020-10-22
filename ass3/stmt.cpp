@@ -119,7 +119,7 @@ For::For(int l, TokenData *itr, TokenData *arr, AST *stmt) {
 	Var *child = new Var(itr);
 	child->initialized = true;
 	addChild(child, 0);
-	addChild(new VarAccess(arr), 1);
+	addChild(new Id(arr), 1);
 	addChild(stmt, 2);
 	if(stmt != NULL)
 		stmt->hasScopeException = true;
@@ -134,6 +134,12 @@ void For::print() {
 void For::propagateScopes(SymbolTable *table) {
 	table->enter("For");
 	AST::propagateScopesChildren(table);
+	/*
+	children[1]->propagateScopes(table);
+	children[0]->type = strdup(children[1]->type);
+	children[0]->propagateScopes(table);
+	if(children[2] != NULL)
+		children[2]->propagateScopes(table);*/
 	table->applyToAll(checkUsage);
 	table->leave();
 	AST::propagateScopesSibling(table);

@@ -8,6 +8,7 @@ AST::AST() {
 	index = 1;
 	isChild = false;
 	isFirst = false;
+	isArray = false;
 	line = -1;
 	type = (char *)"undefined";
 	hasScopeException = false;

@@ -31,7 +31,7 @@ void yyerror(const char *msg) {
 %token <tokenData> BOOLCONST NUMCONST CHARCONST STRINGCONST ID
 %token <tokenData> IF WHILE FOR STATIC INT BOOL CHAR IN ELSE RETURN BREAK
 %token <tokenData> EQ ADDASS SUBASS DIVASS MULASS LEQ GEQ NEQ DEC INC
-%token <tokenData> ADD SUB LT GT MUL DIV MOD RAND ASS AND OR NOT
+%token <tokenData> ADD SUB LT GT MUL DIV MOD RAND ASS AND OR NOT ACCESS
 %start declarationList
 
 %type <ast> declarationList declaration varDeclaration scopedVarDeclaration varDeclList varDeclInitialize varDeclId
@@ -112,9 +112,9 @@ varDeclId : ID
 	{
 		$$ = new Var($1);
 	}
-	| ID '[' NUMCONST ']'
+	| ID ACCESS NUMCONST ']'
 	{
-		$$ = new Array($1, $3);
+		$$ = new Var($1, $3);
 	}
 	;
 typeSpecifier : INT
@@ -181,7 +181,7 @@ paramId : ID
 	{
 		$$ = new Par($1, false);
 	}
-	| ID '[' ']'
+	| ID ACCESS ']'
 	{
 		$$ = new Par($1, true);
 	}
@@ -320,7 +320,6 @@ expressions
 expression : mutable ASS expression
 	{
 		$$ = new Operation($2, $1, $3);
-		((Var *)$1)->initialized = true;
 	}
 	| mutable ADDASS expression
 	{
@@ -485,11 +484,11 @@ factor : immutable
 	;
 mutable : ID
 	{
-		$$ = new VarAccess($1);
+		$$ = new Id($1);
 	}
-	| ID '[' expression ']'
+	| mutable ACCESS expression ']'
 	{
-		$$ = new ArrayAccess($1, $3);
+		$$ = new Operation($2, $1, $3);
 	}
 	;
 immutable : '(' expression ')'

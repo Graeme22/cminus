@@ -15,11 +15,15 @@ Operation::Operation(TokenData *data, AST *left, AST *right): Operation(data, le
 
 void Operation::print() {
 	printPrefix();
-	if(strcmp(str, "=") == 0 || strcmp(str, "++") == 0 || strcmp(str, "--") == 0 || strcmp(str, "+=") == 0 || strcmp(str, "-=") == 0 || strcmp(str, "*=") == 0 || strcmp(str, "/=") == 0) {
+	if(id == ASS || id == INC || id == DEC || id == ADDASS || id == SUBASS || id == MULASS || id == DIVASS) {
 		if(strcmp(type, "undefined") == 0)
 			printf("Assign %s : undefined type [line: %d]\n", str, line);
-		else
-			printf("Assign %s : type %s [line: %d]\n", str, type, line);
+		else {
+			if(children[0]->isArray)
+				printf("Assign %s : array of type %s [line: %d]\n", str, type, line);
+			else
+				printf("Assign %s : type %s [line: %d]\n", str, type, line);
+		}
 	} else {
 		if(strcmp(type, "undefined") == 0)
 			printf("Op %s : undefined type [line: %d]\n", str, line);
@@ -31,24 +35,29 @@ void Operation::print() {
 
 void Operation::propagateScopes(SymbolTable *table) {
 	AST::propagateScopesChildren(table);
-	bool success;
+	
+	char *_INT_ = (char *)"int";
+	char *_BOOL_ = (char *)"bool";
+
 	switch(id) {
 	case ADDASS:
 	case SUBASS:
 	case DIVASS:
 	case MULASS:
 	case ADD:
-	case SUB:
-	case MUL:
 	case DIV:
 	case MOD:
 		type = (char *)"int";
-		if(!validateL((char *)"int")) {
-			printf("ERROR(%d): '%s' requires operands of %s but lhs is of %s.\n", line, str, type, children[0]->type);
+		if(!validateL(_INT_)) {
+			printf("ERROR(%d): '%s' requires operands of type %s but lhs is of type %s.\n", line, str, type, children[0]->type);
 			n_errors++;
 		}
-		if(!validateR((char *)"int")) {
-			printf("ERROR(%d): '%s' requires operands of %s but rhs is of %s.\n", line, str, type, children[1]->type);
+		if(!validateR(_INT_)) {
+			printf("ERROR(%d): '%s' requires operands of type %s but rhs is of type %s.\n", line, str, type, children[1]->type);
+			n_errors++;
+		}
+		if(children[0]->isArray || children[1]->isArray) {
+			printf("ERROR(%d): The operation '%s' does not work with arrays.\n", line, str);
 			n_errors++;
 		}
 		break;
@@ -56,81 +65,158 @@ void Operation::propagateScopes(SymbolTable *table) {
 	case DEC:
 	case RAND:
 		type = (char *)"int";
-		if(!validateL((char *)"int")) {
-			printf("ERROR(%d): Unary '%s' requires an operand of %s but was given %s.\n", line, str, type, children[0]->type);
+		if(!validateL(_INT_)) {
+			printf("ERROR(%d): Unary '%s' requires an operand of type %s but was given type %s.\n", line, str, type, children[0]->type);
+			n_errors++;
+		}
+		if(children[0]->isArray) {
+			printf("ERROR(%d): The operation '%s' does not work with arrays.\n", line, str);
 			n_errors++;
 		}
 		break;
 	case AND:
 	case OR:
 		type = (char *)"bool";
-		if(!validateL((char *)"bool")) {
-			printf("ERROR(%d): '%s' requires operands of %s but lhs is of %s.\n", line, str, type, children[0]->type);
+		if(!validateL(_BOOL_)) {
+			printf("ERROR(%d): '%s' requires operands of type %s but lhs is of type %s.\n", line, str, type, children[0]->type);
 			n_errors++;
 		}
-		if(!validateR((char *)"bool")) {
-			printf("ERROR(%d): '%s' requires operands of %s but rhs is of %s.\n", line, str, type, children[1]->type);
+		if(!validateR(_BOOL_)) {
+			printf("ERROR(%d): '%s' requires operands of type %s but rhs is of type %s.\n", line, str, type, children[1]->type);
+			n_errors++;
+		}
+		if(children[0]->isArray || children[1]->isArray) {
+			printf("ERROR(%d): The operation '%s' does not work with arrays.\n", line, str);
 			n_errors++;
 		}
 		break;
 	case NOT:
 		type = (char *)"bool";
-		if(!validateL((char *)"bool")) {
-			printf("ERROR(%d): Unary '%s' requires an operand of %s but was given %s.\n", line, str, type, children[0]->type);
+		if(!validateL(_BOOL_)) {
+			printf("ERROR(%d): Unary '%s' requires an operand of type %s but was given type %s.\n", line, str, type, children[0]->type);
+			n_errors++;
+		}
+		if(children[0]->isArray) {
+			printf("ERROR(%d): The operation '%s' does not work with arrays.\n", line, str);
 			n_errors++;
 		}
 		break;
 	case EQ:
 	case NEQ:
-		type = (char *)"bool";
-		success = validate((char *)"int", (char *)"int") || validate((char *)"bool", (char *)"bool") || validate((char *)"char", (char *)"char");
-		if(!success) {
-			printf("ERROR(%d): '%s' requires operands of the same type but lhs is %s and rhs is %s.\n", line, str, children[0]->type, children[1]->type);
-			n_errors++;
-		}
-		break;
 	case GEQ:
 	case LEQ:
 	case LT:
 	case GT:
 		type = (char *)"bool";
-		if(!validateL((char *)"int")) {
-			printf("ERROR(%d): '%s' requires operands of %s but lhs is of %s.\n", line, str, type, children[0]->type);
+		if(strcmp(children[0]->type, children[1]->type) != 0) {
+			printf("ERROR(%d): '%s' requires operands of the same type but lhs is type %s and rhs is type %s.\n", line, str, children[0]->type, children[1]->type);
 			n_errors++;
 		}
-		if(!validateR((char *)"int")) {
-			printf("ERROR(%d): '%s' requires operands of %s but rhs is of %s.\n", line, str, type, children[1]->type);
+		if(children[0]->isArray && !children[1]->isArray || children[0]->isArray && !children[1]->isArray) {
+			printf("ERROR(%d): '%s' requires both operands be arrays or not but lhs is%s an array and rhs is%s an array.\n", line, str, (children[0]->isArray ? "" : " not"), (children[1]->isArray ? "" : " not"));
 			n_errors++;
 		}
 		break;
 	case ASS:
 		type = strdup(children[0]->type);
-		success = validate((char *)"int", (char *)"int") || validate((char *)"bool", (char *)"bool") || validate((char *)"char", (char *)"char");
-		if(!success) {
-			printf("ERROR(%d): '%s' requires operands of the same type but lhs is %s and rhs is %s.\n", line, str, children[0]->type, children[1]->type);
+		if(strcmp(children[0]->type, children[1]->type) != 0) {
+			printf("ERROR(%d): '%s' requires operands of the same type but lhs is type %s and rhs is type %s.\n", line, str, children[0]->type, children[1]->type);
 			n_errors++;
 		}
+		if(children[0]->isArray && !children[1]->isArray || children[0]->isArray && !children[1]->isArray) {
+			printf("ERROR(%d): '%s' requires both operands be arrays or not but lhs is%s an array and rhs is%s an array.\n", line, str, (children[0]->isArray ? "" : " not"), (children[1]->isArray ? "" : " not"));
+			n_errors++;
+		}
+		// do the same thing with array-ness
+		break;
+	// these options can be either unary or binary
+	case SUB:
+		type = (char *)"int";
+		// unary
+		if(children[1] == NULL) {
+			if(!validateL(_INT_)) {
+				printf("ERROR(%d): Unary '%s' requires an operand of type %s but was given type %s.\n", line, str, type, children[0]->type);
+				n_errors++;
+			}
+			if(children[0]->isArray) {
+				printf("ERROR(%d): The operation '%s' does not work with arrays.\n", line, str);
+				n_errors++;
+			}
+		} else {
+			if(!validateL(_INT_)) {
+				printf("ERROR(%d): '%s' requires operands of type %s but lhs is of type %s.\n", line, str, type, children[0]->type);
+				n_errors++;
+			}
+			if(!validateR(_INT_)) {
+				printf("ERROR(%d): '%s' requires operands of type %s but rhs is of type %s.\n", line, str, type, children[1]->type);
+				n_errors++;
+			}
+		}
+		break;
+	case MUL:
+		type = (char *)"int";
+		// unary
+		if(children[1] == NULL) {
+			if(!validateL(_INT_)) {
+				printf("ERROR(%d): Unary '%s' requires an operand of type %s but was given type %s.\n", line, str, type, children[0]->type);
+				n_errors++;
+			}
+			if(!children[0]->isArray) {
+				printf("ERROR(%d): The operation '%s' only works with arrays.\n", line, str);
+				n_errors++;
+			}
+		} else {
+			if(!validateL(_INT_)) {
+				printf("ERROR(%d): '%s' requires operands of type %s but lhs is of type %s.\n", line, str, type, children[0]->type);
+				n_errors++;
+			}
+			if(!validateR(_INT_)) {
+				printf("ERROR(%d): '%s' requires operands of type %s but rhs is of type %s.\n", line, str, type, children[1]->type);
+				n_errors++;
+			}
+		}
+		break;
+	case ACCESS:
+		type = strdup(children[0]->type);
+		// this can fail
+		Var *child = (Var *)children[0];
+		if(!validateR(_INT_)) {
+			printf("ERROR(%d): Array '%s' should be indexed by type int but got %s.\n", line, child->name, children[1]->type);
+			n_errors++;
+		}
+		//error handling here
 		break;
 	}
 	AST::propagateScopesSibling(table);
 }
 
 bool Operation::validateL(char *left) {
-	return strcmp(children[0]->type, left) == 0;
+	return strcmp(children[0]->type, left) == 0 || strcmp(children[0]->type, (char *)"undefined") == 0;
 }
 
 bool Operation::validateR(char *right) {
-	return strcmp(children[1]->type, right) == 0;
-}
-
-bool Operation::validate(char *left, char *right) {
-	return validateL(left) && validateR(right);
+	return strcmp(children[1]->type, right) == 0 || strcmp(children[1]->type, (char *)"undefined") == 0;
 }
 
 // Constant
 
 Constant::Constant(TokenData *td) {
 	data = td;
+	switch(data->tokenClass) {
+	case CHARCONST:
+		type = (char *)"char";
+		break;
+	case STRINGCONST:
+		type = (char *)"char";
+		isArray = true;
+		break;
+	case NUMCONST:
+		type = (char *)"int";
+		break;
+	case BOOLCONST:
+		type = (char *)"bool";
+		break;
+	}
 }
 
 void Constant::print() {

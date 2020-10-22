@@ -16,7 +16,7 @@ public:
 	AST *children[MAX_CHILDREN];
 	AST *sibling;
 	int index, depth;
-	bool isChild, isFirst;
+	bool isChild, isFirst, isArray;
 	char *type;
 	int line;
 	bool hasScopeException;

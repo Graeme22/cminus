@@ -144,7 +144,8 @@ static int buildToken(int tokenClass, char *tokenString) {
 &										{ return buildToken(AND, yytext); }
 \|										{ return buildToken(OR, yytext); }
 !										{ return buildToken(NOT, yytext); }
-[;,:\[\]\(\){}]							{ return yytext[0]; }
+\[										{ return buildToken(ACCESS, yytext); }
+[;,:\]\(\){}]							{ return yytext[0]; }
 [a-zA-Z_][a-zA-Z_0-9]*					{ return buildToken(ID, yytext); }
 [0-9]+									{ return buildToken(NUMCONST, yytext); }
 '([^\n\\']|\\.)*'						{ return buildToken(CHARCONST, yytext); }

@@ -2,6 +2,7 @@
 #define _EXP_H_
 
 #include "ast.h"
+#include "var.h"
 #include "scanType.h"
 #include <iostream>
 #include "parser.tab.h"
@@ -18,7 +19,6 @@ public:
 	virtual void propagateScopes(SymbolTable *);
 	bool validateL(char *);
 	bool validateR(char *);
-	bool validate(char *, char *);
 
 };
 
