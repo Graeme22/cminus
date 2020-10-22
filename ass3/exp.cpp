@@ -38,6 +38,7 @@ void Operation::propagateScopes(SymbolTable *table) {
 	
 	char *_INT_ = (char *)"int";
 	char *_BOOL_ = (char *)"bool";
+	char *_UNDEFINED_ = (char *)"undefined";
 
 	switch(id) {
 	case ADDASS:
@@ -108,7 +109,7 @@ void Operation::propagateScopes(SymbolTable *table) {
 	case LT:
 	case GT:
 		type = (char *)"bool";
-		if(strcmp(children[0]->type, children[1]->type) != 0) {
+		if(strcmp(children[0]->type, children[1]->type) != 0 && strcmp(children[0]->type, _UNDEFINED_) != 0 && strcmp(children[1]->type, _UNDEFINED_) != 0) {
 			printf("ERROR(%d): '%s' requires operands of the same type but lhs is type %s and rhs is type %s.\n", line, str, children[0]->type, children[1]->type);
 			n_errors++;
 		}
@@ -119,7 +120,7 @@ void Operation::propagateScopes(SymbolTable *table) {
 		break;
 	case ASS:
 		type = strdup(children[0]->type);
-		if(strcmp(children[0]->type, children[1]->type) != 0) {
+		if(strcmp(children[0]->type, children[1]->type) != 0 && strcmp(children[0]->type, _UNDEFINED_) != 0 && strcmp(children[1]->type, _UNDEFINED_) != 0) {
 			printf("ERROR(%d): '%s' requires operands of the same type but lhs is type %s and rhs is type %s.\n", line, str, children[0]->type, children[1]->type);
 			n_errors++;
 		}
@@ -178,13 +179,16 @@ void Operation::propagateScopes(SymbolTable *table) {
 		break;
 	case ACCESS:
 		type = strdup(children[0]->type);
-		// this can fail
 		Var *child = (Var *)children[0];
-		if(!validateR(_INT_)) {
-			printf("ERROR(%d): Array '%s' should be indexed by type int but got %s.\n", line, child->name, children[1]->type);
+		if(!children[0]->isArray) {
+			printf("ERROR(%d): Cannot index nonarray '%s'.\n", line, child->name);
 			n_errors++;
 		}
-		//error handling here
+		if(!validateR(_INT_)) {
+			printf("ERROR(%d): Array '%s' should be indexed by type int but got type %s.\n", line, child->name, children[1]->type);
+			n_errors++;
+		}
+		child->initialized = true;
 		break;
 	}
 	AST::propagateScopesSibling(table);

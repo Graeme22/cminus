@@ -320,6 +320,7 @@ expressions
 expression : mutable ASS expression
 	{
 		$$ = new Operation($2, $1, $3);
+		$1->initialize();
 	}
 	| mutable ADDASS expression
 	{

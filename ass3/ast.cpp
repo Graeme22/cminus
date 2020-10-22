@@ -9,6 +9,7 @@ AST::AST() {
 	isChild = false;
 	isFirst = false;
 	isArray = false;
+	initialized = false;
 	line = -1;
 	type = (char *)"undefined";
 	hasScopeException = false;
@@ -82,4 +83,10 @@ void AST::propagateScopesChildren(SymbolTable *table) {
 void AST::propagateScopesSibling(SymbolTable *table) {
 	if(sibling != NULL)
 		sibling->propagateScopes(table);
+}
+
+void AST::initialize() {
+	initialized = true;
+	if(children[0] != NULL)
+		children[0]->initialize();
 }

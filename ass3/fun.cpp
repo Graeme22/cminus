@@ -75,7 +75,7 @@ void Call::print() {
 }
 
 void Call::propagateScopes(SymbolTable *table) {
-	void *result = table->lookupGlobal(name);
+	void *result = table->lookup(name);
 	if(result == NULL) {
 		printf("ERROR(%d): Symbol '%s' is not declared.\n", line, name);
 		n_errors++;

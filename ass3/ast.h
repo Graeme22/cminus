@@ -19,7 +19,7 @@ public:
 	bool isChild, isFirst, isArray;
 	char *type;
 	int line;
-	bool hasScopeException;
+	bool hasScopeException, initialized;
 
 	AST();
 	virtual void print();
@@ -30,6 +30,7 @@ public:
 	virtual void propagateScopes(SymbolTable *);
 	void propagateScopesChildren(SymbolTable *);
 	void propagateScopesSibling(SymbolTable *);
+	void initialize();
 
 };
 

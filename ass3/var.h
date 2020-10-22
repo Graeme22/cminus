@@ -10,7 +10,7 @@ public:
 	char *name;
 	int arraySize;
 	bool isStatic, isFunction;
-	bool used, notified, initialized;
+	bool used, notified;
 	Var(TokenData *);
 	Var(TokenData *, TokenData *);
 	void setTypeAndStatic(char *, bool);
