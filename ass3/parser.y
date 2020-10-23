@@ -75,12 +75,14 @@ varDeclaration : typeSpecifier varDeclList ';'
 	{
 		$$ = $2;
 		((Var *)$$)->setTypeAndStatic($1->tokenString, false);
+		((Var *)$$)->setInitialized();
 	}
 	;
 scopedVarDeclaration : STATIC typeSpecifier varDeclList ';'
 	{
 		$$ = $3;
 		((Var *)$$)->setTypeAndStatic($2->tokenString, true);
+		((Var *)$$)->setInitialized();
 	}
 	| typeSpecifier varDeclList ';'
 	{
@@ -325,18 +327,22 @@ expression : mutable ASS expression
 	| mutable ADDASS expression
 	{
 		$$ = new Operation($2, $1, $3);
+		$1->initialize();
 	}
 	| mutable SUBASS expression
 	{
 		$$ = new Operation($2, $1, $3);
+		$1->initialize();
 	}
 	| mutable MULASS expression
 	{
 		$$ = new Operation($2, $1, $3);
+		$1->initialize();
 	}
 	| mutable DIVASS expression
 	{
 		$$ = new Operation($2, $1, $3);
+		$1->initialize();
 	}
 	| mutable INC
 	{

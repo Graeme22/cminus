@@ -14,6 +14,7 @@ public:
 	Var(TokenData *);
 	Var(TokenData *, TokenData *);
 	void setTypeAndStatic(char *, bool);
+	void setInitialized();
 	virtual void print();
 	virtual void propagateScopes(SymbolTable *);
 

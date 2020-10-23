@@ -124,7 +124,7 @@ void Operation::propagateScopes(SymbolTable *table) {
 			printf("ERROR(%d): '%s' requires operands of the same type but lhs is type %s and rhs is type %s.\n", line, str, children[0]->type, children[1]->type);
 			n_errors++;
 		}
-		if(children[0]->isArray && !children[1]->isArray || children[0]->isArray && !children[1]->isArray) {
+		if(children[0]->isArray && !children[1]->isArray || !children[0]->isArray && children[1]->isArray) {
 			printf("ERROR(%d): '%s' requires both operands be arrays or not but lhs is%s an array and rhs is%s an array.\n", line, str, (children[0]->isArray ? "" : " not"), (children[1]->isArray ? "" : " not"));
 			n_errors++;
 		}
@@ -158,10 +158,6 @@ void Operation::propagateScopes(SymbolTable *table) {
 		type = (char *)"int";
 		// unary
 		if(children[1] == NULL) {
-			if(!validateL(_INT_)) {
-				printf("ERROR(%d): Unary '%s' requires an operand of type %s but was given type %s.\n", line, str, type, children[0]->type);
-				n_errors++;
-			}
 			if(!children[0]->isArray) {
 				printf("ERROR(%d): The operation '%s' only works with arrays.\n", line, str);
 				n_errors++;
@@ -188,7 +184,6 @@ void Operation::propagateScopes(SymbolTable *table) {
 			printf("ERROR(%d): Array '%s' should be indexed by type int but got type %s.\n", line, child->name, children[1]->type);
 			n_errors++;
 		}
-		child->initialized = true;
 		break;
 	}
 	AST::propagateScopesSibling(table);
@@ -230,7 +225,7 @@ void Constant::print() {
 		printf("Const: '%c' : type char [line: %d]\n", data->cValue, data->line);
 		break;
 	case STRINGCONST:
-		std::cout << "Const \"" << data->sValue << "\": array of type char [line: " << data->line << "]\n";
+		std::cout << "Const \"" << data->sValue << "\" : array of type char [line: " << data->line << "]\n";
 		break;
 	case NUMCONST:
 		printf("Const %s : type int [line: %d]\n", data->tokenString, data->line);

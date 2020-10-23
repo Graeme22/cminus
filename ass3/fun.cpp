@@ -84,8 +84,8 @@ void Call::propagateScopes(SymbolTable *table) {
 		if(!node->isFunction) {
 			printf("ERROR(%d): '%s' is a simple variable and cannot be called.\n", line, name);
 			n_errors++;
-		} else
-			type = strdup(node->type);
+		}
+		type = strdup(node->type);
 	}
 	AST::propagateScopes(table);
 }

@@ -107,8 +107,10 @@ void Return::print() {
 }
 
 void Return::propagateScopes(SymbolTable *table) {
-	//if(children[0] != NULL)//handle array-ness later && children[0]->isArray)
-	//	printf("ERROR(%d): Cannot return an array.\n", line);
+	if(children[0] != NULL && children[0]->isArray) {
+		printf("ERROR(%d): Cannot return an array.\n", line);
+		n_errors++;
+	}
 	AST::propagateScopes(table);
 }
 
@@ -134,12 +136,6 @@ void For::print() {
 void For::propagateScopes(SymbolTable *table) {
 	table->enter("For");
 	AST::propagateScopesChildren(table);
-	/*
-	children[1]->propagateScopes(table);
-	children[0]->type = strdup(children[1]->type);
-	children[0]->propagateScopes(table);
-	if(children[2] != NULL)
-		children[2]->propagateScopes(table);*/
 	table->applyToAll(checkUsage);
 	table->leave();
 	AST::propagateScopesSibling(table);

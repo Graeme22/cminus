@@ -47,6 +47,12 @@ void Var::setTypeAndStatic(char *t, bool s) {
 		((Var *)sibling)->setTypeAndStatic(t, s);
 }
 
+void Var::setInitialized() {
+	initialized = true;
+	if(sibling != NULL)
+		((Var *)sibling)->setInitialized();
+}
+
 void Var::propagateScopes(SymbolTable *table) {
 	bool success = table->insert(name, this);
 	if(!success) {
