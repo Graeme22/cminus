@@ -2,6 +2,7 @@
 #define _VAR_H_
 
 #include "ast.h"
+#include "exp.h"
 #include "scanType.h"
 
 class Var: public AST {

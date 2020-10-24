@@ -19,7 +19,7 @@ void Operation::print() {
 		if(strcmp(type, "undefined") == 0)
 			printf("Assign %s : undefined type [line: %d]\n", str, line);
 		else {
-			if(children[0]->isArray)
+			if(children[0]->isArray && id != INC && id != DEC)
 				printf("Assign %s : array of type %s [line: %d]\n", str, type, line);
 			else
 				printf("Assign %s : type %s [line: %d]\n", str, type, line);
@@ -34,7 +34,14 @@ void Operation::print() {
 }
 
 void Operation::propagateScopes(SymbolTable *table) {
-	AST::propagateScopesChildren(table);
+	if(id == ASS || id == ADDASS || id == SUBASS || id == MULASS || id == DIVASS) {
+		checkInitialization = false;
+		children[0]->propagateScopes(table);
+		checkInitialization = true;
+		children[1]->propagateScopes(table);
+		children[0]->initialize();
+	} else
+		AST::propagateScopesChildren(table);
 	
 	char *_INT_ = (char *)"int";
 	char *_BOOL_ = (char *)"bool";
@@ -64,6 +71,16 @@ void Operation::propagateScopes(SymbolTable *table) {
 		break;
 	case INC:
 	case DEC:
+		type = (char *)"int";
+		if(!validateL(_INT_)) {
+			printf("ERROR(%d): Unary '%s' requires an operand of type %s but was given type %s.\n", line, str, type, children[0]->type);
+			n_errors++;
+		}
+		if(children[0]->isArray) {
+			printf("ERROR(%d): The operation '%s' does not work with arrays.\n", line, str);
+			n_errors++;
+		}
+		break;
 	case RAND:
 		type = (char *)"int";
 		if(!validateL(_INT_)) {
@@ -128,7 +145,6 @@ void Operation::propagateScopes(SymbolTable *table) {
 			printf("ERROR(%d): '%s' requires both operands be arrays or not but lhs is%s an array and rhs is%s an array.\n", line, str, (children[0]->isArray ? "" : " not"), (children[1]->isArray ? "" : " not"));
 			n_errors++;
 		}
-		// do the same thing with array-ness
 		break;
 	// these options can be either unary or binary
 	case SUB:
@@ -182,6 +198,10 @@ void Operation::propagateScopes(SymbolTable *table) {
 		}
 		if(!validateR(_INT_)) {
 			printf("ERROR(%d): Array '%s' should be indexed by type int but got type %s.\n", line, child->name, children[1]->type);
+			n_errors++;
+		}
+		if(children[1]->isArray) {
+			printf("ERROR(%d): Array index is the unindexed array '%s'.\n", line, ((Var *)children[1])->name);
 			n_errors++;
 		}
 		break;

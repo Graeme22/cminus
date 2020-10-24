@@ -86,6 +86,7 @@ void Call::propagateScopes(SymbolTable *table) {
 			n_errors++;
 		}
 		type = strdup(node->type);
+		node->used = true;
 	}
 	AST::propagateScopes(table);
 }

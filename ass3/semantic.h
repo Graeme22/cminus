@@ -3,6 +3,7 @@
 
 #include "ast.h"
 #include "var.h"
+#include "exp.h"
 #include "symbolTable.h"
 
 void analyze(AST *, SymbolTable *);

@@ -322,27 +322,22 @@ expressions
 expression : mutable ASS expression
 	{
 		$$ = new Operation($2, $1, $3);
-		$1->initialize();
 	}
 	| mutable ADDASS expression
 	{
 		$$ = new Operation($2, $1, $3);
-		$1->initialize();
 	}
 	| mutable SUBASS expression
 	{
 		$$ = new Operation($2, $1, $3);
-		$1->initialize();
 	}
 	| mutable MULASS expression
 	{
 		$$ = new Operation($2, $1, $3);
-		$1->initialize();
 	}
 	| mutable DIVASS expression
 	{
 		$$ = new Operation($2, $1, $3);
-		$1->initialize();
 	}
 	| mutable INC
 	{

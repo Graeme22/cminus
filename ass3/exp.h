@@ -7,6 +7,8 @@
 #include <iostream>
 #include "parser.tab.h"
 
+extern bool checkInitialization;
+
 class Operation: public AST {
 
 	char *str;

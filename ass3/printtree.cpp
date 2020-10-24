@@ -2,6 +2,7 @@
 
 int n_errors = 0;
 int n_warnings = 0;
+bool checkInitialization = true;
 
 int main(int argc, char *argv[]) {
 	tree = new AST();

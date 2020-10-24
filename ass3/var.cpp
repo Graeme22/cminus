@@ -10,7 +10,6 @@ Var::Var(TokenData *data) {
 	isFunction = false;
 	used = false;
 	notified = false;
-	initialized = false;
 }
 
 Var::Var(TokenData *left, TokenData *right): Var(left) {
@@ -107,7 +106,7 @@ void Id::propagateScopes(SymbolTable *table) {
 			var->used = true;
 			if(initialized)
 				var->initialized = true;
-			if(!var->initialized && !var->notified) {
+			if(checkInitialization && !var->initialized && !var->notified) {
 				printf("WARNING(%d): Variable %s may be uninitialized when used here.\n", line, name);
 				n_warnings++;
 				var->notified = true;
