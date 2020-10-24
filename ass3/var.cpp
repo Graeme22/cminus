@@ -62,6 +62,14 @@ void Var::propagateScopes(SymbolTable *table) {
 	AST::propagateScopes(table);
 }
 
+void Var::initialize(SymbolTable *table) {
+	void *result = table->lookup(name);
+	if(result != NULL) {
+		Var *var = (Var *)result;
+		var->initialized = true;
+	}
+}
+
 // Id
 
 Id::Id(TokenData *data): Var(data) {}

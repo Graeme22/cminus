@@ -321,31 +321,31 @@ expressions
 */
 expression : mutable ASS expression
 	{
-		$$ = new Operation($2, $1, $3);
+		$$ = new Assignment($2, $1, $3);
 	}
 	| mutable ADDASS expression
 	{
-		$$ = new Operation($2, $1, $3);
+		$$ = new Assignment($2, $1, $3);
 	}
 	| mutable SUBASS expression
 	{
-		$$ = new Operation($2, $1, $3);
+		$$ = new Assignment($2, $1, $3);
 	}
 	| mutable MULASS expression
 	{
-		$$ = new Operation($2, $1, $3);
+		$$ = new Assignment($2, $1, $3);
 	}
 	| mutable DIVASS expression
 	{
-		$$ = new Operation($2, $1, $3);
+		$$ = new Assignment($2, $1, $3);
 	}
 	| mutable INC
 	{
-		$$ = new Operation($2, $1);
+		$$ = new ShortcutAssignment($2, $1);
 	}
 	| mutable DEC
 	{
-		$$ = new Operation($2, $1);
+		$$ = new ShortcutAssignment($2, $1);
 	}
 	| simpleExpression
 	{

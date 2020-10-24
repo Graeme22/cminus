@@ -11,16 +11,34 @@ extern bool checkInitialization;
 
 class Operation: public AST {
 
+public:
 	char *str;
 	int id;
-
-public:
 	Operation(TokenData *, AST *, AST *);
 	Operation(TokenData *, AST *);
 	virtual void print();
 	virtual void propagateScopes(SymbolTable *);
 	bool validateL(char *);
 	bool validateR(char *);
+
+};
+
+class Assignment: public Operation {
+
+public:
+	Assignment(TokenData *, AST *, AST *);
+	Assignment(TokenData *, AST *);
+	virtual void print();
+	virtual void propagateScopes(SymbolTable *);
+
+};
+
+class ShortcutAssignment: public Assignment {
+
+public:
+	ShortcutAssignment(TokenData *, AST *);
+	virtual void print();
+	virtual void propagateScopes(SymbolTable *);
 
 };
 

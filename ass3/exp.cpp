@@ -15,43 +15,21 @@ Operation::Operation(TokenData *data, AST *left, AST *right): Operation(data, le
 
 void Operation::print() {
 	printPrefix();
-	if(id == ASS || id == INC || id == DEC || id == ADDASS || id == SUBASS || id == MULASS || id == DIVASS) {
-		if(strcmp(type, "undefined") == 0)
-			printf("Assign %s : undefined type [line: %d]\n", str, line);
-		else {
-			if(children[0]->isArray && id != INC && id != DEC)
-				printf("Assign %s : array of type %s [line: %d]\n", str, type, line);
-			else
-				printf("Assign %s : type %s [line: %d]\n", str, type, line);
-		}
-	} else {
-		if(strcmp(type, "undefined") == 0)
-			printf("Op %s : undefined type [line: %d]\n", str, line);
-		else
-			printf("Op %s : type %s [line: %d]\n", str, type, line);
-	}
+	if(strcmp(type, "undefined") == 0)
+		printf("Op %s : undefined type [line: %d]\n", str, line);
+	else
+		printf("Op %s : type %s [line: %d]\n", str, type, line);
 	AST::print();
 }
 
 void Operation::propagateScopes(SymbolTable *table) {
-	if(id == ASS || id == ADDASS || id == SUBASS || id == MULASS || id == DIVASS) {
-		checkInitialization = false;
-		children[0]->propagateScopes(table);
-		checkInitialization = true;
-		children[1]->propagateScopes(table);
-		children[0]->initialize();
-	} else
-		AST::propagateScopesChildren(table);
+	AST::propagateScopesChildren(table);
 	
 	char *_INT_ = (char *)"int";
 	char *_BOOL_ = (char *)"bool";
 	char *_UNDEFINED_ = (char *)"undefined";
 
 	switch(id) {
-	case ADDASS:
-	case SUBASS:
-	case DIVASS:
-	case MULASS:
 	case ADD:
 	case DIV:
 	case MOD:
@@ -65,18 +43,6 @@ void Operation::propagateScopes(SymbolTable *table) {
 			n_errors++;
 		}
 		if(children[0]->isArray || children[1]->isArray) {
-			printf("ERROR(%d): The operation '%s' does not work with arrays.\n", line, str);
-			n_errors++;
-		}
-		break;
-	case INC:
-	case DEC:
-		type = (char *)"int";
-		if(!validateL(_INT_)) {
-			printf("ERROR(%d): Unary '%s' requires an operand of type %s but was given type %s.\n", line, str, type, children[0]->type);
-			n_errors++;
-		}
-		if(children[0]->isArray) {
 			printf("ERROR(%d): The operation '%s' does not work with arrays.\n", line, str);
 			n_errors++;
 		}
@@ -146,11 +112,9 @@ void Operation::propagateScopes(SymbolTable *table) {
 			n_errors++;
 		}
 		break;
-	// these options can be either unary or binary
 	case SUB:
 		type = (char *)"int";
-		// unary
-		if(children[1] == NULL) {
+		if(children[1] == NULL) { // unary
 			if(!validateL(_INT_)) {
 				printf("ERROR(%d): Unary '%s' requires an operand of type %s but was given type %s.\n", line, str, type, children[0]->type);
 				n_errors++;
@@ -159,7 +123,7 @@ void Operation::propagateScopes(SymbolTable *table) {
 				printf("ERROR(%d): The operation '%s' does not work with arrays.\n", line, str);
 				n_errors++;
 			}
-		} else {
+		} else { // binary
 			if(!validateL(_INT_)) {
 				printf("ERROR(%d): '%s' requires operands of type %s but lhs is of type %s.\n", line, str, type, children[0]->type);
 				n_errors++;
@@ -174,7 +138,7 @@ void Operation::propagateScopes(SymbolTable *table) {
 		type = (char *)"int";
 		// unary
 		if(children[1] == NULL) {
-			if(!children[0]->isArray) {
+			if(!children[0]->isArray && strcmp(children[0]->type, (char *)"undefined") != 0) {
 				printf("ERROR(%d): The operation '%s' only works with arrays.\n", line, str);
 				n_errors++;
 			}
@@ -215,6 +179,88 @@ bool Operation::validateL(char *left) {
 
 bool Operation::validateR(char *right) {
 	return strcmp(children[1]->type, right) == 0 || strcmp(children[1]->type, (char *)"undefined") == 0;
+}
+
+// Assignment
+
+Assignment::Assignment(TokenData *data, AST *left, AST *right): Operation(data, left, right) {}
+
+Assignment::Assignment(TokenData *data, AST *left): Operation(data, left) {}
+
+void Assignment::print() {
+	printPrefix();
+	if(strcmp(type, "undefined") == 0)
+		printf("Assign %s : undefined type [line: %d]\n", str, line);
+	else {
+		if(children[0]->isArray)
+			printf("Assign %s : array of type %s [line: %d]\n", str, type, line);
+		else
+			printf("Assign %s : type %s [line: %d]\n", str, type, line);
+	}
+	AST::print();
+}
+
+void Assignment::propagateScopes(SymbolTable *table) {
+	checkInitialization = false;
+	children[0]->propagateScopes(table);
+	checkInitialization = true;
+	children[1]->propagateScopes(table);
+
+	if(id == ASS) {
+		type = strdup(children[0]->type);
+		if(strcmp(children[0]->type, children[1]->type) != 0 && strcmp(children[0]->type, (char *)"undefined") != 0 && strcmp(children[1]->type, (char *)"undefined") != 0) {
+			printf("ERROR(%d): '%s' requires operands of the same type but lhs is type %s and rhs is type %s.\n", line, str, children[0]->type, children[1]->type);
+			n_errors++;
+		}
+		if(children[0]->isArray && !children[1]->isArray || !children[0]->isArray && children[1]->isArray) {
+			printf("ERROR(%d): '%s' requires both operands be arrays or not but lhs is%s an array and rhs is%s an array.\n", line, str, (children[0]->isArray ? "" : " not"), (children[1]->isArray ? "" : " not"));
+			n_errors++;
+		}
+	} else {
+		type = (char *)"int";
+		if(!validateL(type)) {
+			printf("ERROR(%d): '%s' requires operands of type %s but lhs is of type %s.\n", line, str, type, children[0]->type);
+			n_errors++;
+		}
+		if(!validateR(type)) {
+			printf("ERROR(%d): '%s' requires operands of type %s but rhs is of type %s.\n", line, str, type, children[1]->type);
+			n_errors++;
+		}
+		if(children[0]->isArray || children[1]->isArray) {
+			printf("ERROR(%d): The operation '%s' does not work with arrays.\n", line, str);
+			n_errors++;
+		}
+	}
+
+	children[0]->initialize(table);
+	AST::propagateScopesSibling(table);
+}
+
+// ShortcutAssignment
+
+ShortcutAssignment::ShortcutAssignment(TokenData *data, AST *left): Assignment(data, left) {}
+
+void ShortcutAssignment::print() {
+	printPrefix();
+	if(strcmp(type, "undefined") == 0)
+		printf("Assign %s : undefined type [line: %d]\n", str, line);
+	else
+		printf("Assign %s : type %s [line: %d]\n", str, type, line);
+	AST::print();
+}
+
+void ShortcutAssignment::propagateScopes(SymbolTable *table) {
+	AST::propagateScopesChildren(table);
+	type = (char *)"int";
+	if(!validateL(type)) {
+		printf("ERROR(%d): Unary '%s' requires an operand of type %s but was given type %s.\n", line, str, type, children[0]->type);
+		n_errors++;
+	}
+	if(children[0]->isArray) {
+		printf("ERROR(%d): The operation '%s' does not work with arrays.\n", line, str);
+		n_errors++;
+	}
+	AST::propagateScopesSibling(table);
 }
 
 // Constant

@@ -107,11 +107,12 @@ void Return::print() {
 }
 
 void Return::propagateScopes(SymbolTable *table) {
+	AST::propagateScopesChildren(table);
 	if(children[0] != NULL && children[0]->isArray) {
 		printf("ERROR(%d): Cannot return an array.\n", line);
 		n_errors++;
 	}
-	AST::propagateScopes(table);
+	AST::propagateScopesSibling(table);
 }
 
 // For

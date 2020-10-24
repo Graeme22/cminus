@@ -18,6 +18,7 @@ public:
 	void setInitialized();
 	virtual void print();
 	virtual void propagateScopes(SymbolTable *);
+	virtual void initialize(SymbolTable *);
 
 };
 
