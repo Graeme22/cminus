@@ -1,0 +1,71 @@
+====================================
+FILE: uninit.c-
+ERROR(3): Symbol 'z' is already declared at line 3.
+ERROR(3): Symbol 'z' is already declared at line 3.
+WARNING(5): Variable i may be uninitialized when used here.
+WARNING(7): Variable g may be uninitialized when used here.
+WARNING(8): Variable h may be uninitialized when used here.
+WARNING(9): Variable j may be uninitialized when used here.
+WARNING(10): Variable k may be uninitialized when used here.
+WARNING(11): Variable l may be uninitialized when used here.
+WARNING(12): Variable m may be uninitialized when used here.
+ERROR(13): Function 'dog' is not declared.
+ERROR(14): Cannot use function 'main' as a variable.
+WARNING(1): The variable x seems not to be used.
+Func main: returns type void [line: 1]
+.   Child: 0  Param x: type int [line: 1]
+.   Child: 1  Compound [line: 2]
+.   .   Child: 0  Var z: type int [line: 3]
+.   .   Sibling: 1  Var g: type int [line: 3]
+.   .   Sibling: 2  Var h: type int [line: 3]
+.   .   Sibling: 3  Var i: type int [line: 3]
+.   .   Sibling: 4  Var j: type int [line: 3]
+.   .   Sibling: 5  Var k: type int [line: 3]
+.   .   Sibling: 6  Var l: type int [line: 3]
+.   .   Sibling: 7  Var m: type int [line: 3]
+.   .   Sibling: 8  Var z: type int [line: 3]
+.   .   Sibling: 9  Var z: type int [line: 3]
+.   .   Child: 1  Assign = : type int [line: 5]
+.   .   .   Child: 0  Id z: type int [line: 5]
+.   .   .   Child: 1  Id i: type int [line: 5]
+.   .   Sibling: 1  Assign = : type int [line: 6]
+.   .   .   Child: 0  Id z: type int [line: 6]
+.   .   .   Child: 1  Id i: type int [line: 6]
+.   .   Sibling: 2  Assign = : type int [line: 7]
+.   .   .   Child: 0  Id i: type int [line: 7]
+.   .   .   Child: 1  Op + : type int [line: 7]
+.   .   .   .   Child: 0  Id g: type int [line: 7]
+.   .   .   .   Child: 1  Const 3 : type int [line: 7]
+.   .   Sibling: 3  Assign = : type int [line: 8]
+.   .   .   Child: 0  Id i: type int [line: 8]
+.   .   .   Child: 1  Op + : type int [line: 8]
+.   .   .   .   Child: 0  Const 4 : type int [line: 8]
+.   .   .   .   Child: 1  Id h: type int [line: 8]
+.   .   Sibling: 4  Assign ++ : type int [line: 9]
+.   .   .   Child: 0  Id j: type int [line: 9]
+.   .   Sibling: 5  Call main: type void [line: 10]
+.   .   .   Child: 0  Id k: type int [line: 10]
+.   .   Sibling: 6  Id l: type int [line: 11]
+.   .   Sibling: 7  Op - : type int [line: 12]
+.   .   .   Child: 0  Id m: type int [line: 12]
+.   .   Sibling: 8  Call dog: undefined type [line: 13]
+.   .   Sibling: 9  Assign = : undefined type [line: 14]
+.   .   .   Child: 0  Id main: undefined type [line: 14]
+.   .   .   Child: 1  Const 3 : type int [line: 14]
+.   .   Sibling: 10  Op + : type int [line: 15]
+.   .   .   Child: 0  Op + : type int [line: 15]
+.   .   .   .   Child: 0  Op + : type int [line: 15]
+.   .   .   .   .   Child: 0  Op + : type int [line: 15]
+.   .   .   .   .   .   Child: 0  Op + : type int [line: 15]
+.   .   .   .   .   .   .   Child: 0  Op + : type int [line: 15]
+.   .   .   .   .   .   .   .   Child: 0  Op + : type int [line: 15]
+.   .   .   .   .   .   .   .   .   Child: 0  Id g: type int [line: 15]
+.   .   .   .   .   .   .   .   .   Child: 1  Id h: type int [line: 15]
+.   .   .   .   .   .   .   .   Child: 1  Id i: type int [line: 15]
+.   .   .   .   .   .   .   Child: 1  Id j: type int [line: 15]
+.   .   .   .   .   .   Child: 1  Id k: type int [line: 15]
+.   .   .   .   .   Child: 1  Id l: type int [line: 15]
+.   .   .   .   Child: 1  Id m: type int [line: 15]
+.   .   .   Child: 1  Id z: type int [line: 15]
+Number of warnings: 8
+Number of errors: 4

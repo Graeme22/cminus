@@ -1,0 +1,20 @@
+====================================
+FILE: tinyBreak3.c-
+WARNING(5): Variable x may be uninitialized when used here.
+WARNING(4): The variable x seems not to be used.
+Func main: returns type void [line: 2]
+.   Child: 1  Compound [line: 3]
+.   .   Child: 0  Var x: type int [line: 4]
+.   .   Child: 1  While [line: 5]
+.   .   .   Child: 0  Const true : type bool [line: 5]
+.   .   .   Child: 1  For [line: 5]
+.   .   .   .   Child: 0  Var x: undefined type [line: 5]
+.   .   .   .   Child: 1  Id x: undefined type [line: 5]
+.   .   .   .   Child: 2  If [line: 5]
+.   .   .   .   .   Child: 0  Op > : type bool [line: 5]
+.   .   .   .   .   .   Child: 0  Id x: undefined type [line: 5]
+.   .   .   .   .   .   Child: 1  Const 1 : type int [line: 5]
+.   .   .   .   .   Child: 1  Break [line: 5]
+.   .   .   .   .   Child: 2  Break [line: 5]
+Number of warnings: 2
+Number of errors: 0

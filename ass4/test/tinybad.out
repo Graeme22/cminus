@@ -1,0 +1,50 @@
+====================================
+FILE: tinybad.c-
+ERROR(8): Variable 'aspergillus' is not declared.
+ERROR(8): Variable 'niger' is not declared.
+ERROR(9): '=' requires operands of the same type but lhs is type char and rhs is type int.
+ERROR(10): Cannot use function 'dog' as a variable.
+ERROR(11): Cannot use function 'dog' as a variable.
+ERROR(12): Array 'ant' should be indexed by type int but got type char.
+ERROR(12): Array 'ant' should be indexed by type int but got type char.
+ERROR(13): Cannot use function 'dog' as a variable.
+ERROR(13): Variable 'cow' is not declared.
+ERROR(15): Function 'dog' at line 5 is expecting to return type int but got type char.
+WARNING(5): The variable corgi seems not to be used.
+ERROR(LINKER): Procedure main is not declared.
+Var ant: array of type int [line: 2]
+Sibling: 1  Var bat: type int [line: 3]
+Sibling: 2  Func dog: returns type int [line: 5]
+.   Child: 0  Param corgi: type bool [line: 5]
+.   Child: 1  Compound [line: 5]
+.   .   Child: 0  Var cat: type char [line: 6]
+.   .   Child: 1  Assign = : undefined type [line: 8]
+.   .   .   Child: 0  Id aspergillus: undefined type [line: 8]
+.   .   .   Child: 1  Id niger: undefined type [line: 8]
+.   .   Sibling: 1  Assign = : type char [line: 9]
+.   .   .   Child: 0  Id cat: type char [line: 9]
+.   .   .   Child: 1  Const 666 : type int [line: 9]
+.   .   Sibling: 2  Assign = : type char [line: 10]
+.   .   .   Child: 0  Id cat: type char [line: 10]
+.   .   .   Child: 1  Id dog: undefined type [line: 10]
+.   .   Sibling: 3  Assign = : undefined type [line: 11]
+.   .   .   Child: 0  Id dog: undefined type [line: 11]
+.   .   .   Child: 1  Id cat: type char [line: 11]
+.   .   Sibling: 4  Assign = : type int [line: 12]
+.   .   .   Child: 0  Op [ : type int [line: 12]
+.   .   .   .   Child: 0  Id ant: array of type int [line: 12]
+.   .   .   .   Child: 1  Const: 'x' : type char [line: 12]
+.   .   .   Child: 1  Op [ : type int [line: 12]
+.   .   .   .   Child: 0  Id ant: array of type int [line: 12]
+.   .   .   .   Child: 1  Id cat: type char [line: 12]
+.   .   Sibling: 5  Assign = : type int [line: 13]
+.   .   .   Child: 0  Op [ : type int [line: 13]
+.   .   .   .   Child: 0  Id ant: array of type int [line: 13]
+.   .   .   .   Child: 1  Id dog: undefined type [line: 13]
+.   .   .   Child: 1  Op [ : type int [line: 13]
+.   .   .   .   Child: 0  Id ant: array of type int [line: 13]
+.   .   .   .   Child: 1  Id cow: undefined type [line: 13]
+.   .   Sibling: 6  Return [line: 15]
+.   .   .   Child: 0  Id cat: type char [line: 15]
+Number of warnings: 1
+Number of errors: 11

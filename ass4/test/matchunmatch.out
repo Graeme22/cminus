@@ -1,0 +1,86 @@
+====================================
+FILE: matchunmatch.c-
+ERROR(8): Expecting Boolean test condition in if statement but got type int.
+WARNING(8): Variable t may be uninitialized when used here.
+WARNING(8): Variable a may be uninitialized when used here.
+WARNING(8): Variable b may be uninitialized when used here.
+ERROR(9): Expecting Boolean test condition in if statement but got type int.
+WARNING(9): Variable u may be uninitialized when used here.
+ERROR(10): Expecting Boolean test condition in if statement but got type int.
+WARNING(10): Variable v may be uninitialized when used here.
+WARNING(10): Variable c may be uninitialized when used here.
+WARNING(10): Variable d may be uninitialized when used here.
+ERROR(11): Expecting Boolean test condition in if statement but got type int.
+ERROR(12): Expecting Boolean test condition in if statement but got type int.
+WARNING(12): Variable i may be uninitialized when used here.
+ERROR(13): Expecting Boolean test condition in if statement but got type int.
+WARNING(13): The variable s seems not to be used.
+WARNING(5): The variable s seems not to be used.
+Func main: returns type void [line: 2]
+.   Child: 1  Compound [line: 3]
+.   .   Child: 0  Var i: array of type int [line: 4]
+.   .   Sibling: 1  Var s: type bool [line: 5]
+.   .   Sibling: 2  Var t: type bool [line: 5]
+.   .   Sibling: 3  Var u: type bool [line: 5]
+.   .   Sibling: 4  Var v: type bool [line: 5]
+.   .   Sibling: 5  Var a: type char [line: 6]
+.   .   Sibling: 6  Var b: type char [line: 6]
+.   .   Sibling: 7  Var c: type char [line: 6]
+.   .   Sibling: 8  Var d: type char [line: 6]
+.   .   Child: 1  If [line: 8]
+.   .   .   Child: 0  Const 1 : type int [line: 8]
+.   .   .   Child: 1  While [line: 8]
+.   .   .   .   Child: 0  Id t: type bool [line: 8]
+.   .   .   .   Child: 1  Id a: type char [line: 8]
+.   .   .   Child: 2  Id b: type char [line: 8]
+.   .   Sibling: 1  If [line: 9]
+.   .   .   Child: 0  Const 2 : type int [line: 9]
+.   .   .   Child: 1  While [line: 9]
+.   .   .   .   Child: 0  Id t: type bool [line: 9]
+.   .   .   .   Child: 1  If [line: 9]
+.   .   .   .   .   Child: 0  Id u: type bool [line: 9]
+.   .   .   .   .   Child: 1  Id a: type char [line: 9]
+.   .   .   .   .   Child: 2  Id b: type char [line: 9]
+.   .   Sibling: 2  If [line: 10]
+.   .   .   Child: 0  Const 3 : type int [line: 10]
+.   .   .   Child: 1  Id a: type char [line: 10]
+.   .   .   Child: 2  If [line: 10]
+.   .   .   .   Child: 0  Id u: type bool [line: 10]
+.   .   .   .   Child: 1  Id b: type char [line: 10]
+.   .   .   .   Child: 2  If [line: 10]
+.   .   .   .   .   Child: 0  Id v: type bool [line: 10]
+.   .   .   .   .   Child: 1  Id c: type char [line: 10]
+.   .   .   .   .   Child: 2  Id d: type char [line: 10]
+.   .   Sibling: 3  If [line: 11]
+.   .   .   Child: 0  Const 4 : type int [line: 11]
+.   .   .   Child: 1  While [line: 11]
+.   .   .   .   Child: 0  Id t: type bool [line: 11]
+.   .   .   .   Child: 1  If [line: 11]
+.   .   .   .   .   Child: 0  Id u: type bool [line: 11]
+.   .   .   .   .   Child: 1  Id b: type char [line: 11]
+.   .   .   .   .   Child: 2  If [line: 11]
+.   .   .   .   .   .   Child: 0  Id v: type bool [line: 11]
+.   .   .   .   .   .   Child: 1  Id c: type char [line: 11]
+.   .   .   .   .   .   Child: 2  Id d: type char [line: 11]
+.   .   Sibling: 4  If [line: 12]
+.   .   .   Child: 0  Const 5 : type int [line: 12]
+.   .   .   Child: 1  While [line: 12]
+.   .   .   .   Child: 0  Id t: type bool [line: 12]
+.   .   .   .   Child: 1  For [line: 12]
+.   .   .   .   .   Child: 0  Var b: type int [line: 12]
+.   .   .   .   .   Child: 1  Id i: array of type int [line: 12]
+.   .   .   .   .   Child: 2  Id b: type int [line: 12]
+.   .   .   Child: 2  Id c: type char [line: 12]
+.   .   Sibling: 5  If [line: 13]
+.   .   .   Child: 0  Const 6 : type int [line: 13]
+.   .   .   Child: 1  While [line: 13]
+.   .   .   .   Child: 0  Id t: type bool [line: 13]
+.   .   .   .   Child: 1  If [line: 13]
+.   .   .   .   .   Child: 0  Id u: type bool [line: 13]
+.   .   .   .   .   Child: 1  For [line: 13]
+.   .   .   .   .   .   Child: 0  Var s: type int [line: 13]
+.   .   .   .   .   .   Child: 1  Id i: array of type int [line: 13]
+.   .   .   .   .   .   Child: 2  Id b: type char [line: 13]
+.   .   .   .   .   Child: 2  Id c: type char [line: 13]
+Number of warnings: 10
+Number of errors: 6

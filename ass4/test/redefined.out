@@ -1,0 +1,92 @@
+====================================
+FILE: redefined.c-
+ERROR(6): Symbol 'x' is already declared at line 6.
+ERROR(7): Symbol 'x' is already declared at line 6.
+ERROR(7): Symbol 'x' is already declared at line 6.
+ERROR(8): Symbol 'x' is already declared at line 6.
+ERROR(8): Symbol 'x' is already declared at line 6.
+ERROR(10): Symbol 'y' is already declared at line 10.
+ERROR(13): Symbol 'main' is already declared at line 12.
+ERROR(14): Symbol 'main' is already declared at line 12.
+WARNING(16): The variable g seems not to be used.
+WARNING(12): The variable main seems not to be used.
+WARNING(6): The variable x seems not to be used.
+WARNING(10): The variable y seems not to be used.
+ERROR(19): Symbol 'main' is already declared at line 4.
+ERROR(19): Symbol 'a' is already declared at line 19.
+ERROR(19): Symbol 'b' is already declared at line 19.
+ERROR(19): Symbol 'c' is already declared at line 19.
+ERROR(20): Symbol 'a' is already declared at line 19.
+ERROR(20): Symbol 'b' is already declared at line 19.
+ERROR(20): Symbol 'c' is already declared at line 19.
+ERROR(25): Symbol 'a' is already declared at line 24.
+ERROR(25): Symbol 'b' is already declared at line 24.
+ERROR(25): Symbol 'c' is already declared at line 24.
+WARNING(27): The variable a seems not to be used.
+WARNING(27): The variable b seems not to be used.
+WARNING(27): The variable c seems not to be used.
+WARNING(28): The variable g seems not to be used.
+WARNING(28): The variable main seems not to be used.
+WARNING(24): The variable a seems not to be used.
+WARNING(24): The variable b seems not to be used.
+WARNING(24): The variable c seems not to be used.
+WARNING(23): The variable g seems not to be used.
+WARNING(19): The variable a seems not to be used.
+WARNING(19): The variable b seems not to be used.
+WARNING(19): The variable c seems not to be used.
+WARNING(21): The variable g seems not to be used.
+ERROR(34): Symbol 'cat' is already declared at line 33.
+WARNING(33): The variable cat seems not to be used.
+WARNING(33): The variable g seems not to be used.
+ERROR(37): Symbol 'cat' is already declared at line 33.
+ERROR(37): Symbol 'g' is already declared at line 2.
+Var g: type int [line: 2]
+Sibling: 1  Func main: returns type void [line: 4]
+.   Child: 1  Compound [line: 5]
+.   .   Child: 0  Var x: type int [line: 6]
+.   .   Sibling: 1  Var x: type int [line: 6]
+.   .   Sibling: 2  Var x: type bool [line: 7]
+.   .   Sibling: 3  Var x: type bool [line: 7]
+.   .   Sibling: 4  Var x: type char [line: 8]
+.   .   Sibling: 5  Var x: type char [line: 8]
+.   .   Sibling: 6  Var y: type int [line: 10]
+.   .   Sibling: 7  Var y: array of type int [line: 10]
+.   .   Sibling: 8  Var main: type int [line: 12]
+.   .   Sibling: 9  Var main: type bool [line: 13]
+.   .   Sibling: 10  Var main: type char [line: 14]
+.   .   Sibling: 11  Var g: type int [line: 16]
+Sibling: 2  Func main: returns type void [line: 19]
+.   Child: 0  Param a: type int [line: 19]
+.   Sibling: 1  Param b: type bool [line: 19]
+.   Sibling: 2  Param c: type char [line: 19]
+.   Sibling: 3  Param a: type int [line: 19]
+.   Sibling: 4  Param b: type bool [line: 19]
+.   Sibling: 5  Param c: type char [line: 19]
+.   Child: 1  Compound [line: 19]
+.   .   Child: 0  Var a: type int [line: 20]
+.   .   Sibling: 1  Var b: type bool [line: 20]
+.   .   Sibling: 2  Var c: type char [line: 20]
+.   .   Sibling: 3  Var g: type int [line: 21]
+.   .   Child: 1  Compound [line: 22]
+.   .   .   Child: 0  Var g: type int [line: 23]
+.   .   .   Sibling: 1  Var a: type int [line: 24]
+.   .   .   Sibling: 2  Var b: type bool [line: 24]
+.   .   .   Sibling: 3  Var c: type char [line: 24]
+.   .   .   Sibling: 4  Var a: type int [line: 25]
+.   .   .   Sibling: 5  Var b: type bool [line: 25]
+.   .   .   Sibling: 6  Var c: type char [line: 25]
+.   .   .   Child: 1  Compound [line: 26]
+.   .   .   .   Child: 0  Var a: type int [line: 27]
+.   .   .   .   Sibling: 1  Var b: type bool [line: 27]
+.   .   .   .   Sibling: 2  Var c: type char [line: 27]
+.   .   .   .   Sibling: 3  Var main: type int [line: 28]
+.   .   .   .   Sibling: 4  Var g: type int [line: 28]
+Sibling: 3  Func cat: returns type void [line: 33]
+.   Child: 0  Param cat: type int [line: 33]
+.   Sibling: 1  Param g: type int [line: 33]
+.   Child: 1  Compound [line: 33]
+.   .   Child: 0  Var cat: type int [line: 34]
+Sibling: 4  Var cat: type int [line: 37]
+Sibling: 5  Var g: type int [line: 37]
+Number of warnings: 19
+Number of errors: 21

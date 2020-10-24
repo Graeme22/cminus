@@ -1,0 +1,12 @@
+// C-F20
+main()
+{
+   int x;
+
+   x = 0;
+
+   if (false) x++;
+
+   if (x<10) x++;
+   else x--;
+}

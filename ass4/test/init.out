@@ -1,0 +1,97 @@
+====================================
+FILE: init.c-
+ERROR(2): Variable 's' is not declared.
+ERROR(2): Initializer for variable 's' is not a constant expression.
+ERROR(2): Variable 't' is of type int but is being initialized with an expression of type char.
+ERROR(2): Variable 'u' is of type int but is being initialized with an expression of type char.
+WARNING(9): Variable x may be uninitialized when used here.
+ERROR(9): Initializer for variable 'lenx' is not a constant expression.
+WARNING(18): Variable t may be uninitialized when used here.
+ERROR(28): Function 'output' is not declared.
+WARNING(10): The variable ba seems not to be used.
+WARNING(10): The variable bb seems not to be used.
+WARNING(10): The variable bc seems not to be used.
+WARNING(11): The variable ca seems not to be used.
+WARNING(9): The variable k seems not to be used.
+WARNING(9): The variable lenx seems not to be used.
+WARNING(7): The variable y seems not to be used.
+Var s: type int [line: 2]
+.   Child: 0  Id s: undefined type [line: 2]
+Sibling: 1  Var t: type int [line: 2]
+.   Child: 0  Const: '"' : type char [line: 2]
+Sibling: 2  Var u: type int [line: 2]
+.   Child: 0  Const: ''' : type char [line: 2]
+Sibling: 3  Func main: returns type void [line: 4]
+.   Child: 1  Compound [line: 4]
+.   .   Child: 0  Var i: type int [line: 5]
+.   .   .   Child: 0  Const 666 : type int [line: 5]
+.   .   Sibling: 1  Var a: static type int [line: 6]
+.   .   .   Child: 0  Const 666 : type int [line: 6]
+.   .   Sibling: 2  Var y: type char [line: 7]
+.   .   .   Child: 0  Const: 'a' : type char [line: 7]
+.   .   Sibling: 3  Var b: array of type char [line: 7]
+.   .   .   Child: 0  Const: 'x' : type char [line: 7]
+.   .   Sibling: 4  Var x: array of type int [line: 8]
+.   .   Sibling: 5  Var k: type int [line: 9]
+.   .   .   Child: 0  Op + : type int [line: 9]
+.   .   .   .   Child: 0  Op * : type int [line: 9]
+.   .   .   .   .   Child: 0  Const 4 : type int [line: 9]
+.   .   .   .   .   Child: 1  Const 5 : type int [line: 9]
+.   .   .   .   Child: 1  Const 3 : type int [line: 9]
+.   .   Sibling: 6  Var lenx: type int [line: 9]
+.   .   .   Child: 0  Op * : type int [line: 9]
+.   .   .   .   Child: 0  Id x: array of type int [line: 9]
+.   .   Sibling: 7  Var ba: type bool [line: 10]
+.   .   .   Child: 0  Const true : type bool [line: 10]
+.   .   Sibling: 8  Var bb: type bool [line: 10]
+.   .   .   Child: 0  Op & : type bool [line: 10]
+.   .   .   .   Child: 0  Const true : type bool [line: 10]
+.   .   .   .   Child: 1  Op ! : type bool [line: 10]
+.   .   .   .   .   Child: 0  Const false : type bool [line: 10]
+.   .   Sibling: 9  Var bc: type bool [line: 10]
+.   .   .   Child: 0  Op > : type bool [line: 10]
+.   .   .   .   Child: 0  Const 5 : type int [line: 10]
+.   .   .   .   Child: 1  Const 4 : type int [line: 10]
+.   .   Sibling: 10  Var ca: type char [line: 11]
+.   .   .   Child: 0  Const: 'a' : type char [line: 11]
+.   .   Child: 1  Assign = : type int [line: 13]
+.   .   .   Child: 0  Op [ : type int [line: 13]
+.   .   .   .   Child: 0  Id x: array of type int [line: 13]
+.   .   .   .   Child: 1  Const 1 : type int [line: 13]
+.   .   .   Child: 1  Const 111 : type int [line: 13]
+.   .   Sibling: 1  Assign = : type int [line: 14]
+.   .   .   Child: 0  Id a: static type int [line: 14]
+.   .   .   Child: 1  Op * : type int [line: 14]
+.   .   .   .   Child: 0  Id b: array of type char [line: 14]
+.   .   Sibling: 2  While [line: 15]
+.   .   .   Child: 0  Op < : type bool [line: 15]
+.   .   .   .   Child: 0  Id i: type int [line: 15]
+.   .   .   .   Child: 1  Const 10 : type int [line: 15]
+.   .   .   Child: 1  Compound [line: 15]
+.   .   .   .   Child: 0  Var y: array of type int [line: 16]
+.   .   .   .   Sibling: 1  Var t: type bool [line: 17]
+.   .   .   .   Child: 1  If [line: 18]
+.   .   .   .   .   Child: 0  Id t: type bool [line: 18]
+.   .   .   .   .   Child: 1  Break [line: 18]
+.   .   .   .   Sibling: 1  If [line: 19]
+.   .   .   .   .   Child: 0  Id t: type bool [line: 19]
+.   .   .   .   .   Child: 1  Break [line: 19]
+.   .   .   .   .   Child: 2  Return [line: 19]
+.   .   .   .   Sibling: 2  Assign = : type int [line: 20]
+.   .   .   .   .   Child: 0  Op [ : type int [line: 20]
+.   .   .   .   .   .   Child: 0  Id y: array of type int [line: 20]
+.   .   .   .   .   .   Child: 1  Const 2 : type int [line: 20]
+.   .   .   .   .   Child: 1  Const 222 : type int [line: 20]
+.   .   Sibling: 3  Compound [line: 22]
+.   .   .   Child: 1  Compound [line: 23]
+.   .   .   .   Child: 0  Var z: array of type int [line: 24]
+.   .   .   .   Child: 1  Assign = : type int [line: 25]
+.   .   .   .   .   Child: 0  Op [ : type int [line: 25]
+.   .   .   .   .   .   Child: 0  Id z: array of type int [line: 25]
+.   .   .   .   .   .   Child: 1  Const 3 : type int [line: 25]
+.   .   .   .   .   Child: 1  Const 333 : type int [line: 25]
+.   .   Sibling: 4  Call output: undefined type [line: 28]
+.   .   .   Child: 0  Const 666 : type int [line: 28]
+Number of warnings: 9
+Number of errors: 6
+Warning: init.dot: syntax error in line 30 near '''

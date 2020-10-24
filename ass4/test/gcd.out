@@ -1,0 +1,47 @@
+====================================
+FILE: gcd.c-
+ERROR(16): Function 'input' is not declared.
+ERROR(17): Function 'input' is not declared.
+ERROR(19): Function 'output' is not declared.
+ERROR(20): Function 'outnl' is not declared.
+Func gcd: returns type int [line: 4]
+.   Child: 0  Param u: type int [line: 4]
+.   Sibling: 1  Param v: type int [line: 4]
+.   Child: 1  Compound [line: 5]
+.   .   Child: 1  If [line: 6]
+.   .   .   Child: 0  Op == : type bool [line: 6]
+.   .   .   .   Child: 0  Id v: type int [line: 6]
+.   .   .   .   Child: 1  Const 0 : type int [line: 6]
+.   .   .   Child: 1  Return [line: 7]
+.   .   .   .   Child: 0  Id u: type int [line: 7]
+.   .   .   Child: 2  Return [line: 9]
+.   .   .   .   Child: 0  Call gcd: type int [line: 9]
+.   .   .   .   .   Child: 0  Id v: type int [line: 9]
+.   .   .   .   .   Sibling: 1  Op - : type int [line: 9]
+.   .   .   .   .   .   Child: 0  Id u: type int [line: 9]
+.   .   .   .   .   .   Child: 1  Op * : type int [line: 9]
+.   .   .   .   .   .   .   Child: 0  Op / : type int [line: 9]
+.   .   .   .   .   .   .   .   Child: 0  Id u: type int [line: 9]
+.   .   .   .   .   .   .   .   Child: 1  Id v: type int [line: 9]
+.   .   .   .   .   .   .   Child: 1  Id v: type int [line: 9]
+Sibling: 1  Func main: returns type void [line: 12]
+.   Child: 1  Compound [line: 13]
+.   .   Child: 0  Var x: type int [line: 14]
+.   .   Sibling: 1  Var y: type int [line: 14]
+.   .   Sibling: 2  Var z: type int [line: 14]
+.   .   Child: 1  Assign = : type int [line: 16]
+.   .   .   Child: 0  Id x: type int [line: 16]
+.   .   .   Child: 1  Call input: undefined type [line: 16]
+.   .   Sibling: 1  Assign = : type int [line: 17]
+.   .   .   Child: 0  Id y: type int [line: 17]
+.   .   .   Child: 1  Call input: undefined type [line: 17]
+.   .   Sibling: 2  Assign = : type int [line: 18]
+.   .   .   Child: 0  Id z: type int [line: 18]
+.   .   .   Child: 1  Call gcd: type int [line: 18]
+.   .   .   .   Child: 0  Id x: type int [line: 18]
+.   .   .   .   Sibling: 1  Id y: type int [line: 18]
+.   .   Sibling: 3  Call output: undefined type [line: 19]
+.   .   .   Child: 0  Id z: type int [line: 19]
+.   .   Sibling: 4  Call outnl: undefined type [line: 20]
+Number of warnings: 0
+Number of errors: 4

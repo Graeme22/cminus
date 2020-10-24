@@ -1,0 +1,46 @@
+====================================
+FILE: notused.c-
+WARNING(12): The variable y seems not to be used.
+WARNING(8): Expecting to return type int but function 'main' has no return statement.
+WARNING(8): The variable u seems not to be used.
+WARNING(10): The variable w seems not to be used.
+WARNING(8): The variable z seems not to be used.
+ERROR(21): Cannot use function 'dog' as a variable.
+ERROR(22): Variable 'klingon' is not declared.
+ERROR(23): Variable 'klingon' is not declared.
+ERROR(23): Variable 'romulon' is not declared.
+WARNING(20): Expecting to return type int but function 'elk' has no return statement.
+Var g: type int [line: 2]
+Sibling: 1  Var h: type int [line: 2]
+Sibling: 2  Func cat: returns type void [line: 4]
+Sibling: 3  Func dog: returns type void [line: 6]
+Sibling: 4  Func main: returns type int [line: 8]
+.   Child: 0  Param u: type int [line: 8]
+.   Sibling: 1  Param z: type int [line: 8]
+.   Child: 1  Compound [line: 9]
+.   .   Child: 0  Var v: type int [line: 10]
+.   .   Sibling: 1  Var w: type int [line: 10]
+.   .   Child: 1  Compound [line: 11]
+.   .   .   Child: 0  Var x: type int [line: 12]
+.   .   .   Sibling: 1  Var y: type int [line: 12]
+.   .   .   Child: 1  Assign = : type int [line: 13]
+.   .   .   .   Child: 0  Id x: type int [line: 13]
+.   .   .   .   Child: 1  Const 666 : type int [line: 13]
+.   .   .   Sibling: 1  Assign = : type int [line: 14]
+.   .   .   .   Child: 0  Id v: type int [line: 14]
+.   .   .   .   Child: 1  Const 777 : type int [line: 14]
+.   .   Sibling: 1  Assign = : type int [line: 16]
+.   .   .   Child: 0  Id h: type int [line: 16]
+.   .   .   Child: 1  Const 888 : type int [line: 16]
+.   .   Sibling: 2  Call cat: type void [line: 17]
+Sibling: 5  Func elk: returns type int [line: 20]
+.   Child: 1  Compound [line: 20]
+.   .   Child: 1  Assign = : undefined type [line: 21]
+.   .   .   Child: 0  Id dog: undefined type [line: 21]
+.   .   .   Child: 1  Const 3 : type int [line: 21]
+.   .   Sibling: 1  Id klingon: undefined type [line: 22]
+.   .   Sibling: 2  Assign = : undefined type [line: 23]
+.   .   .   Child: 0  Id klingon: undefined type [line: 23]
+.   .   .   Child: 1  Id romulon: undefined type [line: 23]
+Number of warnings: 6
+Number of errors: 4

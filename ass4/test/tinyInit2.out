@@ -1,0 +1,56 @@
+====================================
+FILE: tinyInit2.c-
+ERROR(12): Function 'output' is not declared.
+ERROR(13): Function 'output' is not declared.
+WARNING(13): Variable b may be uninitialized when used here.
+ERROR(14): Function 'output' is not declared.
+ERROR(15): Function 'outnl' is not declared.
+ERROR(17): Function 'output' is not declared.
+ERROR(18): Function 'output' is not declared.
+ERROR(19): Function 'output' is not declared.
+ERROR(20): Function 'outnl' is not declared.
+Var a: array of type int [line: 2]
+Sibling: 1  Var x: type int [line: 3]
+.   Child: 0  Op + : type int [line: 3]
+.   .   Child: 0  Const 666 : type int [line: 3]
+.   .   Child: 1  Op * : type int [line: 3]
+.   .   .   Child: 0  Const 777 : type int [line: 3]
+.   .   .   Child: 1  Const 888 : type int [line: 3]
+Sibling: 2  Func main: returns type void [line: 5]
+.   Child: 1  Compound [line: 6]
+.   .   Child: 0  Var b: array of type int [line: 7]
+.   .   Sibling: 1  Var y: type int [line: 8]
+.   .   .   Child: 0  Op + : type int [line: 8]
+.   .   .   .   Child: 0  Const 777 : type int [line: 8]
+.   .   .   .   Child: 1  Op * : type int [line: 8]
+.   .   .   .   .   Child: 0  Const 666 : type int [line: 8]
+.   .   .   .   .   Child: 1  Const 888 : type int [line: 8]
+.   .   Sibling: 2  Var c: static array of type int [line: 9]
+.   .   Sibling: 3  Var z: static type int [line: 10]
+.   .   .   Child: 0  Op + : type int [line: 10]
+.   .   .   .   Child: 0  Const 888 : type int [line: 10]
+.   .   .   .   Child: 1  Op * : type int [line: 10]
+.   .   .   .   .   Child: 0  Const 777 : type int [line: 10]
+.   .   .   .   .   Child: 1  Const 666 : type int [line: 10]
+.   .   Child: 1  Call output: undefined type [line: 12]
+.   .   .   Child: 0  Op * : type int [line: 12]
+.   .   .   .   Child: 0  Id a: array of type int [line: 12]
+.   .   Sibling: 1  Call output: undefined type [line: 13]
+.   .   .   Child: 0  Op * : type int [line: 13]
+.   .   .   .   Child: 0  Id b: array of type int [line: 13]
+.   .   Sibling: 2  Call output: undefined type [line: 14]
+.   .   .   Child: 0  Op * : type int [line: 14]
+.   .   .   .   Child: 0  Id c: static array of type int [line: 14]
+.   .   Sibling: 3  Call outnl: undefined type [line: 15]
+.   .   Sibling: 4  Call output: undefined type [line: 17]
+.   .   .   Child: 0  Id x: type int [line: 17]
+.   .   Sibling: 5  Call output: undefined type [line: 18]
+.   .   .   Child: 0  Id y: type int [line: 18]
+.   .   Sibling: 6  Call output: undefined type [line: 19]
+.   .   .   Child: 0  Id z: static type int [line: 19]
+.   .   Sibling: 7  Call outnl: undefined type [line: 20]
+.   .   Sibling: 8  Assign = : type int [line: 22]
+.   .   .   Child: 0  Id z: static type int [line: 22]
+.   .   .   Child: 1  Const 999 : type int [line: 22]
+Number of warnings: 1
+Number of errors: 8

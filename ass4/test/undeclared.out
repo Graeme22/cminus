@@ -1,0 +1,36 @@
+====================================
+FILE: undeclared.c-
+ERROR(3): Variable 'z' is not declared.
+ERROR(3): Variable 'i' is not declared.
+ERROR(4): Variable 'z' is not declared.
+ERROR(4): Variable 'i' is not declared.
+ERROR(5): Variable 'i' is not declared.
+ERROR(5): Variable 'i' is not declared.
+ERROR(6): Variable 'j' is not declared.
+ERROR(7): Variable 'l' is not declared.
+ERROR(8): Variable 'm' is not declared.
+ERROR(9): Variable 'k' is not declared.
+WARNING(1): The variable x seems not to be used.
+Func main: returns type void [line: 1]
+.   Child: 0  Param x: type int [line: 1]
+.   Child: 1  Compound [line: 2]
+.   .   Child: 1  Assign = : undefined type [line: 3]
+.   .   .   Child: 0  Id z: undefined type [line: 3]
+.   .   .   Child: 1  Id i: undefined type [line: 3]
+.   .   Sibling: 1  Assign = : undefined type [line: 4]
+.   .   .   Child: 0  Id z: undefined type [line: 4]
+.   .   .   Child: 1  Id i: undefined type [line: 4]
+.   .   Sibling: 2  Assign = : undefined type [line: 5]
+.   .   .   Child: 0  Id i: undefined type [line: 5]
+.   .   .   Child: 1  Op + : type int [line: 5]
+.   .   .   .   Child: 0  Id i: undefined type [line: 5]
+.   .   .   .   Child: 1  Const 3 : type int [line: 5]
+.   .   Sibling: 3  Assign ++ : type int [line: 6]
+.   .   .   Child: 0  Id j: undefined type [line: 6]
+.   .   Sibling: 4  Id l: undefined type [line: 7]
+.   .   Sibling: 5  Op - : type int [line: 8]
+.   .   .   Child: 0  Id m: undefined type [line: 8]
+.   .   Sibling: 6  Call main: type void [line: 9]
+.   .   .   Child: 0  Id k: undefined type [line: 9]
+Number of warnings: 1
+Number of errors: 10

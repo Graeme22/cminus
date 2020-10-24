@@ -1,0 +1,16 @@
+====================================
+FILE: tinyWhile.c-
+Func main: returns type void [line: 2]
+.   Child: 1  Compound [line: 3]
+.   .   Child: 0  Var x: type int [line: 4]
+.   .   Child: 1  Assign = : type int [line: 5]
+.   .   .   Child: 0  Id x: type int [line: 5]
+.   .   .   Child: 1  Const 0 : type int [line: 5]
+.   .   Sibling: 1  While [line: 7]
+.   .   .   Child: 0  Op > : type bool [line: 7]
+.   .   .   .   Child: 0  Id x: type int [line: 7]
+.   .   .   .   Child: 1  Const 10 : type int [line: 7]
+.   .   .   Child: 1  Assign ++ : type int [line: 7]
+.   .   .   .   Child: 0  Id x: type int [line: 7]
+Number of warnings: 0
+Number of errors: 0
