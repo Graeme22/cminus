@@ -488,9 +488,9 @@ mutable : ID
 	{
 		$$ = new Id($1);
 	}
-	| mutable ACCESS expression ']'
+	| ID ACCESS expression ']'
 	{
-		$$ = new Operation($2, $1, $3);
+		$$ = new Operation($2, new Id($1), $3);
 	}
 	;
 immutable : '(' expression ')'

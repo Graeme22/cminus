@@ -18,22 +18,26 @@ void Par::print() {
 
 // FunDeclaration
 
-FunDeclaration::FunDeclaration(TokenData *n, AST *pars, AST *stmt) {
-	name = strdup(n->tokenString);
-	line = n->line;
+FunDeclaration::FunDeclaration(TokenData *n, AST *pars, AST *stmt): Var(n) {
 	addChild(pars, 0);
 	addChild(stmt, 1);
 	if(stmt != NULL)
 		stmt->hasScopeException = true;
 	type = (char *)"void";
-	var = new Var(n);
-	var->isFunction = true;
-	var->type = strdup(type);
+	isFunction = true;
 }
 
 FunDeclaration::FunDeclaration(TokenData *t, TokenData *n, AST *p, AST *s): FunDeclaration(n, p, s) {
 	type = strdup(t->tokenString);
-	var->type = strdup(type);
+}
+
+FunDeclaration::FunDeclaration(char *t, TokenData *n, AST *pars): Var(n) {
+	if(t != NULL)
+		type = strdup(t);
+	else
+		type = (char *)"void";
+	isFunction = true;
+	addChild(pars, 0);
 }
 
 void FunDeclaration::print() {
@@ -43,7 +47,7 @@ void FunDeclaration::print() {
 }
 
 void FunDeclaration::propagateScopes(SymbolTable *table) {
-	bool success = table->insert(name, var);
+	bool success = table->insert(name, this);
 	if(!success) {
 		AST *existing = (AST *)table->lookup(name);
 		printf("ERROR(%d): Symbol '%s' is already declared at line %d.\n", line, name, existing->line);

@@ -14,14 +14,12 @@ public:
 
 };
 
-class FunDeclaration: public AST {
-
-	char *name;
-	Var *var;
+class FunDeclaration: public Var {
 
 public:
 	FunDeclaration(TokenData *, TokenData *, AST *, AST *);
 	FunDeclaration(TokenData *, AST *, AST *);
+	FunDeclaration(char *, TokenData *, AST *);
 	virtual void print();
 	virtual void propagateScopes(SymbolTable *);
 
