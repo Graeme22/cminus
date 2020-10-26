@@ -49,20 +49,16 @@ TokenData *buildDummy(char *name) {
 }
 
 /*
-"ERROR(%d): Cannot have a break statement outside of loop.\n"
 "ERROR(%d): Cannot use array as test condition in %s statement.\n"
-"ERROR(%d): Cannot use function '%s' as a variable.\n"
 "ERROR(%d): Expecting %s in parameter %i of call to '%s' declared on line %d but got %s.\n"
 "ERROR(%d): Expecting Boolean test condition in %s statement but got %s.\n"
 "ERROR(%d): Expecting array in parameter %i of call to '%s' declared on line %d.\n"
-"ERROR(%d): For statement requires that symbol '%s' be an array to loop through.\n"
 "ERROR(%d): Function '%s' at line %d is expecting no return value, but return has return value.\n"
 "ERROR(%d): Function '%s' at line %d is expecting to return %s but got %s.\n"
 "ERROR(%d): Function '%s' at line %d is expecting to return %s but return has no return value.\n"
 "ERROR(%d): Function '%s' is not declared.\n"
 "ERROR(%d): Initializer for variable '%s' is not a constant expression.\n"
 "ERROR(%d): Not expecting array in parameter %i of call to '%s' declared on line %d.\n"
-"ERROR(%d): The operation '%s' does not work with arrays.\n"
 "ERROR(%d): The operation '%s' only works with an array or int.\n"
 "ERROR(%d): The operation '%s' only works with arrays.\n"
 "ERROR(%d): Too few parameters passed for function '%s' declared on line %d.\n"

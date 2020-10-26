@@ -6,6 +6,8 @@
 #include "var.h"
 #include "semantic.h"
 
+extern int loopDepth;
+
 class CompoundStatement: public AST {
 
 public:
@@ -60,6 +62,7 @@ class Break: public AST {
 public:
 	Break(int);
 	virtual void print();
+	virtual void propagateScopes(SymbolTable *);
 
 };
 

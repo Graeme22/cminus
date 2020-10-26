@@ -71,9 +71,11 @@ void While::print() {
 
 void While::propagateScopes(SymbolTable *table) {
 	table->enter("While");
+	loopDepth++;
 	AST::propagateScopesChildren(table);
 	table->applyToAll(checkUsage);
 	table->leave();
+	loopDepth--;
 	AST::propagateScopesSibling(table);
 }
 
@@ -87,6 +89,13 @@ void Break::print() {
 	printPrefix();
 	printf("Break [line: %d]\n", line);
 	AST::print();
+}
+
+void Break::propagateScopes(SymbolTable *table) {
+	AST::propagateScopesChildren(table);
+	if(loopDepth == 0)
+		printf("ERROR(%d): Cannot have a break statement outside of loop.\n", line);
+	AST::propagateScopesSibling(table);
 }
 
 // Return
@@ -136,8 +145,12 @@ void For::print() {
 
 void For::propagateScopes(SymbolTable *table) {
 	table->enter("For");
+	loopDepth++;
 	AST::propagateScopesChildren(table);
+	if(!children[1]->isArray)
+		printf("ERROR(%d): For statement requires that symbol '%s' be an array to loop through.\n", line, ((Id *)children[1])->name);
 	table->applyToAll(checkUsage);
 	table->leave();
+	loopDepth--;
 	AST::propagateScopesSibling(table);
 }
