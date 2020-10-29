@@ -9,6 +9,7 @@ AST::AST() {
 	isChild = false;
 	isFirst = false;
 	isArray = false;
+	isConstant = false;
 	initialized = false;
 	line = -1;
 	type = (char *)"undefined";

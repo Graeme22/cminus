@@ -57,7 +57,6 @@ TokenData *buildDummy(char *name) {
 "ERROR(%d): Function '%s' at line %d is expecting to return %s but got %s.\n"
 "ERROR(%d): Function '%s' at line %d is expecting to return %s but return has no return value.\n"
 "ERROR(%d): Function '%s' is not declared.\n"
-"ERROR(%d): Initializer for variable '%s' is not a constant expression.\n"
 "ERROR(%d): Not expecting array in parameter %i of call to '%s' declared on line %d.\n"
 "ERROR(%d): The operation '%s' only works with an array or int.\n"
 "ERROR(%d): The operation '%s' only works with arrays.\n"

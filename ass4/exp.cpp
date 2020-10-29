@@ -170,6 +170,11 @@ void Operation::propagateScopes(SymbolTable *table) {
 		}
 		break;
 	}
+	if(children[1] != NULL)
+		if(children[0]->isConstant && children[1]->isConstant)
+			isConstant = true;
+	else if(children[0]->isConstant)
+		isConstant = true;
 	AST::propagateScopesSibling(table);
 }
 
@@ -267,6 +272,7 @@ void ShortcutAssignment::propagateScopes(SymbolTable *table) {
 
 Constant::Constant(TokenData *td) {
 	data = td;
+	isConstant = true;
 	switch(data->tokenClass) {
 	case CHARCONST:
 		type = (char *)"char";
