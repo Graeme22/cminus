@@ -10,6 +10,8 @@
 #include "stmt.h"
 #include "parser.tab.h"
 
+#define YYERROR_VERBOSE
+
 extern int yylex();
 extern FILE *yyin;
 extern int yylineno;
@@ -17,7 +19,7 @@ extern char *yytext;
 extern AST *tree;
 
 void yyerror(const char *msg) {
-	printf("Error: %s while parsing `%s` on line %d.\n", msg, yytext, yylineno);
+	printf("ERROR(%d): %s\n", yylineno, msg);
 }
 %}
 

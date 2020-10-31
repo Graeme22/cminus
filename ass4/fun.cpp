@@ -81,7 +81,7 @@ void Call::print() {
 void Call::propagateScopes(SymbolTable *table) {
 	void *result = table->lookup(name);
 	if(result == NULL) {
-		printf("ERROR(%d): Symbol '%s' is not declared.\n", line, name);
+		printf("ERROR(%d): Function '%s' is not declared.\n", line, name);
 		n_errors++;
 	} else {
 		Var *node = (Var *)result;

@@ -64,6 +64,10 @@ void Var::propagateScopes(SymbolTable *table) {
 		printf("ERROR(%d): Initializer for variable '%s' is not a constant expression.\n", line, name);
 		n_errors++;
 	}
+	if(children[0] != NULL && strcmp(children[0]->type, type) != 0 && strcmp(children[0]->type, (char *)"undefined")) {
+		printf(	"ERROR(%d): Variable '%s' is of type %s but is being initialized with an expression of type %s.\n", line, name, type, children[0]->type);
+		n_errors++;
+	}
 	AST::propagateScopesSibling(table);
 }
 
@@ -104,7 +108,7 @@ void Id::print() {
 void Id::propagateScopes(SymbolTable *table) {
 	void *result = table->lookup(name);
 	if(result == NULL) {
-		printf("ERROR(%d): Symbol '%s' is not declared.\n", line, name);
+		printf("ERROR(%d): Variable '%s' is not declared.\n", line, name);
 		n_errors++;
 	} else {
 		Var *var = (Var *)result;
