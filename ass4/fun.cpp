@@ -57,12 +57,12 @@ void FunDeclaration::propagateScopes(SymbolTable *table) {
 	hasReturn = false;
 	table->enter("Function");
 	AST::propagateScopesChildren(table);
-	table->applyToAll(checkUsage);
-	table->leave();
 	if(!hasReturn && strcmp(type, (char *)"void") != 0) {
 		printf("WARNING(%d): Expecting to return type %s but function '%s' has no return statement.\n", line, type, name);
 		n_warnings++;
 	}
+	table->applyToAll(checkUsage);
+	table->leave();
 	AST::propagateScopesSibling(table);
 }
 
@@ -79,7 +79,6 @@ void FunDeclaration::verify(AST *args, int l) {
 		printf("ERROR(%d): Too many parameters passed for function '%s' declared on line %d.\n", l, name, line);
 		n_errors++;
 	}
-
 	// loop through for type checking on each parameter
 	AST *in = args;
 	AST *def = children[0];

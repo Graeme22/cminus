@@ -93,7 +93,8 @@ void While::propagateScopes(SymbolTable *table) {
 		printf("ERROR(%d): Cannot use array as test condition in while statement.\n", line);
 		n_errors++;
 	}
-	children[1]->propagateScopes(table);
+	if(children[1] != NULL)
+		children[1]->propagateScopes(table);
 	table->applyToAll(checkUsage);
 	table->leave();
 	loopDepth--;
@@ -144,7 +145,7 @@ void For::propagateScopes(SymbolTable *table) {
 	table->enter("For");
 	loopDepth++;
 	AST::propagateScopesChildren(table);
-	if(!children[1]->isArray) {
+	if(!children[1]->isArray && strcmp(children[1]->type, (char *)"undefined") != 0) {
 		printf("ERROR(%d): For statement requires that symbol '%s' be an array to loop through.\n", line, ((Id *)children[1])->name);
 		n_errors++;
 	}
