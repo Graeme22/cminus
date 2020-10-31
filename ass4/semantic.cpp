@@ -51,11 +51,7 @@ TokenData *buildDummy(char *name) {
 /*
 "ERROR(%d): Expecting %s in parameter %i of call to '%s' declared on line %d but got %s.\n"
 "ERROR(%d): Expecting array in parameter %i of call to '%s' declared on line %d.\n"
-"ERROR(%d): Function '%s' at line %d is expecting no return value, but return has return value.\n"
-"ERROR(%d): Function '%s' at line %d is expecting to return %s but got %s.\n"
-"ERROR(%d): Function '%s' at line %d is expecting to return %s but return has no return value.\n"
 "ERROR(%d): Not expecting array in parameter %i of call to '%s' declared on line %d.\n"
 "ERROR(%d): Too few parameters passed for function '%s' declared on line %d.\n"
 "ERROR(%d): Too many parameters passed for function '%s' declared on line %d.\n"
-"WARNING(%d): Expecting to return %s but function '%s' has no return statement.\n"
 */

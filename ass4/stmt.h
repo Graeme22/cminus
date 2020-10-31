@@ -38,16 +38,6 @@ public:
 
 };
 
-class Return: public AST {
-
-public:
-	Return(int);
-	Return(int, AST *);
-	virtual void print();
-	virtual void propagateScopes(SymbolTable *);
-
-};
-
 class For: public AST {
 
 public:

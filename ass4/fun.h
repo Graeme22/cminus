@@ -36,4 +36,17 @@ public:
 
 };
 
+class Return: public AST {
+
+public:
+	Return(int);
+	Return(int, AST *);
+	virtual void print();
+	virtual void propagateScopes(SymbolTable *);
+
+};
+
+extern FunDeclaration *currentFunction;
+extern bool hasReturn;
+
 #endif

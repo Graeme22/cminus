@@ -53,10 +53,16 @@ void FunDeclaration::propagateScopes(SymbolTable *table) {
 		printf("ERROR(%d): Symbol '%s' is already declared at line %d.\n", line, name, existing->line);
 		n_errors++;
 	}
+	currentFunction = this;
+	hasReturn = false;
 	table->enter("Function");
 	AST::propagateScopesChildren(table);
 	table->applyToAll(checkUsage);
 	table->leave();
+	if(!hasReturn && strcmp(type, (char *)"void") != 0) {
+		printf("WARNING(%d): Expecting to return type %s but function '%s' has no return statement.\n", line, type, name);
+		n_warnings++;
+	}
 	AST::propagateScopesSibling(table);
 }
 
@@ -93,4 +99,43 @@ void Call::propagateScopes(SymbolTable *table) {
 		node->used = true;
 	}
 	AST::propagateScopes(table);
+}
+
+// Return
+
+Return::Return(int l) {
+	line = l;
+}
+
+Return::Return(int l, AST *stmt) {
+	addChild(stmt, 0);
+	line = l;
+}
+
+void Return::print() {
+	printPrefix();
+	printf("Return [line: %d]\n", line);
+	AST::print();
+}
+
+void Return::propagateScopes(SymbolTable *table) {
+	AST::propagateScopesChildren(table);
+	if(children[0] != NULL && children[0]->isArray) {
+		printf("ERROR(%d): Cannot return an array.\n", line);
+		n_errors++;
+	}
+	if(children[0] == NULL && strcmp(currentFunction->type, (char *)"void") != 0) {
+		printf("ERROR(%d): Function '%s' at line %d is expecting to return type %s but return has no return value.\n", line, currentFunction->name, currentFunction->line, currentFunction->type);
+		n_errors++;
+	}
+	if(children[0] != NULL && strcmp(currentFunction->type, (char *)"void") == 0) {
+		printf("ERROR(%d): Function '%s' at line %d is expecting no return value, but return has return value.\n", line, currentFunction->name, currentFunction->line);
+		n_errors++;
+	}
+	if(children[0] != NULL && strcmp(currentFunction->type, children[0]->type) != 0 && strcmp(children[0]->type, (char *)"undefined") != 0 && strcmp(currentFunction->type, (char *)"void") != 0) {
+		printf("ERROR(%d): Function '%s' at line %d is expecting to return type %s but got type %s.\n", line, currentFunction->name, currentFunction->line, currentFunction->type, children[0]->type);
+		n_errors++;
+	}
+	hasReturn = true;
+	AST::propagateScopesSibling(table);
 }

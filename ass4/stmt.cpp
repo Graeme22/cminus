@@ -49,7 +49,7 @@ void If::propagateScopes(SymbolTable *table) {
 	table->enter("If");
 	children[0]->propagateScopes(table);
 	if(strcmp(children[0]->type, (char *)"bool") != 0 && strcmp(children[0]->type, (char *)"undefined") != 0) {
-		printf("ERROR(%d): Expecting Boolean test condition in if statement but got %s.\n", line, children[0]->type);
+		printf("ERROR(%d): Expecting Boolean test condition in if statement but got type %s.\n", line, children[0]->type);
 		n_errors++;
 	}
 	if(children[0]->isArray) {
@@ -86,7 +86,7 @@ void While::propagateScopes(SymbolTable *table) {
 	loopDepth++;
 	children[0]->propagateScopes(table);
 	if(strcmp(children[0]->type, (char *)"bool") != 0 && strcmp(children[0]->type, (char *)"undefined") != 0) {
-		printf("ERROR(%d): Expecting Boolean test condition in while statement but got %s.\n", line, children[0]->type);
+		printf("ERROR(%d): Expecting Boolean test condition in while statement but got type %s.\n", line, children[0]->type);
 		n_errors++;
 	}
 	if(children[0]->isArray) {
@@ -116,32 +116,6 @@ void Break::propagateScopes(SymbolTable *table) {
 	AST::propagateScopesChildren(table);
 	if(loopDepth == 0)
 		printf("ERROR(%d): Cannot have a break statement outside of loop.\n", line);
-	AST::propagateScopesSibling(table);
-}
-
-// Return
-
-Return::Return(int l) {
-	line = l;
-}
-
-Return::Return(int l, AST *stmt) {
-	addChild(stmt, 0);
-	line = l;
-}
-
-void Return::print() {
-	printPrefix();
-	printf("Return [line: %d]\n", line);
-	AST::print();
-}
-
-void Return::propagateScopes(SymbolTable *table) {
-	AST::propagateScopesChildren(table);
-	if(children[0] != NULL && children[0]->isArray) {
-		printf("ERROR(%d): Cannot return an array.\n", line);
-		n_errors++;
-	}
 	AST::propagateScopesSibling(table);
 }
 
