@@ -66,6 +66,41 @@ void FunDeclaration::propagateScopes(SymbolTable *table) {
 	AST::propagateScopesSibling(table);
 }
 
+void FunDeclaration::verify(AST *args, int l) {
+	int i = 0, j = 0;
+	for(AST *par = children[0]; par != NULL; par = par->sibling)
+		i++;
+	for(AST *par = args; par != NULL; par = par->sibling)
+		j++;
+	if(j < i) {
+		printf("ERROR(%d): Too few parameters passed for function '%s' declared on line %d.\n", l, name, line);
+		n_errors++;
+	} else if(j > i) {
+		printf("ERROR(%d): Too many parameters passed for function '%s' declared on line %d.\n", l, name, line);
+		n_errors++;
+	}
+
+	// loop through for type checking on each parameter
+	AST *in = args;
+	AST *def = children[0];
+	for(i = 0; in != NULL && def != NULL; in = in->sibling, def = def->sibling) {
+		i++;
+		if(strcmp(in->type, (char *)"undefined") != 0 && strcmp(def->type, (char *)"undefined") != 0) {
+			if(strcmp(in->type, def->type) != 0) {
+				printf("ERROR(%d): Expecting type %s in parameter %d of call to '%s' declared on line %d but got type %s.\n", l, def->type, i, name, line, in->type);
+				n_errors++;
+			}
+			if(in->isArray && !def->isArray) {
+				printf("ERROR(%d): Not expecting array in parameter %d of call to '%s' declared on line %d.\n", l, i, name, line);
+				n_errors++;
+			} else if(!in->isArray && def->isArray) {
+				printf("ERROR(%d): Expecting array in parameter %d of call to '%s' declared on line %d.\n", l, i, name, line);
+				n_errors++;
+			}
+		}
+	}
+}
+
 // Call
 
 Call::Call(TokenData *data, AST *args) {
@@ -94,9 +129,12 @@ void Call::propagateScopes(SymbolTable *table) {
 		if(!node->isFunction) {
 			printf("ERROR(%d): '%s' is a simple variable and cannot be called.\n", line, name);
 			n_errors++;
+		} else {
+			type = strdup(node->type);
+			node->used = true;
+			FunDeclaration *fun = (FunDeclaration *)result;
+			fun->verify(children[0], line);
 		}
-		type = strdup(node->type);
-		node->used = true;
 	}
 	AST::propagateScopes(table);
 }

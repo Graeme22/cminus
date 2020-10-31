@@ -1,9 +1,0 @@
-// C-F20
-main()
-{
-   static int x:111;
-
-   output(x);
-   x = 222;
-   output(x);
-}

@@ -2,6 +2,7 @@
 
 void analyze(AST *tree, SymbolTable *table) {
 	// add I/O symbols to table
+	/*
 	FunDeclaration *input = new FunDeclaration((char *)"int", buildDummy((char *)"input"), NULL);
 	FunDeclaration *inputb = new FunDeclaration((char *)"bool", buildDummy((char *)"inputb"), NULL);
 	FunDeclaration *inputc = new FunDeclaration((char *)"char", buildDummy((char *)"inputc"), NULL);
@@ -20,6 +21,7 @@ void analyze(AST *tree, SymbolTable *table) {
 	table->insert(output->name, output);
 	table->insert(outputb->name, outputb);
 	table->insert(outputc->name, outputc);
+	*/
 
 	// do semantic analysis
 	tree->propagateScopes(table);

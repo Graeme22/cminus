@@ -22,6 +22,7 @@ public:
 	FunDeclaration(char *, TokenData *, AST *);
 	virtual void print();
 	virtual void propagateScopes(SymbolTable *);
+	void verify(AST *, int);
 
 };
 

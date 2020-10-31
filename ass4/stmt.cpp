@@ -114,8 +114,10 @@ void Break::print() {
 
 void Break::propagateScopes(SymbolTable *table) {
 	AST::propagateScopesChildren(table);
-	if(loopDepth == 0)
+	if(loopDepth == 0) {
 		printf("ERROR(%d): Cannot have a break statement outside of loop.\n", line);
+		n_errors++;
+	}
 	AST::propagateScopesSibling(table);
 }
 
@@ -142,8 +144,10 @@ void For::propagateScopes(SymbolTable *table) {
 	table->enter("For");
 	loopDepth++;
 	AST::propagateScopesChildren(table);
-	if(!children[1]->isArray)
+	if(!children[1]->isArray) {
 		printf("ERROR(%d): For statement requires that symbol '%s' be an array to loop through.\n", line, ((Id *)children[1])->name);
+		n_errors++;
+	}
 	table->applyToAll(checkUsage);
 	table->leave();
 	loopDepth--;
