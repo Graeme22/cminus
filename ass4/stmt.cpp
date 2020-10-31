@@ -47,9 +47,21 @@ void If::print() {
 
 void If::propagateScopes(SymbolTable *table) {
 	table->enter("If");
-	AST::propagateScopesChildren(table);
+	children[0]->propagateScopes(table);
+	if(strcmp(children[0]->type, (char *)"bool") != 0 && strcmp(children[0]->type, (char *)"undefined") != 0) {
+		printf("ERROR(%d): Expecting Boolean test condition in if statement but got %s.\n", line, children[0]->type);
+		n_errors++;
+	}
+	if(children[0]->isArray) {
+		printf("ERROR(%d): Cannot use array as test condition in if statement.\n", line);
+		n_errors++;
+	}
+	if(children[1] != NULL)
+		children[1]->propagateScopes(table);
 	table->applyToAll(checkUsage);
 	table->leave();
+	if(children[2] != NULL)
+		children[2]->propagateScopes(table);
 	AST::propagateScopesSibling(table);
 }
 
@@ -72,7 +84,16 @@ void While::print() {
 void While::propagateScopes(SymbolTable *table) {
 	table->enter("While");
 	loopDepth++;
-	AST::propagateScopesChildren(table);
+	children[0]->propagateScopes(table);
+	if(strcmp(children[0]->type, (char *)"bool") != 0 && strcmp(children[0]->type, (char *)"undefined") != 0) {
+		printf("ERROR(%d): Expecting Boolean test condition in while statement but got %s.\n", line, children[0]->type);
+		n_errors++;
+	}
+	if(children[0]->isArray) {
+		printf("ERROR(%d): Cannot use array as test condition in while statement.\n", line);
+		n_errors++;
+	}
+	children[1]->propagateScopes(table);
 	table->applyToAll(checkUsage);
 	table->leave();
 	loopDepth--;
