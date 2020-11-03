@@ -96,7 +96,7 @@ void Operation::propagateScopes(SymbolTable *table) {
 			printf("ERROR(%d): '%s' requires operands of the same type but lhs is type %s and rhs is type %s.\n", line, str, children[0]->type, children[1]->type);
 			n_errors++;
 		}
-		if(children[0]->isArray && !children[1]->isArray || children[0]->isArray && !children[1]->isArray) {
+		if(children[0]->isArray && !children[1]->isArray || !children[0]->isArray && children[1]->isArray) {
 			printf("ERROR(%d): '%s' requires both operands be arrays or not but lhs is%s an array and rhs is%s an array.\n", line, str, (children[0]->isArray ? "" : " not"), (children[1]->isArray ? "" : " not"));
 			n_errors++;
 		}

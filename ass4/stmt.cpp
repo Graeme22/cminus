@@ -148,12 +148,12 @@ void For::propagateScopes(SymbolTable *table) {
 	if(strcmp(children[1]->type, (char *)"undefined") != 0)
 		children[0]->type = strdup(children[1]->type);
 	children[0]->initialized = true;
-	if(children[2] != NULL)
-		children[2]->propagateScopes(table);
 	if(!children[1]->isArray && strcmp(children[1]->type, (char *)"undefined") != 0) {
 		printf("ERROR(%d): For statement requires that symbol '%s' be an array to loop through.\n", line, ((Id *)children[1])->name);
 		n_errors++;
 	}
+	if(children[2] != NULL)
+		children[2]->propagateScopes(table);
 	table->applyToAll(checkUsage);
 	table->leave();
 	loopDepth--;

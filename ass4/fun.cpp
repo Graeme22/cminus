@@ -158,10 +158,6 @@ void Return::print() {
 
 void Return::propagateScopes(SymbolTable *table) {
 	AST::propagateScopesChildren(table);
-	if(children[0] != NULL && children[0]->isArray) {
-		printf("ERROR(%d): Cannot return an array.\n", line);
-		n_errors++;
-	}
 	if(children[0] == NULL && strcmp(currentFunction->type, (char *)"void") != 0) {
 		printf("ERROR(%d): Function '%s' at line %d is expecting to return type %s but return has no return value.\n", line, currentFunction->name, currentFunction->line, currentFunction->type);
 		n_errors++;
@@ -172,6 +168,10 @@ void Return::propagateScopes(SymbolTable *table) {
 	}
 	if(children[0] != NULL && strcmp(currentFunction->type, children[0]->type) != 0 && strcmp(children[0]->type, (char *)"undefined") != 0 && strcmp(currentFunction->type, (char *)"void") != 0) {
 		printf("ERROR(%d): Function '%s' at line %d is expecting to return type %s but got type %s.\n", line, currentFunction->name, currentFunction->line, currentFunction->type, children[0]->type);
+		n_errors++;
+	}
+	if(children[0] != NULL && children[0]->isArray) {
+		printf("ERROR(%d): Cannot return an array.\n", line);
 		n_errors++;
 	}
 	hasReturn = true;
