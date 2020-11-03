@@ -49,11 +49,3 @@ TokenData *buildDummy(char *name) {
 	td->tokenString = strdup(name);
 	return td;
 }
-
-/*
-"ERROR(%d): Expecting %s in parameter %i of call to '%s' declared on line %d but got %s.\n"
-"ERROR(%d): Expecting array in parameter %i of call to '%s' declared on line %d.\n"
-"ERROR(%d): Not expecting array in parameter %i of call to '%s' declared on line %d.\n"
-"ERROR(%d): Too few parameters passed for function '%s' declared on line %d.\n"
-"ERROR(%d): Too many parameters passed for function '%s' declared on line %d.\n"
-*/

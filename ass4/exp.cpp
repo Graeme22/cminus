@@ -57,6 +57,7 @@ void Operation::propagateScopes(SymbolTable *table) {
 			printf("ERROR(%d): The operation '%s' does not work with arrays.\n", line, str);
 			n_errors++;
 		}
+		isConstant = true;
 		break;
 	case AND:
 	case OR:
