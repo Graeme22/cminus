@@ -119,6 +119,7 @@ void Call::print() {
 }
 
 void Call::propagateScopes(SymbolTable *table) {
+	//AST::propagateScopesChildren(table);
 	void *result = table->lookup(name);
 	if(result == NULL) {
 		printf("ERROR(%d): Function '%s' is not declared.\n", line, name);

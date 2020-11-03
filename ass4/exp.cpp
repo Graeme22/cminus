@@ -48,9 +48,9 @@ void Operation::propagateScopes(SymbolTable *table) {
 		}
 		break;
 	case RAND:
-		type = (char *)"int";
+		type = strdup(children[0]->type);
 		if(!validateL(_INT_)) {
-			printf("ERROR(%d): Unary '%s' requires an operand of type %s but was given type %s.\n", line, str, type, children[0]->type);
+			printf("ERROR(%d): Unary '%s' requires an operand of type int but was given type %s.\n", line, str, children[0]->type);
 			n_errors++;
 		}
 		if(children[0]->isArray) {
@@ -123,6 +123,7 @@ void Operation::propagateScopes(SymbolTable *table) {
 				printf("ERROR(%d): The operation '%s' does not work with arrays.\n", line, str);
 				n_errors++;
 			}
+			isConstant = true;
 		} else { // binary
 			if(!validateL(_INT_)) {
 				printf("ERROR(%d): '%s' requires operands of type %s but lhs is of type %s.\n", line, str, type, children[0]->type);

@@ -55,13 +55,13 @@ void Var::setInitialized() {
 void Var::propagateScopes(SymbolTable *table) {
 	AST::propagateScopesChildren(table);
 	bool success = table->insert(name, this);
+	if(children[0] != NULL && !children[0]->isConstant) {
+		printf("ERROR(%d): Initializer for variable '%s' is not a constant expression.\n", line, name);
+		n_errors++;
+	}
 	if(!success) {
 		AST *existing = (AST *)table->lookup(name);
 		printf("ERROR(%d): Symbol '%s' is already declared at line %d.\n", line, name, existing->line);
-		n_errors++;
-	}
-	if(children[0] != NULL && !children[0]->isConstant) {
-		printf("ERROR(%d): Initializer for variable '%s' is not a constant expression.\n", line, name);
 		n_errors++;
 	}
 	if(children[0] != NULL && strcmp(children[0]->type, type) != 0 && strcmp(children[0]->type, (char *)"undefined")) {

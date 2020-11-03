@@ -127,7 +127,6 @@ void Break::propagateScopes(SymbolTable *table) {
 For::For(int l, TokenData *itr, TokenData *arr, AST *stmt) {
 	line = l;
 	Var *child = new Var(itr);
-	child->initialized = true;
 	addChild(child, 0);
 	addChild(new Id(arr), 1);
 	addChild(stmt, 2);
@@ -144,7 +143,13 @@ void For::print() {
 void For::propagateScopes(SymbolTable *table) {
 	table->enter("For");
 	loopDepth++;
-	AST::propagateScopesChildren(table);
+	children[0]->propagateScopes(table);
+	children[1]->propagateScopes(table);
+	if(strcmp(children[1]->type, (char *)"undefined") != 0)
+		children[0]->type = strdup(children[1]->type);
+	children[0]->initialized = true;
+	if(children[2] != NULL)
+		children[2]->propagateScopes(table);
 	if(!children[1]->isArray && strcmp(children[1]->type, (char *)"undefined") != 0) {
 		printf("ERROR(%d): For statement requires that symbol '%s' be an array to loop through.\n", line, ((Id *)children[1])->name);
 		n_errors++;
