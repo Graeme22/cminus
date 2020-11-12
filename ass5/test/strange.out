@@ -1,0 +1,6 @@
+====================================
+FILE: strange.c-
+ERROR(20): Expecting Boolean test condition in if statement but got type int.
+ERROR(22): Expecting Boolean test condition in if statement but got type int.
+Number of warnings: 0
+Number of errors: 2

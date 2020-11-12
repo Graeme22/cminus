@@ -1,0 +1,19 @@
+// C-F20
+  main()
+{
+    int x;
+
+    if (6>3) {
+        x = 111;
+    }
+    else {
+        x = 222;
+    }
+
+    while (7>3 ) {
+        x = 333;
+        if (x<9) break;
+        x = 444;
+        break;
+   }
+}

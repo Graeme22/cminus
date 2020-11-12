@@ -1,0 +1,6 @@
+====================================
+FILE: tinyAssignChar.c-
+WARNING(33): Variable zx may be uninitialized when used here.
+WARNING(33): Variable zy may be uninitialized when used here.
+Number of warnings: 2
+Number of errors: 0

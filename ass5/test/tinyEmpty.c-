@@ -1,0 +1,12 @@
+// C-F20
+main();
+
+dogs()
+{
+  int x;
+  ;
+  if (true);else;
+  while (true);
+  for (x in x);
+  {}
+}

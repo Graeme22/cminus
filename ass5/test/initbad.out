@@ -1,0 +1,13 @@
+====================================
+FILE: initbad.c-
+ERROR(2): Variable 'a' is of type int but is being initialized with an expression of type char.
+ERROR(3): Variable 'b' is of type bool but is being initialized with an expression of type int.
+ERROR(4): Variable 'c' is of type char but is being initialized with an expression of type bool.
+ERROR(9): Initializer for variable 'aa' is not a constant expression.
+ERROR(10): Initializer for variable 'bb' is not a constant expression.
+ERROR(11): Initializer for variable 'cc' is not a constant expression.
+WARNING(9): The variable aa seems not to be used.
+WARNING(10): The variable bb seems not to be used.
+WARNING(11): The variable cc seems not to be used.
+Number of warnings: 3
+Number of errors: 6

@@ -8,6 +8,7 @@
 #include "var.h"
 #include "fun.h"
 #include "stmt.h"
+#include "yyerror.h"
 #include "parser.tab.h"
 
 #define YYERROR_VERBOSE
@@ -18,9 +19,7 @@ extern int yylineno;
 extern char *yytext;
 extern AST *tree;
 
-void yyerror(const char *msg) {
-	printf("ERROR(%d): %s\n", yylineno, msg);
-}
+extern void yyerror(const char *);
 %}
 
 %locations
@@ -67,6 +66,10 @@ declaration : varDeclaration
 	{
 		$$ = $1;
 	}
+	| error
+	{
+		$$ = NULL;
+	}
 	;
 /*
 
@@ -78,6 +81,16 @@ varDeclaration : typeSpecifier varDeclList ';'
 		$$ = $2;
 		((Var *)$$)->setTypeAndStatic($1->tokenString, false);
 		((Var *)$$)->setInitialized();
+		yyerrok;
+	}
+	| error varDeclList ';'
+	{
+		$$ = NULL;
+	}
+	| typeSpecifier error ';'
+	{
+		$$ = NULL;
+		yyerrok;
 	}
 	;
 scopedVarDeclaration : STATIC typeSpecifier varDeclList ';'
@@ -85,16 +98,32 @@ scopedVarDeclaration : STATIC typeSpecifier varDeclList ';'
 		$$ = $3;
 		((Var *)$$)->setTypeAndStatic($2->tokenString, true);
 		((Var *)$$)->setInitialized();
+		yyerrok;
 	}
 	| typeSpecifier varDeclList ';'
 	{
 		$$ = $2;
 		((Var *)$$)->setTypeAndStatic($1->tokenString, false);
+		yyerrok;
+	}
+	| error varDeclList ';'
+	{
+		$$ = NULL;
+		yyerrok;
 	}
 	;
 varDeclList : varDeclList ',' varDeclInitialize
 	{
 		$$->append($3);
+		yyerrok;
+	}
+	| varDeclList ',' error
+	{
+		$$ = NULL;
+	}
+	| error
+	{
+		$$ = NULL;
 	}
 	| varDeclInitialize
 	{
@@ -111,6 +140,15 @@ varDeclInitialize : varDeclId
 		((Var *)$$)->initialized = true;
 		$$->addChild($3, 0);
 	}
+	| error ':' simpleExpression
+	{
+		$$ = NULL;
+		yyerrok;
+	}
+	| varDeclId ':' error
+	{
+		$$ = NULL;
+	}
 	;
 varDeclId : ID
 	{
@@ -119,6 +157,15 @@ varDeclId : ID
 	| ID ACCESS NUMCONST ']'
 	{
 		$$ = new Var($1, $3);
+	}
+	| ID ACCESS error
+	{
+		$$ = NULL;
+	}
+	| error ']'
+	{
+		$$ = NULL;
+		yyerrok;
 	}
 	;
 typeSpecifier : INT
@@ -147,6 +194,26 @@ funDeclaration : typeSpecifier ID '(' params ')' statement
 	{
 		$$ = new FunDeclaration($1, $3, $5);
 	}
+	| typeSpecifier error
+	{
+		$$ = NULL;
+	}
+	| typeSpecifier ID '(' error
+	{
+		$$ = NULL;
+	}
+	| typeSpecifier ID '(' params ')' error
+	{
+		$$ = NULL;
+	}
+	| ID '(' error
+	{
+		$$ = NULL;
+	}
+	| ID '(' params ')' error
+	{
+		$$ = NULL;
+	}
 	;
 params : paramList
 	{
@@ -165,20 +232,41 @@ paramList : paramList ';' paramTypeList
 	{
 		$$ = $1;
 	}
+	| paramList ';' error
+	{
+		$$ = NULL;
+	}
+	| error
+	{
+		$$ = NULL;
+	}
 	;
 paramTypeList : typeSpecifier paramIdList
 	{
 		$$ = $2;
 		((Var *)$$)->setTypeAndStatic($1->tokenString, false);
 	}
+	| typeSpecifier error
+	{
+		$$ = NULL;
+	}
 	;
 paramIdList : paramIdList ',' paramId
 	{
 		$$->append($3);
+		yyerrok;
 	}
 	| paramId
 	{
 		$$ = $1;
+	}
+	| paramIdList ',' error
+	{
+		$$ = NULL;
+	}
+	| error
+	{
+		$$ = NULL;
 	}
 	;
 paramId : ID
@@ -188,6 +276,11 @@ paramId : ID
 	| ID ACCESS ']'
 	{
 		$$ = new Par($1, true);
+	}
+	| error ']'
+	{
+		$$ = NULL;
+		yyerrok;
 	}
 	;
 /*
@@ -228,6 +321,38 @@ matched : expressionStmt
 	{
 		$$ = $1;
 	}
+	| IF error
+	{
+		$$ = NULL;
+	}
+	| IF error ELSE matched
+	{
+		$$ = NULL;
+		yyerrok;
+	}
+	| IF error ')' matched ELSE matched
+	{
+		$$ = NULL;
+		yyerrok;
+	}
+	| WHILE error ')' matched
+	{
+		$$ = NULL;
+		yyerrok;
+	}
+	| WHILE error
+	{
+		$$ = NULL;
+	}
+	| FOR error ')' matched
+	{
+		$$ = NULL;
+		yyerrok;
+	}
+	| FOR error
+	{
+		$$ = NULL;
+	}
 	;
 unmatched : unmatchedSelectionStmt
 	{
@@ -237,19 +362,61 @@ unmatched : unmatchedSelectionStmt
 	{
 		$$ = $1;
 	}
+	| IF error ')' statement
+	{
+		$$ = NULL;
+		yyerrok;
+	}
+	| IF error ELSE unmatched
+	{
+		$$ = NULL;
+		yyerrok;
+	}
+	| IF error ')' matched ELSE unmatched
+	{
+		$$ = NULL;
+		yyerrok;
+	}
+	| WHILE error ')' unmatched
+	{
+		$$ = NULL;
+		yyerrok;
+	}
+	| FOR error ')' unmatched
+	{
+		$$ = NULL;
+		yyerrok;
+	}
 	;
 expressionStmt : expression ';'
 	{
 		$$ = $1;
+		yyerrok;
 	}
 	| ';'
 	{
 		$$ = NULL;
+		yyerrok;
+	}
+	| error ';'
+	{
+		$$ = NULL;
+		yyerrok;
 	}
 	;
 compoundStmt : '{' localDeclarations statementList '}'
 	{
 		$$ = new CompoundStatement(@1.first_line, $2, $3);
+	}
+	| '{' localDeclarations error '}'
+	{
+		$$ = NULL;
+		yyerrok;
+	}
+	| '{' error statementList '}'
+	{
+		$$ = NULL;
+		yyerrok;
 	}
 	;
 localDeclarations : localDeclarations scopedVarDeclaration
@@ -309,6 +476,7 @@ returnStmt : RETURN ';'
 	| RETURN expression ';'
 	{
 		$$ = new Return(@1.first_line, $2);
+		yyerrok;
 	}
 	;
 breakStmt : BREAK ';'
@@ -353,6 +521,36 @@ expression : mutable ASS expression
 	{
 		$$ = $1;
 	}
+	| error INC
+	{
+		$$ = NULL;
+		yyerrok;
+	}
+	| error DEC
+	{
+		$$ = NULL;
+		yyerrok;
+	}
+	| error ASS error
+	{
+		$$ = NULL;
+	}
+	| error ADDASS error
+	{
+		$$ = NULL;
+	}
+	| error SUBASS error
+	{
+		$$ = NULL;
+	}
+	| error MULASS error
+	{
+		$$ = NULL;
+	}
+	| error DIVASS error
+	{
+		$$ = NULL;
+	}
 	;
 simpleExpression : simpleExpression OR andExpression
 	{
@@ -361,6 +559,10 @@ simpleExpression : simpleExpression OR andExpression
 	| andExpression
 	{
 		$$ = $1;
+	}
+	| simpleExpression OR error
+	{
+		$$ = NULL;
 	}
 	;
 andExpression : andExpression AND unaryRelExpression
@@ -371,6 +573,10 @@ andExpression : andExpression AND unaryRelExpression
 	{
 		$$ = $1;
 	}
+	| andExpression AND error
+	{
+		$$ = NULL;
+	}
 	;
 unaryRelExpression : NOT unaryRelExpression
 	{
@@ -380,6 +586,10 @@ unaryRelExpression : NOT unaryRelExpression
 	{
 		$$ = $1;
 	}
+	| NOT error
+	{
+		$$ = NULL;
+	}
 	;
 relExpression : sumExpression relop sumExpression
 	{
@@ -388,6 +598,10 @@ relExpression : sumExpression relop sumExpression
 	| sumExpression
 	{
 		$$ = $1;
+	}
+	| sumExpression relop error
+	{
+		$$ = NULL;
 	}
 	;
 relop : LEQ
@@ -423,6 +637,11 @@ sumExpression : sumExpression sumop mulExpression
 	{
 		$$ = $1;
 	}
+	| sumExpression sumop error
+	{
+		$$ = NULL;
+		yyerrok;
+	}
 	;
 sumop : ADD
 	{
@@ -440,6 +659,10 @@ mulExpression : mulExpression mulop unaryExpression
 	| unaryExpression
 	{
 		$$ = $1;
+	}
+	| mulExpression mulop error
+	{
+		$$ = NULL;
 	}
 	;
 mulop : MUL
@@ -462,6 +685,10 @@ unaryExpression : unaryop unaryExpression
 	| factor
 	{
 		$$ = $1;
+	}
+	| unaryop error
+	{
+		$$ = NULL;
 	}
 	;
 unaryop : SUB
@@ -498,6 +725,7 @@ mutable : ID
 immutable : '(' expression ')'
 	{
 		$$ = $2;
+		yyerrok;
 	}
 	| call
 	{
@@ -507,10 +735,24 @@ immutable : '(' expression ')'
 	{
 		$$ = new Constant($1);
 	}
+	| '(' error
+	{
+		$$ = NULL;
+	}
+	| error ')'
+	{
+		$$ = NULL;
+		yyerrok;
+	}
 	;
 call : ID '(' args ')'
 	{
 		$$ = new Call($1, $3);
+	}
+	| error '('
+	{
+		$$ = NULL;
+		yyerrok;
 	}
 	;
 args : argList
@@ -525,10 +767,15 @@ args : argList
 argList : argList ',' expression
 	{
 		$$->append($3);
+		yyerrok;
 	}
 	| expression
 	{
 		$$ = $1;
+	}
+	| argList ',' error
+	{
+		$$ = NULL;
 	}
 	;
 constant : NUMCONST

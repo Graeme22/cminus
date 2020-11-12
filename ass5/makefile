@@ -3,7 +3,7 @@ CC = g++
 OUT = c-
 LIBS = ourgetopt.h ast.h scanType.h
 FLAGS = -DCPLUSPLUS -g
-OBJS = ourgetopt.o ast.o exp.o stmt.o var.o fun.o semantic.o printtree.o symbolTable.o
+OBJS = ourgetopt.o ast.o exp.o stmt.o var.o fun.o semantic.o printtree.o symbolTable.o yyerror.o
 
 $(BIN) : lex.yy.c $(BIN).tab.c $(BIN).tab.h $(LIBS) $(OBJS)
 	$(CC) $(FLAGS) lex.yy.c $(BIN).tab.c $(OBJS) -o $(OUT)

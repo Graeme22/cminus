@@ -1,0 +1,28 @@
+====================================
+FILE: arrayops.c-
+ERROR(12): '=' requires both operands be arrays or not but lhs is not an array and rhs is an array.
+ERROR(13): '=' requires both operands be arrays or not but lhs is an array and rhs is not an array.
+ERROR(17): The operation '-' does not work with arrays.
+ERROR(19): Cannot index nonarray 'a'.
+ERROR(20): Cannot index nonarray 'a'.
+ERROR(20): Array index is the unindexed array 'aa'.
+ERROR(22): Array index is the unindexed array 'aa'.
+ERROR(24): The operation '*' only works with arrays.
+ERROR(27): The operation '?' does not work with arrays.
+ERROR(29): The operation '!' does not work with arrays.
+ERROR(31): The operation '++' does not work with arrays.
+ERROR(34): The operation '+' does not work with arrays.
+ERROR(35): The operation '+' does not work with arrays.
+ERROR(36): The operation '+' does not work with arrays.
+ERROR(39): The operation '&' does not work with arrays.
+ERROR(40): The operation '&' does not work with arrays.
+ERROR(41): The operation '&' does not work with arrays.
+WARNING(43): Variable c may be uninitialized when used here.
+ERROR(43): Cannot index nonarray 'c'.
+WARNING(44): Variable cc may be uninitialized when used here.
+ERROR(45): Cannot index nonarray 'c'.
+ERROR(45): '=' requires both operands be arrays or not but lhs is an array and rhs is not an array.
+ERROR(46): '=' requires both operands be arrays or not but lhs is an array and rhs is not an array.
+ERROR(49): '=' requires both operands be arrays or not but lhs is an array and rhs is not an array.
+Number of warnings: 2
+Number of errors: 22

@@ -1,0 +1,64 @@
+// C-F20
+main()
+{
+ for ( x);
+ zz;
+ for ( x int;
+ zz;
+ for ( int);
+ zz;
+ for ( int int;
+ zz;
+ for int x);
+ zz;
+ for int x int;
+ zz;
+ for int int);
+ zz;
+ for int int int;
+ zz;
+
+ for ( x);
+ zz;
+ for ( x *;
+ zz;
+ for ( *);
+ zz;
+ for ( * *;
+ zz;
+ for * x);
+ zz;
+ for * x *;
+ zz;
+ for * *);
+ zz;
+ for * * *;
+ zz;
+
+ for ( x);
+ zz;
+ for ( x ;
+ zz;
+ for ();
+ zz;
+ for ( ;
+ zz;
+ for x);
+ zz;
+ for x ;
+ zz;
+ for);
+ zz;
+ for ;
+zz;
+ for (x in ) ;
+zz;
+ for (in x) ;
+zz;
+ for x in y ) ;
+zz;
+ for (x in y ;
+ zz;
+ for ( in y) if (true);
+ 
+}

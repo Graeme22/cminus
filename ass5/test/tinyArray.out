@@ -1,0 +1,5 @@
+====================================
+FILE: tinyArray.c-
+WARNING(12): Variable b may be uninitialized when used here.
+Number of warnings: 1
+Number of errors: 0

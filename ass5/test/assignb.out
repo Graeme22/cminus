@@ -1,0 +1,11 @@
+====================================
+FILE: assignb.c-
+ERROR(8): Variable 'x' is not declared.
+ERROR(8): Variable 'x' is not declared.
+ERROR(9): Variable 'x' is not declared.
+WARNING(10): Variable aa may be uninitialized when used here.
+WARNING(11): Variable b may be uninitialized when used here.
+WARNING(13): Variable cc may be uninitialized when used here.
+WARNING(6): The variable c seems not to be used.
+Number of warnings: 4
+Number of errors: 3

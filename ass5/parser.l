@@ -8,6 +8,8 @@
 
 #define YY_USER_ACTION yylloc.first_line = yylloc.last_line = yylineno;
 
+char *lastToken = NULL;
+
 // returns an array of ints.
 std::string sValueFrom(char *raw) {
 	int len = strlen(raw);
@@ -55,6 +57,7 @@ int cValueFrom(char *raw) {
 		}
 	} else if(len > 3) {
 		printf("WARNING(%d): character is %d characters long and not a single character: '%s'. The first char will be used.\n", yylineno, len - 2, raw);
+		n_warnings++;
 		if(raw[1] == '\\') {
 			switch(raw[2]) {
 			case '0':
@@ -70,6 +73,7 @@ int cValueFrom(char *raw) {
 			c = raw[1];
 	} else if(len == 2) {
 		printf("ERROR(%d): Empty character ''. Characters ignored.\n", yylineno);
+		n_errors++;
 		return -1;
 	} else
 		c = raw[1];
@@ -101,6 +105,7 @@ static int buildToken(int tokenClass, char *tokenString) {
 		break;
 	}
 
+	lastToken = strdup(tokenString);
 	return tokenClass;
 }
 %}
@@ -150,6 +155,6 @@ static int buildToken(int tokenClass, char *tokenString) {
 [0-9]+									{ return buildToken(NUMCONST, yytext); }
 '([^\n\\']|\\.)*'						{ return buildToken(CHARCONST, yytext); }
 \"([^\\\"\n]|\\.)*\"					{ return buildToken(STRINGCONST, yytext); }
-[^ \n\t]								{ printf("ERROR(%d): Invalid or misplaced input character: '%c'. Character Ignored.\n", yylineno, yytext[0]); }
+[^ \n\t]								{ printf("WARNING(%d): Invalid or misplaced input character: '%c'. Character Ignored.\n", yylineno, yytext[0]); n_warnings++; }
 .|\n									;
 %%

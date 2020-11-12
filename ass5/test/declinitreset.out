@@ -1,0 +1,8 @@
+====================================
+FILE: declinitreset.c-
+WARNING(6): Variable a may be uninitialized when used here.
+ERROR(9): Variable 'z' is not declared.
+ERROR(10): Variable 'z' is not declared.
+ERROR(11): Variable 'z' is not declared.
+Number of warnings: 1
+Number of errors: 3

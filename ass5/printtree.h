@@ -8,6 +8,7 @@
 #include "ourgetopt.h"
 #include "semantic.h"
 #include "symbolTable.h"
+#include "yyerror.h"
 #include "parser.tab.h"
 
 extern FILE *yyin;

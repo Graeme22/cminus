@@ -1,0 +1,14 @@
+// C-F20
+main ()
+{
+   int i[4];
+   bool s, t, u, v;
+   char a, b, c, d;
+
+   if (1) while (t) a; else b;
+   if (2) while (t) if (u) a; else b;
+   if (3) a; else if (u) b; else if (v) c; else d;
+   if (4) while (t) if (u) b; else if (v) c; else d;
+   if (5) while (t) for (b in i) b; else c;
+   if (6) while (t) if (u) for (s in i) b; else c;
+}

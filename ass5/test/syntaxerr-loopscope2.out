@@ -1,0 +1,16 @@
+====================================
+FILE: syntaxerr-loopscope2.c-
+ERROR(10): Syntax error, unexpected identifier "forever", expecting ';'.
+ERROR(14): Syntax error, unexpected identifier "y", expecting '('.
+ERROR(14): Invalid or misplaced input character: '.'. Character Ignored.
+ERROR(14): Invalid or misplaced input character: '.'. Character Ignored.
+ERROR(18): Invalid or misplaced input character: '.'. Character Ignored.
+ERROR(18): Invalid or misplaced input character: '.'. Character Ignored.
+ERROR(22): Invalid or misplaced input character: '.'. Character Ignored.
+ERROR(22): Invalid or misplaced input character: '.'. Character Ignored.
+ERROR(26): Invalid or misplaced input character: '.'. Character Ignored.
+ERROR(26): Invalid or misplaced input character: '.'. Character Ignored.
+ERROR(30): Invalid or misplaced input character: '.'. Character Ignored.
+ERROR(30): Invalid or misplaced input character: '.'. Character Ignored.
+Number of warnings: 0
+Number of errors: 12

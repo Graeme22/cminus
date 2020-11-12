@@ -1,0 +1,33 @@
+// C-F20
+main()
+{
+     int x;
+
+     while (true) {
+           int x;          // OK
+           }
+
+     loop forever {
+           int x;         // OK
+           }
+
+     loop y = 1..10 do {
+           int x;         // OK
+           }
+
+     loop y = 1..10 do { {
+           int x;        // OK
+           } }
+
+     loop y = 1..10 do {
+           int y;        // y redeclared
+           }
+
+     loop y = 1..10 do { {
+           int y;        // OK
+           } }
+
+     loop y = 1..10 do ; // should NOT effect the next compound
+     { int x; }          // OK
+}
+

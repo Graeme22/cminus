@@ -43,6 +43,9 @@ int main(int argc, char *argv[]) {
 	if(hflag)
 		usage();
 
+	// create map
+	initErrorProcessing();
+
 	if(optind < argc) {
 		yyin = fopen(argv[optind], "r");
 		yyparse();
@@ -62,7 +65,8 @@ int main(int argc, char *argv[]) {
 		if(Pflag)
 			tree->print();
 
-		// code generation will go here
+		// code generation
+		// TODO
 	}
 
 	printf("Number of warnings: %d\n", n_warnings);

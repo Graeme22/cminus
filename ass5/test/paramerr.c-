@@ -1,0 +1,46 @@
+// C-F20
+//
+// IMPORTANT:
+//
+// This file has many if ! all semantic errors.
+// The errors in the comments are ! necessarily the
+// the exact text generated for each error !  !  !   Use the
+// error message text in the assignment.  If this doesn't
+// test all errors then let me know.  thanks, rh
+//
+int ant() return 666;
+bool bear() return true;
+char cat() return 'c';
+
+int ant_no();
+bool bear_no();
+char cat_no();
+
+dog(int aardvark; bool baboon; char cow);
+
+elk(int asp[]; bool bull[]; char crow[]);
+
+main()
+{
+   int a; bool b; char c;
+   int aa[3]; bool bb[5]; char cc[7];
+
+   dog(a, b, c);
+   elk(a, b, c);
+   fox(a, b, c);
+
+   dog(aa, bb, cc);
+   elk(aa, bb, cc);
+   fox(aa, bb, cc);
+
+   dog(ant(), bear(), cat());
+   dog(ant_no(), bear_no(), cat_no());
+   elk(ant(), bear(), cat());
+   fox(ant(), bear(), cat());
+
+   dog(a+b, b-c, a*c);
+   elk(a+b, b-c, a*c);
+
+   emu(x+b, parrot, b & x);
+   emu(false, true & emu(x+b, parrot, b & x), true, x*b);
+}

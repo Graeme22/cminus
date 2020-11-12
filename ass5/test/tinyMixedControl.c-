@@ -1,0 +1,31 @@
+// C-F20
+main()
+{
+   int x, y, z;
+
+   if (x>=0)
+       while (true) x;
+   else y;
+   111;
+   if (y>=0) y;
+   else while (true) z;
+   222;
+   if (y>=0) y;
+   while (true)
+        if (true) z;
+        else x;
+   333;
+   if (x>=0)
+       while (true)
+          if (true) x;
+          else y;
+   else z;
+   444;
+   if (x>=0) z;
+   else
+       if (true) 
+          while (true)
+              if (true) x;
+              else y;
+       else z;
+}

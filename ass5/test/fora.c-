@@ -1,0 +1,5 @@
+// C-F20
+main() {
+    for (i in j);
+    for (i in i);
+}
