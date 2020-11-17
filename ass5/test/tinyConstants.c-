@@ -1,9 +1,0 @@
-// C-F20
-main()
-{
-    output(111);
-    outputb(true);
-    outputb(false);
-    outputc('x');
-    outnl();
-}

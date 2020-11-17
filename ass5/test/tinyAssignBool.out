@@ -1,6 +1,0 @@
-====================================
-FILE: tinyAssignBool.c-
-WARNING(34): Variable zx may be uninitialized when used here.
-WARNING(34): Variable zy may be uninitialized when used here.
-Number of warnings: 2
-Number of errors: 0

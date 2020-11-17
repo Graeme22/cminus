@@ -61,16 +61,18 @@ int main(int argc, char *argv[]) {
 		table->debug(Sflag);
 
 		analyze(tree, table);
+	}
 
+	printf("Number of warnings: %d\n", n_warnings);
+	printf("Number of errors: %d\n", n_errors);
+
+	if(n_errors == 0) {
 		if(Pflag)
 			tree->print();
 
 		// code generation
 		// TODO
 	}
-
-	printf("Number of warnings: %d\n", n_warnings);
-	printf("Number of errors: %d\n", n_errors);
 
 	return 0;
 }

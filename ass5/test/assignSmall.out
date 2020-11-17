@@ -1,8 +1,0 @@
-====================================
-FILE: assignSmall.c-
-WARNING(6): Variable v may be uninitialized when used here.
-WARNING(8): Variable w may be uninitialized when used here.
-WARNING(11): Variable x may be uninitialized when used here.
-WARNING(13): Variable y may be uninitialized when used here.
-Number of warnings: 4
-Number of errors: 0

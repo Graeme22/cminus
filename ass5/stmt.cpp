@@ -150,7 +150,7 @@ void For::propagateScopes(SymbolTable *table) {
 	if(strcmp(children[1]->type, (char *)"undefined") != 0)
 		children[0]->type = strdup(children[1]->type);
 	if(!children[1]->isArray) {
-		printf("ERROR(%d): For statement requires that symbol '%s' be an array to loop through.\n", line, ((Id *)children[1])->name);
+		printf("ERROR(%d): For statement requires that symbol '%s' be an array to loop through.\n", children[1]->line, ((Id *)children[1])->name);
 		n_errors++;
 	}
 	if(children[2] != NULL)

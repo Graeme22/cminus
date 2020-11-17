@@ -55,7 +55,8 @@ declarationList : declarationList declaration
 	| declaration
 	{
 		tree->append($1);
-		$1->isFirst = true;
+		if($1 != NULL)
+			$1->isFirst = true;
 	}
 	;
 declaration : varDeclaration

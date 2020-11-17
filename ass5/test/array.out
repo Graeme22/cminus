@@ -1,6 +1,0 @@
-====================================
-FILE: array.c-
-WARNING(14): The variable z seems not to be used.
-WARNING(22): Variable y may be uninitialized when used here.
-Number of warnings: 2
-Number of errors: 0

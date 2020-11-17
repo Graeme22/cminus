@@ -1,6 +1,0 @@
-====================================
-FILE: tinyVar.c-
-WARNING(12): Variable x may be uninitialized when used here.
-WARNING(13): Variable y may be uninitialized when used here.
-Number of warnings: 2
-Number of errors: 0

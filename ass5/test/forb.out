@@ -1,8 +1,0 @@
-====================================
-FILE: forb.c-
-ERROR(6): For statement requires that symbol 'x' be an array to loop through.
-WARNING(8): Variable y may be uninitialized when used here.
-ERROR(8): For statement requires that symbol 'y' be an array to loop through.
-WARNING(9): Variable z may be uninitialized when used here.
-Number of warnings: 2
-Number of errors: 2
