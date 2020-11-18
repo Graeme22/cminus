@@ -63,39 +63,49 @@ static std::map<std::string , char *> niceTokenNameMap;    // use an ordered map
 // WARNING: this routine must be called to initialize mapping of
 // (strings returned as error message) --> (human readable strings)
 //
+
 void initErrorProcessing() {
+    niceTokenNameMap["ACCESS"] = (char *)"'['";
+    niceTokenNameMap["ADD"] = (char *)"'+'";
     niceTokenNameMap["ADDASS"] = (char *)"\"+=\"";
+    niceTokenNameMap["AND"] = (char *)"'&'";
+    niceTokenNameMap["ASS"] = (char *)"'='";
     niceTokenNameMap["BOOL"] = (char *)"\"bool\"";
     niceTokenNameMap["BOOLCONST"] = (char *)"Boolean constant";
     niceTokenNameMap["BREAK"] = (char *)"\"break\"";
     niceTokenNameMap["CHAR"] = (char *)"\"char\"";
     niceTokenNameMap["CHARCONST"] = (char *)"character constant";
-    niceTokenNameMap["SUB"] = (char *)"-";
     niceTokenNameMap["DEC"] = (char *)"\"--\"";
     niceTokenNameMap["DIVASS"] = (char *)"\"/=\"";
+    niceTokenNameMap["DIV"] = (char *)"'/'";
     niceTokenNameMap["ELSE"] = (char *)"\"else\"";
     niceTokenNameMap["EQ"] = (char *)"\"==\"";
-    niceTokenNameMap["FOR"] = (char *)"\"forever\"";
+    niceTokenNameMap["FOR"] = (char *)"\"for\"";
     niceTokenNameMap["GEQ"] = (char *)"\">=\"";
+    niceTokenNameMap["GT"] = (char *)"'>'";
     niceTokenNameMap["ID"] = (char *)"identifier";
     niceTokenNameMap["IF"] = (char *)"\"if\"";
     niceTokenNameMap["IN"] = (char *)"\"in\"";
     niceTokenNameMap["INC"] = (char *)"\"++\"";
     niceTokenNameMap["INT"] = (char *)"\"int\"";
     niceTokenNameMap["LEQ"] = (char *)"\"<=\"";
+    niceTokenNameMap["LT"] = (char *)"'<'";
+    niceTokenNameMap["MOD"] = (char *)"'%'";
     niceTokenNameMap["MULASS"] = (char *)"\"*=\"";
     niceTokenNameMap["NEQ"] = (char *)"\"!=\"";
+    niceTokenNameMap["NOT"] = (char *)"'!'";
     niceTokenNameMap["NUMCONST"] = (char *)"numeric constant";
-    niceTokenNameMap["OR"] = (char *)"\"or\"";
+    niceTokenNameMap["OR"] = (char *)"'|'";
+    niceTokenNameMap["RAND"] = (char *)"'?'";
     niceTokenNameMap["RETURN"] = (char *)"\"return\"";
-    niceTokenNameMap["MUL"] = (char *)"\"*\"";
+    niceTokenNameMap["MUL"] = (char *)"'*'";
     niceTokenNameMap["STATIC"] = (char *)"\"static\"";
     niceTokenNameMap["STRINGCONST"] = (char *)"string constant";
+    niceTokenNameMap["SUB"] = (char *)"'-'";
     niceTokenNameMap["SUBASS"] = (char *)"\"-=\"";
     niceTokenNameMap["WHILE"] = (char *)"\"while\"";
     niceTokenNameMap["$end"] = (char *)"end of input";
 }
-
 
 // looks of pretty printed words for tokens that are
 // not already in single quotes.  It uses the niceTokenNameMap table.
@@ -164,7 +174,7 @@ void yyerror(const char *msg) {
         else printf(" \"%s\"", lastToken);
     }
 
-    if (numstrs>4) printf(",");
+    if (numstrs > 4) printf(",");
 
     // print sorted list of expected
     tinySort(strs+5, numstrs-5, 2, true); 

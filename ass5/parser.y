@@ -80,8 +80,10 @@ variables
 varDeclaration : typeSpecifier varDeclList ';'
 	{
 		$$ = $2;
-		((Var *)$$)->setTypeAndStatic($1->tokenString, false);
-		((Var *)$$)->setInitialized();
+		if($2 != NULL) {
+			((Var *)$$)->setTypeAndStatic($1->tokenString, false);
+			((Var *)$$)->setInitialized();
+		}
 		yyerrok;
 	}
 	| error varDeclList ';'
@@ -97,14 +99,17 @@ varDeclaration : typeSpecifier varDeclList ';'
 scopedVarDeclaration : STATIC typeSpecifier varDeclList ';'
 	{
 		$$ = $3;
-		((Var *)$$)->setTypeAndStatic($2->tokenString, true);
-		((Var *)$$)->setInitialized();
+		if($3 != NULL) {
+			((Var *)$$)->setTypeAndStatic($2->tokenString, true);
+			((Var *)$$)->setInitialized();
+		}
 		yyerrok;
 	}
 	| typeSpecifier varDeclList ';'
 	{
 		$$ = $2;
-		((Var *)$$)->setTypeAndStatic($1->tokenString, false);
+		if($2 != NULL)
+			((Var *)$$)->setTypeAndStatic($1->tokenString, false);
 		yyerrok;
 	}
 	| error varDeclList ';'
@@ -115,7 +120,8 @@ scopedVarDeclaration : STATIC typeSpecifier varDeclList ';'
 	;
 varDeclList : varDeclList ',' varDeclInitialize
 	{
-		$$->append($3);
+		if($$ != NULL)
+			$$->append($3);
 		yyerrok;
 	}
 	| varDeclList ',' error
@@ -138,8 +144,10 @@ varDeclInitialize : varDeclId
 	| varDeclId ':' simpleExpression
 	{
 		$$ = $1;
-		((Var *)$$)->initialized = true;
-		$$->addChild($3, 0);
+		if($1 != NULL) {
+			((Var *)$$)->initialized = true;
+			$$->addChild($3, 0);
+		}
 	}
 	| error ':' simpleExpression
 	{
@@ -227,7 +235,8 @@ params : paramList
 	;
 paramList : paramList ';' paramTypeList
 	{
-		$$->append($3);
+		if($$ != NULL)
+			$$->append($3);
 	}
 	| paramTypeList
 	{
@@ -245,7 +254,8 @@ paramList : paramList ';' paramTypeList
 paramTypeList : typeSpecifier paramIdList
 	{
 		$$ = $2;
-		((Var *)$$)->setTypeAndStatic($1->tokenString, false);
+		if($2 != NULL)
+			((Var *)$$)->setTypeAndStatic($1->tokenString, false);
 	}
 	| typeSpecifier error
 	{
@@ -254,7 +264,8 @@ paramTypeList : typeSpecifier paramIdList
 	;
 paramIdList : paramIdList ',' paramId
 	{
-		$$->append($3);
+		if($$ != NULL)
+			$$->append($3);
 		yyerrok;
 	}
 	| paramId
@@ -767,7 +778,8 @@ args : argList
 	;
 argList : argList ',' expression
 	{
-		$$->append($3);
+		if($$ != NULL)
+			$$->append($3);
 		yyerrok;
 	}
 	| expression

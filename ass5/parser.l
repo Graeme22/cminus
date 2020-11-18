@@ -99,9 +99,8 @@ static int buildToken(int tokenClass, char *tokenString) {
 		break;
 	case CHARCONST:
 		int c = cValueFrom(tokenString);
-		if(c == -1)
-			return -1;
-		yylval.tokenData->cValue = (char)c;
+		if(c != -1)
+			yylval.tokenData->cValue = (char)c;
 		break;
 	}
 
@@ -155,6 +154,6 @@ static int buildToken(int tokenClass, char *tokenString) {
 [0-9]+									{ return buildToken(NUMCONST, yytext); }
 '([^\n\\']|\\.)*'						{ return buildToken(CHARCONST, yytext); }
 \"([^\\\"\n]|\\.)*\"					{ return buildToken(STRINGCONST, yytext); }
-[^ \n\t]								{ printf("WARNING(%d): Invalid or misplaced input character: '%c'. Character Ignored.\n", yylineno, yytext[0]); n_warnings++; }
+[^ \n\t]								{ printf("ERROR(%d): Invalid or misplaced input character: '%c'. Character Ignored.\n", yylineno, yytext[0]); n_errors++; }
 .|\n									;
 %%
