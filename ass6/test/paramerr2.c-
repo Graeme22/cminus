@@ -1,0 +1,15 @@
+// C-F20
+//
+cow();
+dog(int aardvark, boar) aardvark;
+
+main()
+{
+   int a:1; bool b:true;
+
+   cow(b+b & a);
+   dog(a+b);
+   dog(a+b, a*b);
+   dog(a+b, a*b, a-b);
+   elk(a+b);
+}

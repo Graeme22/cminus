@@ -1,0 +1,29 @@
+// C-F20
+D_Artagnan();
+
+int Athos(int a; bool b; char c) {
+    D_Artagnan(666);
+    D_Artagnan(666, true + 6);
+    Athos(a, b, c);
+}
+
+char Aramis(int aa[]; bool ab[]; char ac[]) {
+     Athos(aa[1], ab);
+     Athos(aa[1], ab[2], ac[3]);
+     Athos(aa[1], ab[2], ac[3], 5 & 6);
+}
+
+
+bool Porthos(bool bb; char cc; int aa)
+{
+   int a[1];
+   bool b[2];
+   char c[3];
+   Athos(Athos(1, true, 'x'), Porthos(true, 'w', 78), Aramis(a, b, c));
+   Athos(Athos(1, true, 'x')*6, Porthos(true, 'w', 78) & true, Aramis(a, b, c));
+   Athos(Athos(1, true, 'x'), Porthos(true, 'w', 78));
+   Athos(Athos(1, true, 'x'), Porthos(true, 'w', 78), Aramis(a, b, c), true, 34, a, D_Artagnan());
+   Athos(D_Artagnan(), thx1138, a[0] = a[0]);
+
+   return Porthos(true, 'e', 90);
+}

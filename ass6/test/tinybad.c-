@@ -1,0 +1,17 @@
+// C-F20
+int ant[10];
+int bat;
+
+int dog(bool corgi) {
+    char cat;
+
+    aspergillus = niger;
+    cat = 666;
+    cat = dog;
+    dog = cat;
+    ant['x'] = ant[cat];
+    ant[dog] = ant[cow];
+
+    return cat;
+}
+

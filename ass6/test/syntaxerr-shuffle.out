@@ -1,0 +1,61 @@
+====================================
+RUN: syntaxerr-shuffle.c-
+ERROR(1): Syntax error, unexpected '>', expecting "bool" or "char" or "int" or identifier.
+ERROR(18): Syntax error, unexpected ';'.
+ERROR(23): Syntax error, unexpected identifier "c", expecting ',' or ';'.
+ERROR(55): Invalid or misplaced input character: '''. Character Ignored.
+ERROR(63): Syntax error, unexpected ','.
+ERROR(78): Invalid or misplaced input character: '''. Character Ignored.
+ERROR(81): Syntax error, unexpected ')', expecting ',' or ';'.
+ERROR(125): Invalid or misplaced input character: '''. Character Ignored.
+ERROR(125): Invalid or misplaced input character: '\'. Character Ignored.
+ERROR(137): Syntax error, unexpected '*', expecting ',' or ';'.
+ERROR(146): Syntax error, unexpected identifier "wool", expecting ',' or ';'.
+ERROR(162): Invalid or misplaced input character: '\'. Character Ignored.
+ERROR(163): Syntax error, unexpected identifier "grand", expecting ',' or ';'.
+ERROR(200): Syntax error, unexpected identifier "close", expecting ',' or ';'.
+ERROR(210): Syntax error, unexpected "while", expecting ',' or ';'.
+ERROR(232): Syntax error, unexpected "while", expecting '('.
+ERROR(238): Syntax error, unexpected ']', expecting ',' or ';'.
+ERROR(239): Syntax error, unexpected "bool", expecting ',' or ';'.
+ERROR(259): Invalid or misplaced input character: '"'. Character Ignored.
+ERROR(259): Invalid or misplaced input character: '\'. Character Ignored.
+ERROR(259): Invalid or misplaced input character: '"'. Character Ignored.
+ERROR(263): Syntax error, unexpected '[', expecting ',' or ';'.
+ERROR(296): Syntax error, unexpected '&', expecting ',' or ';'.
+ERROR(302): Syntax error, unexpected numeric constant "4".
+ERROR(304): Invalid or misplaced input character: '\'. Character Ignored.
+ERROR(314): Syntax error, unexpected "for", expecting ',' or ';'.
+ERROR(322): Invalid or misplaced input character: '''. Character Ignored.
+ERROR(322): Invalid or misplaced input character: '"'. Character Ignored.
+ERROR(330): Syntax error, unexpected ']'.
+ERROR(352): Syntax error, unexpected '-', expecting ',' or ';'.
+ERROR(364): Invalid or misplaced input character: '\'. Character Ignored.
+ERROR(407): Syntax error, unexpected '(', expecting ',' or ';'.
+ERROR(412): Syntax error, unexpected identifier "y", expecting ',' or ';'.
+ERROR(418): Syntax error, unexpected identifier "a", expecting ',' or ';'.
+ERROR(422): Syntax error, unexpected identifier "x", expecting ',' or ';'.
+ERROR(431): Syntax error, unexpected identifier "wrong", expecting ',' or ';'.
+ERROR(450): Syntax error, unexpected numeric constant "33", expecting '('.
+ERROR(495): Invalid or misplaced input character: '\'. Character Ignored.
+ERROR(495): Invalid or misplaced input character: '''. Character Ignored.
+ERROR(495): Invalid or misplaced input character: '"'. Character Ignored.
+ERROR(499): Syntax error, unexpected identifier "McGraw", expecting ',' or ';'.
+ERROR(528): Syntax error, unexpected identifier "rabbit", expecting ',' or ';'.
+ERROR(533): Invalid or misplaced input character: '''. Character Ignored.
+ERROR(533): Invalid or misplaced input character: '\'. Character Ignored.
+ERROR(538): Syntax error, unexpected '{', expecting ',' or ';'.
+ERROR(562): Syntax error, unexpected '(', expecting ',' or ';'.
+ERROR(580): Syntax error, unexpected "==", expecting ',' or ';'.
+ERROR(585): Invalid or misplaced input character: '"'. Character Ignored.
+ERROR(587): Syntax error, unexpected "return", expecting ',' or ';'.
+ERROR(610): Invalid or misplaced input character: '"'. Character Ignored.
+ERROR(614): Syntax error, unexpected '=', expecting ',' or ';'.
+ERROR(689): Invalid or misplaced input character: '\'. Character Ignored.
+ERROR(689): Invalid or misplaced input character: '\'. Character Ignored.
+ERROR(689): Invalid or misplaced input character: '"'. Character Ignored.
+ERROR(701): Syntax error, unexpected identifier "gromit", expecting ',' or ';'.
+ERROR(714): Syntax error, unexpected identifier "run", expecting ',' or ';'.
+ERROR(727): Syntax error, unexpected '(', expecting ',' or ';'.
+Number of warnings: 0
+Number of errors: 57

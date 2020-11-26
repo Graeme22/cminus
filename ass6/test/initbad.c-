@@ -1,0 +1,12 @@
+// C-F20
+int a:'a';
+bool b:3;
+char c:true;
+char s[10];
+
+main()
+{
+   int aa:a;
+   bool bb:b;
+   char cc:c;
+   }

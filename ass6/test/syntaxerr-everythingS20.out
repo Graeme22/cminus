@@ -1,0 +1,68 @@
+====================================
+RUN: syntaxerr-everythingS20.c-
+ERROR(1): Syntax error, unexpected "==", expecting "bool" or "char" or "int" or identifier.
+ERROR(2): Invalid or misplaced input character: '.'. Character Ignored.
+ERROR(2): Syntax error, unexpected identifier "c", expecting ',' or ';'.
+ERROR(3): Syntax error, unexpected identifier "error", expecting ',' or ';'.
+ERROR(3): Syntax error, unexpected character constant '!', expecting ',' or ';'.
+ERROR(3): Syntax error, unexpected character constant '(', expecting ',' or ';'.
+ERROR(3): Invalid or misplaced input character: '.'. Character Ignored.
+ERROR(4): Syntax error, unexpected identifier "error", expecting ',' or ';'.
+ERROR(4): Syntax error, unexpected identifier "identifier", expecting ',' or ';'.
+ERROR(4): Syntax error, unexpected character constant ';', expecting ',' or ';'.
+ERROR(4): Invalid or misplaced input character: '.'. Character Ignored.
+ERROR(5): Syntax error, unexpected identifier "error", expecting ',' or ';'.
+ERROR(5): Syntax error, unexpected string constant "else", expecting ',' or ';'.
+ERROR(5): Invalid or misplaced input character: '.'. Character Ignored.
+ERROR(6): Syntax error, unexpected identifier "error", expecting ',' or ';'.
+ERROR(6): Syntax error, unexpected identifier "identifier", expecting ',' or ';'.
+ERROR(6): Syntax error, unexpected character constant ';', expecting ',' or ';'.
+ERROR(6): Invalid or misplaced input character: '.'. Character Ignored.
+ERROR(7): Syntax error, unexpected identifier "or", expecting ',' or ';'.
+ERROR(7): Invalid or misplaced input character: '.'. Character Ignored.
+ERROR(7): Syntax error, unexpected identifier "Character", expecting ',' or ';'.
+ERROR(7): Invalid or misplaced input character: '.'. Character Ignored.
+ERROR(8): Syntax error, unexpected identifier "or", expecting ',' or ';'.
+ERROR(8): Invalid or misplaced input character: '.'. Character Ignored.
+ERROR(8): Syntax error, unexpected identifier "Character", expecting ',' or ';'.
+ERROR(8): Invalid or misplaced input character: '.'. Character Ignored.
+ERROR(9): Syntax error, unexpected identifier "error", expecting ',' or ';'.
+ERROR(9): Syntax error, unexpected identifier "identifier", expecting ',' or ';'.
+ERROR(9): Syntax error, unexpected character constant ',', expecting ',' or ';'.
+ERROR(9): Invalid or misplaced input character: '.'. Character Ignored.
+ERROR(10): Syntax error, unexpected identifier "error", expecting ',' or ';'.
+ERROR(10): Syntax error, unexpected string constant "==", expecting ',' or ';'.
+ERROR(10): Syntax error, unexpected character constant ',', expecting ',' or ';'.
+ERROR(10): Invalid or misplaced input character: '.'. Character Ignored.
+ERROR(11): Syntax error, unexpected identifier "error", expecting ',' or ';'.
+ERROR(11): Syntax error, unexpected identifier "identifier", expecting ',' or ';'.
+ERROR(11): Syntax error, unexpected character constant ';', expecting ',' or ';'.
+ERROR(11): Invalid or misplaced input character: '.'. Character Ignored.
+ERROR(12): Syntax error, unexpected identifier "or", expecting ',' or ';'.
+ERROR(12): Invalid or misplaced input character: '.'. Character Ignored.
+ERROR(12): Syntax error, unexpected identifier "Character", expecting ',' or ';'.
+ERROR(12): Invalid or misplaced input character: '.'. Character Ignored.
+ERROR(13): Syntax error, unexpected identifier "or", expecting ',' or ';'.
+ERROR(13): Invalid or misplaced input character: '.'. Character Ignored.
+ERROR(13): Syntax error, unexpected identifier "Character", expecting ',' or ';'.
+ERROR(13): Invalid or misplaced input character: '.'. Character Ignored.
+ERROR(14): Syntax error, unexpected identifier "error", expecting ',' or ';'.
+ERROR(14): Syntax error, unexpected identifier "identifier", expecting ',' or ';'.
+ERROR(14): Syntax error, unexpected character constant ';', expecting ',' or ';'.
+ERROR(14): Invalid or misplaced input character: '.'. Character Ignored.
+ERROR(15): Syntax error, unexpected identifier "error", expecting ',' or ';'.
+ERROR(15): Syntax error, unexpected identifier "identifier", expecting ',' or ';'.
+ERROR(15): Syntax error, unexpected character constant ';', expecting ',' or ';'.
+ERROR(15): Invalid or misplaced input character: '.'. Character Ignored.
+ERROR(16): Syntax error, unexpected identifier "error", expecting ',' or ';'.
+ERROR(16): Syntax error, unexpected identifier "identifier", expecting ',' or ';'.
+ERROR(16): Syntax error, unexpected character constant ';', expecting ',' or ';'.
+ERROR(16): Invalid or misplaced input character: '.'. Character Ignored.
+ERROR(17): Syntax error, unexpected identifier "error", expecting ',' or ';'.
+ERROR(17): Syntax error, unexpected string constant "break", expecting ',' or ';'.
+ERROR(17): Syntax error, unexpected character constant ';', expecting ',' or ';'.
+ERROR(17): Invalid or misplaced input character: '.'. Character Ignored.
+ERROR(19): Syntax error, unexpected identifier "Number", expecting ',' or ';'.
+ERROR(20): Syntax error, unexpected end of input, expecting ',' or ';'.
+Number of warnings: 0
+Number of errors: 64

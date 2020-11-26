@@ -1,0 +1,35 @@
+====================================
+RUN: undefined.c-
+ERROR(4): Variable 'y' is not declared.
+ERROR(5): Variable 'x' is not declared.
+ERROR(6): Variable 'x' is not declared.
+ERROR(6): Variable 'y' is not declared.
+ERROR(7): Variable 'y' is not declared.
+ERROR(7): Variable 'x' is not declared.
+ERROR(8): Variable 'x' is not declared.
+ERROR(8): Variable 'y' is not declared.
+ERROR(9): Variable 'x' is not declared.
+ERROR(9): Variable 'array' is not declared.
+ERROR(14): Function 'dog' is not declared.
+ERROR(15): Variable 'dog' is not declared.
+ERROR(16): Variable 'dog' is not declared.
+ERROR(16): Variable 'dog' is not declared.
+ERROR(16): Variable 'dog' is not declared.
+ERROR(18): Variable 'mouse' is not declared.
+ERROR(25): Variable 'mouse' is not declared.
+ERROR(27): Variable 'mouse' is not declared.
+ERROR(29): Variable 'mouse' is not declared.
+ERROR(31): Variable 'mouse' is not declared.
+ERROR(36): Variable 'mouse' is not declared.
+ERROR(36): Variable 'mouse' is not declared.
+ERROR(37): Variable 'mouse' is not declared.
+ERROR(37): Variable 'mouse' is not declared.
+ERROR(38): Variable 'mouse' is not declared.
+ERROR(38): Variable 'mouse' is not declared.
+ERROR(39): Variable 'mouse' is not declared.
+ERROR(39): Variable 'mouse' is not declared.
+ERROR(41): Variable 'mouse' is not declared.
+ERROR(42): Variable 'mouse' is not declared.
+WARNING(34): Expecting to return type int but function 'dog' has no return statement.
+Number of warnings: 1
+Number of errors: 30

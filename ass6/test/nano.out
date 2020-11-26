@@ -1,0 +1,6 @@
+====================================
+RUN: nano.c-
+ERROR(4): Too many parameters passed for function 'main' declared on line 2.
+WARNING(2): The variable x seems not to be used.
+Number of warnings: 1
+Number of errors: 1

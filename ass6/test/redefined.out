@@ -1,0 +1,44 @@
+====================================
+RUN: redefined.c-
+ERROR(6): Symbol 'x' is already declared at line 6.
+ERROR(7): Symbol 'x' is already declared at line 6.
+ERROR(7): Symbol 'x' is already declared at line 6.
+ERROR(8): Symbol 'x' is already declared at line 6.
+ERROR(8): Symbol 'x' is already declared at line 6.
+ERROR(10): Symbol 'y' is already declared at line 10.
+ERROR(13): Symbol 'main' is already declared at line 12.
+ERROR(14): Symbol 'main' is already declared at line 12.
+WARNING(16): The variable g seems not to be used.
+WARNING(12): The variable main seems not to be used.
+WARNING(6): The variable x seems not to be used.
+WARNING(10): The variable y seems not to be used.
+ERROR(19): Symbol 'main' is already declared at line 4.
+ERROR(19): Symbol 'a' is already declared at line 19.
+ERROR(19): Symbol 'b' is already declared at line 19.
+ERROR(19): Symbol 'c' is already declared at line 19.
+ERROR(20): Symbol 'a' is already declared at line 19.
+ERROR(20): Symbol 'b' is already declared at line 19.
+ERROR(20): Symbol 'c' is already declared at line 19.
+ERROR(25): Symbol 'a' is already declared at line 24.
+ERROR(25): Symbol 'b' is already declared at line 24.
+ERROR(25): Symbol 'c' is already declared at line 24.
+WARNING(27): The variable a seems not to be used.
+WARNING(27): The variable b seems not to be used.
+WARNING(27): The variable c seems not to be used.
+WARNING(28): The variable g seems not to be used.
+WARNING(28): The variable main seems not to be used.
+WARNING(24): The variable a seems not to be used.
+WARNING(24): The variable b seems not to be used.
+WARNING(24): The variable c seems not to be used.
+WARNING(23): The variable g seems not to be used.
+WARNING(19): The variable a seems not to be used.
+WARNING(19): The variable b seems not to be used.
+WARNING(19): The variable c seems not to be used.
+WARNING(21): The variable g seems not to be used.
+ERROR(34): Symbol 'cat' is already declared at line 33.
+WARNING(33): The variable cat seems not to be used.
+WARNING(33): The variable g seems not to be used.
+ERROR(37): Symbol 'cat' is already declared at line 33.
+ERROR(37): Symbol 'g' is already declared at line 2.
+Number of warnings: 19
+Number of errors: 21

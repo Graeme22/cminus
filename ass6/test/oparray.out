@@ -1,0 +1,39 @@
+====================================
+RUN: oparray.c-
+ERROR(12): Cannot use function 'main' as a variable.
+ERROR(12): Cannot index nonarray 'main'.
+WARNING(14): Variable xa may be uninitialized when used here.
+WARNING(15): Variable ca may be uninitialized when used here.
+WARNING(16): Variable ba may be uninitialized when used here.
+ERROR(17): '=' requires operands of the same type but lhs is type int and rhs is type char.
+ERROR(18): '=' requires operands of the same type but lhs is type int and rhs is type bool.
+ERROR(19): '=' requires both operands be arrays or not but lhs is an array and rhs is not an array.
+WARNING(21): Variable x may be uninitialized when used here.
+ERROR(21): '=' requires both operands be arrays or not but lhs is an array and rhs is not an array.
+WARNING(22): Variable c may be uninitialized when used here.
+ERROR(22): '=' requires both operands be arrays or not but lhs is an array and rhs is not an array.
+WARNING(23): Variable b may be uninitialized when used here.
+ERROR(23): '=' requires both operands be arrays or not but lhs is an array and rhs is not an array.
+ERROR(24): '=' requires operands of the same type but lhs is type int and rhs is type char.
+ERROR(24): '=' requires both operands be arrays or not but lhs is an array and rhs is not an array.
+ERROR(25): '=' requires operands of the same type but lhs is type int and rhs is type bool.
+ERROR(25): '=' requires both operands be arrays or not but lhs is an array and rhs is not an array.
+ERROR(27): '=' requires both operands be arrays or not but lhs is not an array and rhs is an array.
+ERROR(28): '=' requires both operands be arrays or not but lhs is not an array and rhs is an array.
+ERROR(29): '=' requires both operands be arrays or not but lhs is not an array and rhs is an array.
+ERROR(30): '=' requires operands of the same type but lhs is type int and rhs is type char.
+ERROR(30): '=' requires both operands be arrays or not but lhs is not an array and rhs is an array.
+ERROR(31): '=' requires operands of the same type but lhs is type int and rhs is type bool.
+ERROR(31): '=' requires both operands be arrays or not but lhs is not an array and rhs is an array.
+ERROR(40): '>' requires both operands be arrays or not but lhs is an array and rhs is not an array.
+ERROR(41): '>' requires both operands be arrays or not but lhs is not an array and rhs is an array.
+ERROR(43): The operation '?' does not work with arrays.
+ERROR(46): The operation '*' only works with arrays.
+ERROR(47): Cannot index nonarray 'x'.
+ERROR(48): Cannot index nonarray 'x'.
+ERROR(48): The operation '*' only works with arrays.
+ERROR(50): The operation '*' only works with arrays.
+WARNING(10): The variable y seems not to be used.
+WARNING(10): The variable ya seems not to be used.
+Number of warnings: 8
+Number of errors: 27

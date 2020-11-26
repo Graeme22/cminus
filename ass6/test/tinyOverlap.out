@@ -1,0 +1,25 @@
+====================================
+RUN: tinyOverlap.c-
+WARNING(8): The variable b seems not to be used.
+WARNING(11): The variable c seems not to be used.
+WARNING(15): The variable b seems not to be used.
+WARNING(18): The variable c seems not to be used.
+WARNING(6): The variable a seems not to be used.
+WARNING(4): The variable p seems not to be used.
+Var g: type int [mem: Global  size: 1  loc: 0] [line: 2]
+Sibling: 1  Func main: returns type void [line: 4]
+.   Child: 0  Param p: type int [mem: Param  size: 1  loc: -2] [line: 4]
+.   Child: 1  Compound [line: 5]
+.   .   Child: 0  Var a: type int [mem: Local  size: 1  loc: -3] [line: 6]
+.   .   Child: 1  Compound [line: 7]
+.   .   .   Child: 0  Var b: type int [mem: Local  size: 1  loc: -4] [line: 8]
+.   .   Sibling: 1  Compound [line: 10]
+.   .   .   Child: 0  Var c: type int [mem: Local  size: 1  loc: -4] [line: 11]
+.   .   Sibling: 2  Compound [line: 13]
+.   .   .   Child: 1  Compound [line: 14]
+.   .   .   .   Child: 0  Var b: type int [mem: Local  size: 1  loc: -4] [line: 15]
+.   .   .   Sibling: 1  Compound [line: 17]
+.   .   .   .   Child: 0  Var c: type int [mem: Local  size: 1  loc: -4] [line: 18]
+Sibling: 2  Var h: type int [mem: Global  size: 1  loc: -1] [line: 23]
+Number of warnings: 6
+Number of errors: 0

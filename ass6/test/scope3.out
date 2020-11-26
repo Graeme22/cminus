@@ -1,0 +1,93 @@
+====================================
+RUN: scope3.c-
+WARNING(26): The variable sla seems not to be used.
+WARNING(29): The variable slaa seems not to be used.
+WARNING(27): The variable slb seems not to be used.
+WARNING(30): The variable slbb seems not to be used.
+WARNING(28): The variable slc seems not to be used.
+WARNING(31): The variable slcc seems not to be used.
+WARNING(35): The variable tla seems not to be used.
+WARNING(38): The variable tlaa seems not to be used.
+WARNING(36): The variable tlb seems not to be used.
+WARNING(39): The variable tlbb seems not to be used.
+WARNING(37): The variable tlc seems not to be used.
+WARNING(40): The variable tlcc seems not to be used.
+WARNING(44): The variable sa seems not to be used.
+WARNING(47): The variable saa seems not to be used.
+WARNING(45): The variable sb seems not to be used.
+WARNING(48): The variable sbb seems not to be used.
+WARNING(46): The variable sc seems not to be used.
+WARNING(49): The variable scc seems not to be used.
+WARNING(18): The variable la seems not to be used.
+WARNING(21): The variable laa seems not to be used.
+WARNING(19): The variable lb seems not to be used.
+WARNING(22): The variable lbb seems not to be used.
+WARNING(20): The variable lc seems not to be used.
+WARNING(23): The variable lcc seems not to be used.
+WARNING(10): The variable pa seems not to be used.
+WARNING(13): The variable paa seems not to be used.
+WARNING(11): The variable pb seems not to be used.
+WARNING(14): The variable pbb seems not to be used.
+WARNING(12): The variable pc seems not to be used.
+WARNING(15): The variable pcc seems not to be used.
+WARNING(59): The variable foxa seems not to be used.
+WARNING(57): The variable fpa seems not to be used.
+WARNING(57): The variable fpaa seems not to be used.
+WARNING(57): The variable fpb seems not to be used.
+WARNING(57): The variable fpbb seems not to be used.
+WARNING(57): The variable fpc seems not to be used.
+WARNING(57): The variable fpcc seems not to be used.
+Var a: type int [mem: Global  size: 1  loc: 0] [line: 2]
+Sibling: 1  Var b: type bool [mem: Global  size: 1  loc: -1] [line: 3]
+Sibling: 2  Var c: type char [mem: Global  size: 1  loc: -2] [line: 4]
+Sibling: 3  Var aa: array of type int [mem: Global  size: 12  loc: -4] [line: 5]
+Sibling: 4  Var bb: array of type bool [mem: Global  size: 23  loc: -16] [line: 6]
+Sibling: 5  Var cc: array of type char [mem: Global  size: 34  loc: -39] [line: 7]
+Sibling: 6  Func main: returns type void [line: 10]
+.   Child: 0  Param pa: type int [mem: Param  size: 1  loc: -2] [line: 10]
+.   Sibling: 1  Param pb: type bool [mem: Param  size: 1  loc: -3] [line: 11]
+.   Sibling: 2  Param pc: type char [mem: Param  size: 1  loc: -4] [line: 12]
+.   Sibling: 3  Param paa: array of type int [mem: Param  size: 1  loc: -5] [line: 13]
+.   Sibling: 4  Param pbb: array of type bool [mem: Param  size: 1  loc: -6] [line: 14]
+.   Sibling: 5  Param pcc: array of type char [mem: Param  size: 1  loc: -7] [line: 15]
+.   Child: 1  Compound [line: 17]
+.   .   Child: 0  Var la: type int [mem: Local  size: 1  loc: -8] [line: 18]
+.   .   Sibling: 1  Var lb: type bool [mem: Local  size: 1  loc: -9] [line: 19]
+.   .   Sibling: 2  Var lc: type char [mem: Local  size: 1  loc: -10] [line: 20]
+.   .   Sibling: 3  Var laa: array of type int [mem: Local  size: 12  loc: -12] [line: 21]
+.   .   Sibling: 4  Var lbb: array of type bool [mem: Local  size: 23  loc: -24] [line: 22]
+.   .   Sibling: 5  Var lcc: array of type char [mem: Local  size: 34  loc: -47] [line: 23]
+.   .   Child: 1  Compound [line: 25]
+.   .   .   Child: 0  Var sla: type int [mem: Local  size: 1  loc: -80] [line: 26]
+.   .   .   Sibling: 1  Var slb: type bool [mem: Local  size: 1  loc: -81] [line: 27]
+.   .   .   Sibling: 2  Var slc: type char [mem: Local  size: 1  loc: -82] [line: 28]
+.   .   .   Sibling: 3  Var slaa: array of type int [mem: Local  size: 12  loc: -84] [line: 29]
+.   .   .   Sibling: 4  Var slbb: array of type bool [mem: Local  size: 23  loc: -96] [line: 30]
+.   .   .   Sibling: 5  Var slcc: array of type char [mem: Local  size: 34  loc: -119] [line: 31]
+.   .   Sibling: 1  Compound [line: 34]
+.   .   .   Child: 0  Var tla: type int [mem: Local  size: 1  loc: -80] [line: 35]
+.   .   .   Sibling: 1  Var tlb: type bool [mem: Local  size: 1  loc: -81] [line: 36]
+.   .   .   Sibling: 2  Var tlc: type char [mem: Local  size: 1  loc: -82] [line: 37]
+.   .   .   Sibling: 3  Var tlaa: array of type int [mem: Local  size: 12  loc: -84] [line: 38]
+.   .   .   Sibling: 4  Var tlbb: array of type bool [mem: Local  size: 23  loc: -96] [line: 39]
+.   .   .   Sibling: 5  Var tlcc: array of type char [mem: Local  size: 34  loc: -119] [line: 40]
+.   .   Sibling: 2  Compound [line: 43]
+.   .   .   Child: 0  Var sa: static type int [mem: Static  size: 1  loc: -72] [line: 44]
+.   .   .   Sibling: 1  Var sb: static type bool [mem: Static  size: 1  loc: -73] [line: 45]
+.   .   .   Sibling: 2  Var sc: static type char [mem: Static  size: 1  loc: -74] [line: 46]
+.   .   .   Sibling: 3  Var saa: static array of type int [mem: Static  size: 12  loc: -76] [line: 47]
+.   .   .   Sibling: 4  Var sbb: static array of type bool [mem: Static  size: 23  loc: -88] [line: 48]
+.   .   .   Sibling: 5  Var scc: static array of type char [mem: Static  size: 34  loc: -111] [line: 49]
+Sibling: 7  Var d: type int [mem: Global  size: 1  loc: -144] [line: 54]
+Sibling: 8  Var ee: array of type int [mem: Global  size: 11  loc: -146] [line: 54]
+Sibling: 9  Func fox: returns type void [line: 57]
+.   Child: 0  Param fpa: type int [mem: Param  size: 1  loc: -2] [line: 57]
+.   Sibling: 1  Param fpb: type bool [mem: Param  size: 1  loc: -3] [line: 57]
+.   Sibling: 2  Param fpc: type char [mem: Param  size: 1  loc: -4] [line: 57]
+.   Sibling: 3  Param fpaa: array of type int [mem: Param  size: 1  loc: -5] [line: 57]
+.   Sibling: 4  Param fpbb: array of type bool [mem: Param  size: 1  loc: -6] [line: 57]
+.   Sibling: 5  Param fpcc: array of type char [mem: Param  size: 1  loc: -7] [line: 57]
+.   Child: 1  Compound [line: 58]
+.   .   Child: 0  Var foxa: type int [mem: Local  size: 1  loc: -8] [line: 59]
+Number of warnings: 37
+Number of errors: 0

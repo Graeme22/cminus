@@ -1,0 +1,5 @@
+====================================
+RUN: syntaxerr-compound.c-
+ERROR(2): Syntax error, unexpected '}', expecting "bool" or "char" or "int" or identifier.
+Number of warnings: 0
+Number of errors: 1

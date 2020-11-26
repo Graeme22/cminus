@@ -1,0 +1,17 @@
+====================================
+RUN: nested.c-
+WARNING(8): The variable i seems not to be used.
+WARNING(7): The variable i seems not to be used.
+WARNING(12): The variable i seems not to be used.
+WARNING(10): The variable i seems not to be used.
+WARNING(18): The variable i seems not to be used.
+WARNING(16): The variable i seems not to be used.
+ERROR(23): Symbol 'i' is already declared at line 22.
+WARNING(28): The variable i seems not to be used.
+WARNING(25): The variable i seems not to be used.
+ERROR(34): Symbol 'i' is already declared at line 32.
+WARNING(32): The variable i seems not to be used.
+WARNING(22): The variable i seems not to be used.
+ERROR(LINKER): Procedure main is not declared.
+Number of warnings: 10
+Number of errors: 3

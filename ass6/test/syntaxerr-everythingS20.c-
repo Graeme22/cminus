@@ -1,0 +1,19 @@
+====================================
+RUN: everythingS20.c-
+ERROR(32): Syntax error, unexpected '!', expecting '('.
+ERROR(32): Syntax error, unexpected identifier "then", expecting ';'.
+ERROR(33): Syntax error, unexpected "else".
+ERROR(91): Syntax error, unexpected identifier "i", expecting ';'.
+ERROR(91): Invalid or misplaced input character: '.'. Character Ignored.
+ERROR(91): Invalid or misplaced input character: '.'. Character Ignored.
+ERROR(91): Syntax error, unexpected identifier "do", expecting ',' or ';'.
+ERROR(91): Syntax error, unexpected "==", expecting ',' or ';'.
+ERROR(95): Syntax error, unexpected identifier "ginger", expecting ';'.
+ERROR(95): Invalid or misplaced input character: '.'. Character Ignored.
+ERROR(95): Invalid or misplaced input character: '.'. Character Ignored.
+ERROR(96): Syntax error, unexpected identifier "forever", expecting ';'.
+ERROR(97): Syntax error, unexpected identifier "forever", expecting ';'.
+ERROR(97): Syntax error, unexpected identifier "s", expecting ';'.
+ERROR(97): Syntax error, unexpected "break", expecting ';'.
+Number of warnings: 0
+Number of errors: 15

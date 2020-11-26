@@ -1,0 +1,17 @@
+====================================
+RUN: syntaxerr-call.c-
+ERROR(2): Syntax error, unexpected "int".
+ERROR(8): Syntax error, unexpected "while".
+ERROR(8): Syntax error, unexpected ';', expecting ')'.
+ERROR(9): Syntax error, unexpected "while", expecting ')'.
+ERROR(9): Syntax error, unexpected ';', expecting ')'.
+ERROR(10): Syntax error, unexpected identifier "dog", expecting ')'.
+ERROR(10): Syntax error, unexpected ',', expecting ';'.
+ERROR(10): Syntax error, unexpected ')', expecting ';'.
+ERROR(10): Syntax error, unexpected ')', expecting ';'.
+ERROR(12): Syntax error, unexpected ';'.
+ERROR(13): Syntax error, unexpected ';', expecting ')'.
+ERROR(18): Syntax error, unexpected "int", expecting ')'.
+ERROR(18): Syntax error, unexpected "int", expecting ')'.
+Number of warnings: 0
+Number of errors: 13

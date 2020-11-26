@@ -1,0 +1,37 @@
+====================================
+RUN: syntaxerr-for.c-
+ERROR(4): Syntax error, unexpected ')', expecting "in".
+ERROR(6): Syntax error, unexpected "int", expecting "in".
+ERROR(8): Syntax error, unexpected "int", expecting identifier.
+ERROR(10): Syntax error, unexpected "int", expecting identifier.
+ERROR(12): Syntax error, unexpected "int", expecting '('.
+ERROR(14): Syntax error, unexpected "int", expecting '('.
+ERROR(16): Syntax error, unexpected "int", expecting '('.
+ERROR(18): Syntax error, unexpected "int", expecting '('.
+ERROR(21): Syntax error, unexpected ')', expecting "in".
+ERROR(23): Syntax error, unexpected '*', expecting "in".
+ERROR(25): Syntax error, unexpected '*', expecting identifier.
+ERROR(27): Syntax error, unexpected '*', expecting identifier.
+ERROR(29): Syntax error, unexpected '*', expecting '('.
+ERROR(31): Syntax error, unexpected '*', expecting '('.
+ERROR(31): Syntax error, unexpected ';'.
+ERROR(33): Syntax error, unexpected '*', expecting '('.
+ERROR(35): Syntax error, unexpected '*', expecting '('.
+ERROR(35): Syntax error, unexpected ';'.
+ERROR(38): Syntax error, unexpected ')', expecting "in".
+ERROR(40): Syntax error, unexpected ';', expecting "in".
+ERROR(42): Syntax error, unexpected ')', expecting identifier.
+ERROR(44): Syntax error, unexpected ';', expecting identifier.
+ERROR(46): Syntax error, unexpected identifier "x", expecting '('.
+ERROR(48): Syntax error, unexpected identifier "x", expecting '('.
+ERROR(50): Syntax error, unexpected ')', expecting '('.
+ERROR(52): Syntax error, unexpected ';', expecting '('.
+ERROR(54): Syntax error, unexpected ')', expecting identifier.
+ERROR(56): Syntax error, unexpected "in", expecting identifier.
+ERROR(58): Syntax error, unexpected identifier "x", expecting '('.
+ERROR(60): Syntax error, unexpected ';', expecting ')'.
+ERROR(62): Syntax error, unexpected "in", expecting identifier.
+ERROR(62): Syntax error, unexpected "if", expecting ';'.
+ERROR(62): Syntax error, unexpected Boolean constant "true", expecting ';'.
+Number of warnings: 0
+Number of errors: 33
