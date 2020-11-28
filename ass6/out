@@ -1,4 +1,14 @@
-Var g: type int  [mem: Global  size: 1  loc: 0] [line: 1]
+WARNING(13): The variable p seems not to be used.
+WARNING(14): The variable q seems not to be used.
+WARNING(5): The variable aa seems not to be used.
+WARNING(6): The variable b seems not to be used.
+WARNING(6): The variable bb seems not to be used.
+WARNING(7): The variable c seems not to be used.
+WARNING(8): The variable s seems not to be used.
+WARNING(8): The variable t seems not to be used.
+WARNING(3): The variable y seems not to be used.
+WARNING(3): The variable z seems not to be used.
+Var g: type int [mem: Global  size: 1  loc: 0] [line: 1]
 Sibling: 1  Var gg: array of type int [mem: Global  size: 11  loc: -2] [line: 1]
 Sibling: 2  Func julia: returns type void [line: 3]
 .   Child: 0  Param x: type int [mem: Param  size: 1  loc: -2] [line: 3]

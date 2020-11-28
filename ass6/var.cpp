@@ -145,7 +145,7 @@ void Id::propagateScopes(SymbolTable *table) {
 			isArray = var->isArray;
 			isStatic = var->isStatic;
 			isFunction = var->isFunction;
-			mType = var->mType != NULL ? (var->mType) : NULL;
+			mType = var->mType != NULL ? strdup(var->mType) : NULL;
 			mSize = var->mSize;
 			mOffset = var->mOffset;
 			var->used = true;

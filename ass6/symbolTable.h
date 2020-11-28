@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+extern int foffset;
+
 // // // // // // // // // // // // // // // // // // // // 
 //
 // Class: Scope
@@ -20,6 +22,7 @@ private:
     std::map<std::string, void *> symbols;     // use an ordered map (not as fast as unordered)
 
 public:
+    int initialOffset;
     Scope(std::string);
     ~Scope();
     std::string scopeName();                   // returns name of scope
