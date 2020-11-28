@@ -16,7 +16,7 @@ public:
 	Var(TokenData *, TokenData *);
 	void setTypeAndStatic(char *, bool);
 	void setInitialized();
-	virtual void print();
+	virtual void print(bool);
 	virtual void propagateScopes(SymbolTable *);
 	virtual void initialize(SymbolTable *);
 
@@ -26,7 +26,7 @@ class Id: public Var {
 
 public:
 	Id(TokenData *);
-	virtual void print();
+	virtual void print(bool);
 	virtual void propagateScopes(SymbolTable *);
 
 };

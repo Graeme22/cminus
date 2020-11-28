@@ -8,10 +8,10 @@ CompoundStatement::CompoundStatement(int l, AST *vars, AST *stmt) {
 	addChild(stmt->sibling, 1);
 }
 
-void CompoundStatement::print() {
+void CompoundStatement::print(bool showMemory) {
 	printPrefix();
 	printf("Compound [line: %d]\n", line);
-	AST::print();
+	AST::print(showMemory);
 }
 
 void CompoundStatement::propagateScopes(SymbolTable *table) {
@@ -39,10 +39,10 @@ If::If(int l, AST *condition, AST *stmt, AST *elseStmt): If(l, condition, stmt) 
 	addChild(elseStmt, 2);
 }
 
-void If::print() {
+void If::print(bool showMemory) {
 	printPrefix();
 	printf("If [line: %d]\n", line);
-	AST::print();
+	AST::print(showMemory);
 }
 
 void If::propagateScopes(SymbolTable *table) {
@@ -75,10 +75,10 @@ While::While(int l, AST *cond, AST *stmt) {
 		stmt->hasScopeException = true;
 }
 
-void While::print() {
+void While::print(bool showMemory) {
 	printPrefix();
 	printf("While [line: %d]\n", line);
-	AST::print();
+	AST::print(showMemory);
 }
 
 void While::propagateScopes(SymbolTable *table) {
@@ -107,10 +107,10 @@ Break::Break(int l) {
 	line = l;
 }
 
-void Break::print() {
+void Break::print(bool showMemory) {
 	printPrefix();
 	printf("Break [line: %d]\n", line);
-	AST::print();
+	AST::print(showMemory);
 }
 
 void Break::propagateScopes(SymbolTable *table) {
@@ -136,10 +136,10 @@ For::For(int l, TokenData *itr, TokenData *arr, AST *stmt) {
 		stmt->hasScopeException = true;
 }
 
-void For::print() {
+void For::print(bool showMemory) {
 	printPrefix();
 	printf("For [line: %d]\n", line);
-	AST::print();
+	AST::print(showMemory);
 }
 
 void For::propagateScopes(SymbolTable *table) {

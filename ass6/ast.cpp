@@ -48,12 +48,12 @@ void AST::printPrefix() {
 		printf("Sibling: %d  ", index);
 }
 
-void AST::print() {
+void AST::print(bool showMemory) {
 	for(int i = 0; i < MAX_CHILDREN; i++)
 		if(children[i] != NULL)
-			children[i]->print();
+			children[i]->print(showMemory);
 	if(sibling != NULL)
-		sibling->print();
+		sibling->print(showMemory);
 }
 
 void AST::propagateInfo() {

@@ -16,7 +16,7 @@ public:
 	int id;
 	Operation(TokenData *, AST *, AST *);
 	Operation(TokenData *, AST *);
-	virtual void print();
+	virtual void print(bool);
 	virtual void propagateScopes(SymbolTable *);
 	bool validateL(char *);
 	bool validateR(char *);
@@ -28,7 +28,7 @@ class Assignment: public Operation {
 public:
 	Assignment(TokenData *, AST *, AST *);
 	Assignment(TokenData *, AST *);
-	virtual void print();
+	virtual void print(bool);
 	virtual void propagateScopes(SymbolTable *);
 
 };
@@ -37,7 +37,7 @@ class ShortcutAssignment: public Assignment {
 
 public:
 	ShortcutAssignment(TokenData *, AST *);
-	virtual void print();
+	virtual void print(bool);
 	virtual void propagateScopes(SymbolTable *);
 
 };
@@ -48,7 +48,8 @@ class Constant: public AST {
 
 public:
 	Constant(TokenData *);
-	virtual void print();
+	virtual void print(bool);
+	virtual void propagateScopes(SymbolTable *);
 
 };
 

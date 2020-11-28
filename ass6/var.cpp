@@ -10,33 +10,40 @@ Var::Var(TokenData *data) {
 	isFunction = false;
 	used = false;
 	notified = false;
+	mSize = 1;
 }
 
 Var::Var(TokenData *left, TokenData *right): Var(left) {
 	isArray = true;
 	arraySize = right->nValue;
+	mSize = arraySize + 1;
 }
 
-void Var::print() {
+void Var::print(bool showMemory) {
 	printPrefix();
+	char *mData;
+	if(showMemory) {
+		mData = (char *)malloc(50);
+		sprintf(mData, " [mem: %s  size: %d  loc: %d]", mType, mSize, mOffset);
+	}
 	if(isArray) {
 		if(strcmp(type, "undefined") != 0) {
 			if(isStatic)
-				printf("Var %s: static array of type %s [line: %d]\n", name, type, line);
+				printf("Var %s: static array of type %s%s [line: %d]\n", name, type, (showMemory ? mData : (char *)""), line);
 			else
-				printf("Var %s: array of type %s [line: %d]\n", name, type, line);
+				printf("Var %s: array of type %s%s [line: %d]\n", name, type, (showMemory ? mData : (char *)""), line);
 		} else // if it's undefined we won't know whether it's static
-			printf("Var %s: array of undefined type [line: %d]\n", name, line);
+			printf("Var %s: array of undefined type%s [line: %d]\n", name, (showMemory ? mData : (char *)""), line);
 	} else {
 		if(strcmp(type, "undefined") != 0) {
 			if(isStatic)
-				printf("Var %s: static type %s [line: %d]\n", name, type, line);
+				printf("Var %s: static type %s%s [line: %d]\n", name, type, (showMemory ? mData : (char *)""), line);
 			else
-				printf("Var %s: type %s [line: %d]\n", name, type, line);
+				printf("Var %s: type %s%s [line: %d]\n", name, type, (showMemory ? mData : (char *)""), line);
 		} else
-			printf("Var %s: undefined type [line: %d]\n", name, line);
+			printf("Var %s: undefined type%s [line: %d]\n", name, (showMemory ? mData : (char *)""), line);
 	}
-	AST::print();
+	AST::print(showMemory);
 }
 
 void Var::setTypeAndStatic(char *t, bool s) {
@@ -68,6 +75,19 @@ void Var::propagateScopes(SymbolTable *table) {
 		printf(	"ERROR(%d): Variable '%s' is of type %s but is being initialized with an expression of type %s.\n", line, name, type, children[0]->type);
 		n_errors++;
 	}
+	// memory management
+	if(isStatic || table->depth() == 1) { // we're in global scope
+		if(isStatic)
+			mType = (char *)"Static";
+		else
+			mType = (char *)"Global";
+		mOffset = goffset - (isArray ? 1 : 0); // the first index of an array is the size, we'll treat it as location -1
+		goffset -= mSize;
+	} else {
+		mType = (char *)"Local";
+		mOffset = foffset - (isArray ? 1 : 0);
+		foffset -= mSize;
+	}
 	AST::propagateScopesSibling(table);
 }
 
@@ -83,26 +103,31 @@ void Var::initialize(SymbolTable *table) {
 
 Id::Id(TokenData *data): Var(data) {}
 
-void Id::print() {
+void Id::print(bool showMemory) {
 	printPrefix();
+	char *mData;
+	if(showMemory) {
+		mData = (char *)malloc(50);
+		sprintf(mData, " [mem: %s  size: %d  loc: %d]", mType, mSize, mOffset);
+	}
 	if(isArray) {
 		if(strcmp(type, "undefined") != 0) {
 			if(isStatic)
-				printf("Id %s: static array of type %s [line: %d]\n", name, type, line);
+				printf("Id %s: static array of type %s%s [line: %d]\n", name, type, (showMemory ? mData : (char *)""), line);
 			else
-				printf("Id %s: array of type %s [line: %d]\n", name, type, line);
+				printf("Id %s: array of type %s%s [line: %d]\n", name, type, (showMemory ? mData : (char *)""), line);
 		} else // if it's undefined we won't know whether it's static
-			printf("Id %s: array of undefined type [line: %d]\n", name, line);
+			printf("Id %s: array of undefined type%s [line: %d]\n", name, (showMemory ? mData : (char *)""), line);
 	} else {
 		if(strcmp(type, "undefined") != 0) {
 			if(isStatic)
-				printf("Id %s: static type %s [line: %d]\n", name, type, line);
+				printf("Id %s: static type %s%s [line: %d]\n", name, type, (showMemory ? mData : (char *)""), line);
 			else
-				printf("Id %s: type %s [line: %d]\n", name, type, line);
+				printf("Id %s: type %s%s [line: %d]\n", name, type, (showMemory ? mData : (char *)""), line);
 		} else
-			printf("Id %s: undefined type [line: %d]\n", name, line);
+			printf("Id %s: undefined type%s [line: %d]\n", name, (showMemory ? mData : (char *)""), line);
 	}
-	AST::print();
+	AST::print(showMemory);
 }
 
 void Id::propagateScopes(SymbolTable *table) {
@@ -120,6 +145,9 @@ void Id::propagateScopes(SymbolTable *table) {
 			isArray = var->isArray;
 			isStatic = var->isStatic;
 			isFunction = var->isFunction;
+			mType = var->mType != NULL ? (var->mType) : NULL;
+			mSize = var->mSize;
+			mOffset = var->mOffset;
 			var->used = true;
 			if(initialized)
 				var->initialized = true;

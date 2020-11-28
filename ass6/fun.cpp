@@ -7,13 +7,23 @@ Par::Par(TokenData *data, bool array): Var(data) {
 	initialized = true;
 }
 
-void Par::print() {
+void Par::print(bool showMemory) {
 	printPrefix();
+	char *mData;
+	if(showMemory) {
+		mData = (char *)malloc(50);
+		sprintf(mData, " [mem: %s  size: %d  loc: %d]", mType, mSize, mOffset);
+	}
 	if(isArray)
-		printf("Param %s: array of type %s [line: %d]\n", name, type, line);
+		printf("Param %s: array of type %s%s [line: %d]\n", name, type, (showMemory ? mData : (char *)""), line);
 	else
-		printf("Param %s: type %s [line: %d]\n", name, type, line);
-	AST::print();
+		printf("Param %s: type %s%s [line: %d]\n", name, type, (showMemory ? mData : (char *)""), line);
+	AST::print(showMemory);
+}
+
+void Par::propagateScopes(SymbolTable *table) {
+	Var::propagateScopes(table);
+	mType = (char *)"Param";
 }
 
 // FunDeclaration
@@ -40,10 +50,10 @@ FunDeclaration::FunDeclaration(char *t, TokenData *n, AST *pars): Var(n) {
 	addChild(pars, 0);
 }
 
-void FunDeclaration::print() {
+void FunDeclaration::print(bool showMemory) {
 	printPrefix();
 	printf("Func %s: returns type %s [line: %d]\n", name, type, line);
-	AST::print();
+	AST::print(showMemory);
 }
 
 void FunDeclaration::propagateScopes(SymbolTable *table) {
@@ -56,6 +66,9 @@ void FunDeclaration::propagateScopes(SymbolTable *table) {
 	currentFunction = this;
 	hasReturn = false;
 	table->enter("Function");
+	// allocate space for return frame pointer and return address
+	// each of size 1
+	foffset -= 2;
 	AST::propagateScopesChildren(table);
 	if(!hasReturn && strcmp(type, (char *)"void") != 0) {
 		printf("WARNING(%d): Expecting to return type %s but function '%s' has no return statement.\n", line, type, name);
@@ -75,13 +88,13 @@ Call::Call(TokenData *data, AST *args) {
 	addChild(args, 0);
 }
 
-void Call::print() {
+void Call::print(bool showMemory) {
 	printPrefix();
 	if(strcmp(type, "undefined") == 0)
 		printf("Call %s: undefined type [line: %d]\n", name, line);
 	else
 		printf("Call %s: type %s [line: %d]\n", name, type, line);
-	AST::print();
+	AST::print(showMemory);
 }
 
 void Call::propagateScopes(SymbolTable *table) {
@@ -153,10 +166,10 @@ Return::Return(int l, AST *stmt) {
 	line = l;
 }
 
-void Return::print() {
+void Return::print(bool showMemory) {
 	printPrefix();
 	printf("Return [line: %d]\n", line);
-	AST::print();
+	AST::print(showMemory);
 }
 
 void Return::propagateScopes(SymbolTable *table) {

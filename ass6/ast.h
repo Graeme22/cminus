@@ -9,6 +9,8 @@
 
 extern int n_errors;
 extern int n_warnings;
+extern int foffset;
+extern int goffset;
 
 class AST {
 
@@ -21,8 +23,12 @@ public:
 	int line;
 	bool hasScopeException, initialized;
 
+	char *mType;
+	int mSize;
+	int mOffset;
+
 	AST();
-	virtual void print();
+	virtual void print(bool);
 	void append(AST *);
 	void addChild(AST *, int);
 	virtual void printPrefix();

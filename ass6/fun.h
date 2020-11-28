@@ -10,7 +10,8 @@ class Par: public Var {
 
 public:
 	Par(TokenData *, bool);
-	virtual void print();
+	virtual void print(bool);
+	virtual void propagateScopes(SymbolTable *);
 
 };
 
@@ -20,7 +21,7 @@ public:
 	FunDeclaration(TokenData *, TokenData *, AST *, AST *);
 	FunDeclaration(TokenData *, AST *, AST *);
 	FunDeclaration(char *, TokenData *, AST *);
-	virtual void print();
+	virtual void print(bool);
 	virtual void propagateScopes(SymbolTable *);
 
 };
@@ -31,7 +32,7 @@ class Call: public AST {
 
 public:
 	Call(TokenData *, AST *);
-	virtual void print();
+	virtual void print(bool);
 	virtual void propagateScopes(SymbolTable *);
 
 };
@@ -41,7 +42,7 @@ class Return: public AST {
 public:
 	Return(int);
 	Return(int, AST *);
-	virtual void print();
+	virtual void print(bool);
 	virtual void propagateScopes(SymbolTable *);
 
 };

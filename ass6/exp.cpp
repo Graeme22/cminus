@@ -13,13 +13,13 @@ Operation::Operation(TokenData *data, AST *left, AST *right): Operation(data, le
 	addChild(right, 1);
 }
 
-void Operation::print() {
+void Operation::print(bool showMemory) {
 	printPrefix();
 	if(strcmp(type, "undefined") == 0)
 		printf("Op %s : undefined type [line: %d]\n", str, line);
 	else
 		printf("Op %s : type %s [line: %d]\n", str, type, line);
-	AST::print();
+	AST::print(showMemory);
 }
 
 void Operation::propagateScopes(SymbolTable *table) {
@@ -194,7 +194,7 @@ Assignment::Assignment(TokenData *data, AST *left, AST *right): Operation(data, 
 
 Assignment::Assignment(TokenData *data, AST *left): Operation(data, left) {}
 
-void Assignment::print() {
+void Assignment::print(bool showMemory) {
 	printPrefix();
 	if(strcmp(type, "undefined") == 0)
 		printf("Assign %s : undefined type [line: %d]\n", str, line);
@@ -204,7 +204,7 @@ void Assignment::print() {
 		else
 			printf("Assign %s : type %s [line: %d]\n", str, type, line);
 	}
-	AST::print();
+	AST::print(showMemory);
 }
 
 void Assignment::propagateScopes(SymbolTable *table) {
@@ -247,13 +247,13 @@ void Assignment::propagateScopes(SymbolTable *table) {
 
 ShortcutAssignment::ShortcutAssignment(TokenData *data, AST *left): Assignment(data, left) {}
 
-void ShortcutAssignment::print() {
+void ShortcutAssignment::print(bool showMemory) {
 	printPrefix();
 	if(strcmp(type, "undefined") == 0)
 		printf("Assign %s : undefined type [line: %d]\n", str, line);
 	else
 		printf("Assign %s : type %s [line: %d]\n", str, type, line);
-	AST::print();
+	AST::print(showMemory);
 }
 
 void ShortcutAssignment::propagateScopes(SymbolTable *table) {
@@ -282,6 +282,8 @@ Constant::Constant(TokenData *td) {
 	case STRINGCONST:
 		type = (char *)"char";
 		isArray = true;
+		mSize = strlen(data->tokenString) + 1 - 2; // add 1 for the size, subtract 2 for the double quotes
+		mType = (char *)"Global";
 		break;
 	case NUMCONST:
 		type = (char *)"int";
@@ -292,14 +294,17 @@ Constant::Constant(TokenData *td) {
 	}
 }
 
-void Constant::print() {
+void Constant::print(bool showMemory) {
 	printPrefix();
 	switch(data->tokenClass) {
 	case CHARCONST:
 		printf("Const: '%c' : type char [line: %d]\n", data->cValue, data->line);
 		break;
 	case STRINGCONST:
-		std::cout << "Const \"" << data->sValue << "\" : array of type char [line: " << data->line << "]\n";
+		if(showMemory)
+			std::cout << "Const \"" << data->sValue << "\" : array of type char [mem: " << mType << "  size: " << mSize << "  loc: " << mOffset << "] [line: " << data->line << "]\n";
+		else
+			std::cout << "Const \"" << data->sValue << "\" : array of type char [line: " << data->line << "]\n";
 		break;
 	case NUMCONST:
 		printf("Const %s : type int [line: %d]\n", data->tokenString, data->line);
@@ -308,5 +313,14 @@ void Constant::print() {
 		printf("Const %s : type bool [line: %d]\n", data->tokenString, data->line);
 		break;
 	}
-	AST::print();
+	AST::print(showMemory);
+}
+
+void Constant::propagateScopes(SymbolTable *table) {
+	// only do anything if we're a STRINGCONST
+	if(isArray) {
+		mOffset = goffset - 1;
+		goffset -= mSize;
+	}
+	AST::propagateScopes(table);
 }
