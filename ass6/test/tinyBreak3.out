@@ -1,6 +1,0 @@
-====================================
-RUN: tinyBreak3.c-
-ERROR(5): For statement requires that symbol 'x' be an array to loop through.
-WARNING(4): The variable x seems not to be used.
-Number of warnings: 1
-Number of errors: 1

@@ -1,7 +1,0 @@
-====================================
-RUN: simple.c-
-ERROR(4): Variable 'x' is not declared.
-ERROR(5): Variable 'y' is not declared.
-ERROR(6): Variable 'z' is not declared.
-Number of warnings: 0
-Number of errors: 3

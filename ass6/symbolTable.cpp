@@ -100,7 +100,7 @@ void SymbolTable::print(void (*printData)(void *)) {
 
 // Enter a scope
 void SymbolTable::enter(std::string name) {
-    if (debugFlg) printf("DEBUG(SymbolTable): enter scope \"%s\".\n", name.c_str());
+    if (debugFlg) printf("DEBUG(SymbolTable): enter scope \"%s\", setting inital foffset to %d.\n", name.c_str(), foffset);
     Scope *s = new Scope(name);
     s->initialOffset = foffset;
     stack.push_back(s);
@@ -108,7 +108,7 @@ void SymbolTable::enter(std::string name) {
 
 // Leave a scope (not allowed to leave global)
 void SymbolTable::leave() {
-    if (debugFlg) printf("DEBUG(SymbolTable): leave scope \"%s\".\n", (stack.back()->scopeName()).c_str());
+    if (debugFlg) printf("DEBUG(SymbolTable): leave scope \"%s\", resetting foffset to %d.\n", (stack.back()->scopeName()).c_str(), stack.back()->initialOffset);
     if (stack.size()>1) {
         foffset = stack.back()->initialOffset; // reset foffset
         delete stack.back();

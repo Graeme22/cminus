@@ -1,8 +1,0 @@
-====================================
-RUN: fora.c-
-ERROR(3): Variable 'j' is not declared.
-ERROR(3): For statement requires that symbol 'j' be an array to loop through.
-WARNING(3): The variable i seems not to be used.
-ERROR(4): For statement requires that symbol 'i' be an array to loop through.
-Number of warnings: 1
-Number of errors: 3

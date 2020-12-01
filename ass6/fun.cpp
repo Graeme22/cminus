@@ -22,8 +22,26 @@ void Par::print(bool showMemory) {
 }
 
 void Par::propagateScopes(SymbolTable *table) {
-	Var::propagateScopes(table);
+	AST::propagateScopesChildren(table);
+	bool success = table->insert(name, this);
+	if(children[0] != NULL && !children[0]->isConstant) {
+		printf("ERROR(%d): Initializer for variable '%s' is not a constant expression.\n", line, name);
+		n_errors++;
+	}
+	if(!success) {
+		AST *existing = (AST *)table->lookup(name);
+		printf("ERROR(%d): Symbol '%s' is already declared at line %d.\n", line, name, existing->line);
+		n_errors++;
+	}
+	if(children[0] != NULL && strcmp(children[0]->type, type) != 0 && strcmp(children[0]->type, (char *)"undefined")) {
+		printf(	"ERROR(%d): Variable '%s' is of type %s but is being initialized with an expression of type %s.\n", line, name, type, children[0]->type);
+		n_errors++;
+	}
+	
 	mType = (char *)"Param";
+	mOffset = foffset; // no need to store size for a passed array
+	foffset -= mSize;
+	AST::propagateScopesSibling(table);
 }
 
 // FunDeclaration
@@ -66,8 +84,7 @@ void FunDeclaration::propagateScopes(SymbolTable *table) {
 	currentFunction = this;
 	hasReturn = false;
 	table->enter("Function");
-	// allocate space for return frame pointer and return address
-	// each of size 1
+	// function takes up one word of memory
 	foffset -= 2;
 	AST::propagateScopesChildren(table);
 	if(!hasReturn && strcmp(type, (char *)"void") != 0) {

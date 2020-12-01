@@ -1,7 +1,0 @@
-// C-F20
-main()
-{
-   int a;
-   bool b;
-   char c;
-}
