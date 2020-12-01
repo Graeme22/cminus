@@ -282,7 +282,7 @@ Constant::Constant(TokenData *td) {
 	case STRINGCONST:
 		type = (char *)"char";
 		isArray = true;
-		mSize = strlen(data->tokenString) + 1 - 2; // add 1 for the size, subtract 2 for the double quotes
+		mSize = (td->sValue).length() + 1; // add 1 for array
 		mType = (char *)"Global";
 		break;
 	case NUMCONST:

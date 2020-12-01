@@ -1,2 +1,2 @@
-# Semantic Analysis
-This folder contains the third part of the project, which adds semantic analysis to the parser and adds semantic error messages.
+# Syntax Errors
+This folder contains the fifth part of the project, which formats syntax error messages and allows for detection of multiple syntax errors instead of halting at the first.
