@@ -10,10 +10,13 @@
 #include "symbolTable.h"
 #include "yyerror.h"
 #include "parser.tab.h"
+#include "emitcode.h"
 
 extern FILE *yyin;
 AST *tree;
+FILE *code;
 
 void usage();
+void loadIO(char *);
 
 #endif

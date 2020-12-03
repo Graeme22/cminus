@@ -8,6 +8,8 @@ FunDeclaration *currentFunction;
 bool hasReturn = false;
 int foffset = 0, goffset = 0;
 
+char *VERSION = (char *)"0.7.1";
+
 int main(int argc, char *argv[]) {
 	tree = new AST();
 	tree->index = -1;
@@ -72,8 +74,15 @@ int main(int argc, char *argv[]) {
 		if(Pflag)
 			tree->print(Mflag == 1);
 
+		// create output file
+		// TODO: make this match input file name up to the .c-
+		code = fopen("a.tm", "w+");
+
 		// roughly
-		// generate(tree, table[globals], goffset)
+		// tree->generate(table[globals], goffset)
+		loadIO(argv[optind]);
+
+		fclose(code);
 	}
 
 	printf("Number of warnings: %d\n", n_warnings);
@@ -84,4 +93,26 @@ int main(int argc, char *argv[]) {
 
 void usage() {
 	printf("Usage: c- [options] [sourceFile]\n  -d  turn on Bison debugging\n  -h  this usage message\n  -P  print abstract syntax tree + types\n  -S  turn on syntax table debugging\n  -M  show memory usage\n");
+}
+
+void loadIO(char *inFile) {
+	// insert header comment
+	emitComment("C- version:", VERSION);
+	emitComment("by Graeme Holliday\t12/2/20");
+	emitComment("Input file:", inFile);
+
+	// input
+	emitComment("FUNCTION input");
+	emitRM((char *)"ST", 3, -1, 1, (char *)"Store return address");
+	emitComment("END");
+
+	/*
+	* FUNCTION input
+	1:     ST  3,-1(1)	Store return address 
+	2:     IN  2,2,2	Grab int input 
+	3:     LD  3,-1(1)	Load return address 
+	4:     LD  1,0(1)	Adjust fp 
+	5:    JMP  7,0(3)	Return 
+	* END FUNCTION input
+	*/
 }
