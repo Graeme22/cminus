@@ -17,6 +17,6 @@ AST *tree;
 FILE *code;
 
 void usage();
-void loadIO(char *);
+void generate(char *, AST *, SymbolTable *);
 
 #endif
