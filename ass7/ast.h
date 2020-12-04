@@ -37,6 +37,7 @@ public:
 	void propagateScopesChildren(SymbolTable *);
 	void propagateScopesSibling(SymbolTable *);
 	virtual void initialize(SymbolTable *);
+	virtual void generate(SymbolTable *);
 
 };
 

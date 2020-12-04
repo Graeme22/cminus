@@ -104,17 +104,19 @@ void usage() {
 	printf("Usage: c- [options] [sourceFile]\n  -d  turn on Bison debugging\n  -h  this usage message\n  -P  print abstract syntax tree + types\n  -S  turn on syntax table debugging\n  -M  show memory usage\n");
 }
 
-void generate(char *inFile, AST *tree, SymbolTable *globals) {
+// at this point the symbol table only contains the global scope, so functions and globals
+void generate(char *filename, AST *tree, SymbolTable *globals) {
 	// insert header comment
 	emitComment((char *)"C- version:", VERSION);
 	emitComment((char *)"by Graeme Holliday");
-	emitComment((char *)"Input file:", inFile);
+	emitComment((char *)"Input file:", filename);
 
 	// backpatch a jump to init
 	int entry = emitSkip(1);
 
 	// input
-	int input = emitSkip(0);
+	FunDeclaration *fun = (FunDeclaration *)globals->lookupGlobal((char *)"input");
+	fun->loc = emitSkip(0);
 	emitComment((char *)"FUNCTION input");
 	emitRM((char *)"ST", 3, -1, 1, (char *)"Store return address");
 	emitRO((char *)"IN", 2, 2, 2, (char *)"Grab int input");
@@ -123,18 +125,19 @@ void generate(char *inFile, AST *tree, SymbolTable *globals) {
 	emitRM((char *)"LDA", 7, 0, 3, (char *)"Return");
 
 	// output
-	int output = emitSkip(0);
+	fun = (FunDeclaration *)globals->lookupGlobal((char *)"output");
+	fun->loc = emitSkip(0);
 	emitComment((char *)"FUNCTION output");
 	emitRM((char *)"ST", 3, -1, 1, (char *)"Store return address");
 	emitRM((char *)"LD", 3, -2, 1, (char *)"Load parameter");
 	emitRO((char *)"OUT", 3, 3, 3, (char *)"Output integer");
-	emitRM((char *)"LDC", 2, 0, 6, (char *)"Set return to 0");
 	emitRM((char *)"LD", 3, -1, 1, (char *)"Load return address");
 	emitRM((char *)"LD", 1, 0, 1, (char *)"Adjust frame pointer");
 	emitRM((char *)"LDA", 7, 0, 3, (char *)"Return");
 
 	// inputb
-	int inputb = emitSkip(0);
+	fun = (FunDeclaration *)globals->lookupGlobal((char *)"inputb");
+	fun->loc = emitSkip(0);
 	emitComment((char *)"FUNCTION inputb");
 	emitRM((char *)"ST", 3, -1, 1, (char *)"Store return address");
 	emitRO((char *)"INB", 2, 2, 2, (char *)"Grab bool input");
@@ -143,18 +146,19 @@ void generate(char *inFile, AST *tree, SymbolTable *globals) {
 	emitRM((char *)"LDA", 7, 0, 3, (char *)"Return");
 
 	// outputb
-	int outputb = emitSkip(0);
+	fun = (FunDeclaration *)globals->lookupGlobal((char *)"outputb");
+	fun->loc = emitSkip(0);
 	emitComment((char *)"FUNCTION outputb");
 	emitRM((char *)"ST", 3, -1, 1, (char *)"Store return address");
 	emitRM((char *)"LD", 3, -2, 1, (char *)"Load parameter");
 	emitRO((char *)"OUTB", 3, 3, 3, (char *)"Output bool");
-	emitRM((char *)"LDC", 2, 0, 6, (char *)"Set return to 0");
 	emitRM((char *)"LD", 3, -1, 1, (char *)"Load return address");
 	emitRM((char *)"LD", 1, 0, 1, (char *)"Adjust frame pointer");
 	emitRM((char *)"LDA", 7, 0, 3, (char *)"Return");
 
 	// inputc
-	int inputc = emitSkip(0);
+	fun = (FunDeclaration *)globals->lookupGlobal((char *)"inputc");
+	fun->loc = emitSkip(0);
 	emitComment((char *)"FUNCTION inputc");
 	emitRM((char *)"ST", 3, -1, 1, (char *)"Store return address");
 	emitRO((char *)"INC", 2, 2, 2, (char *)"Grab char input");
@@ -163,41 +167,40 @@ void generate(char *inFile, AST *tree, SymbolTable *globals) {
 	emitRM((char *)"LDA", 7, 0, 3, (char *)"Return");
 
 	// outputc
-	int outputc = emitSkip(0);
+	fun = (FunDeclaration *)globals->lookupGlobal((char *)"outputc");
+	fun->loc = emitSkip(0);
 	emitComment((char *)"FUNCTION outputc");
 	emitRM((char *)"ST", 3, -1, 1, (char *)"Store return address");
 	emitRM((char *)"LD", 3, -2, 1, (char *)"Load parameter");
 	emitRO((char *)"OUTC", 3, 3, 3, (char *)"Output char");
-	emitRM((char *)"LDC", 2, 0, 6, (char *)"Set return to 0");
 	emitRM((char *)"LD", 3, -1, 1, (char *)"Load return address");
 	emitRM((char *)"LD", 1, 0, 1, (char *)"Adjust frame pointer");
 	emitRM((char *)"LDA", 7, 0, 3, (char *)"Return");
 
 	// outnl
-	int outnl = emitSkip(0);
+	fun = (FunDeclaration *)globals->lookupGlobal((char *)"outnl");
+	fun->loc = emitSkip(0);
 	emitComment((char *)"FUNCTION outnl");
 	emitRM((char *)"ST", 3, -1, 1, (char *)"Store return address");
 	emitRO((char *)"OUTNL", 3, 3, 3, (char *)"Output newline");
-	emitRM((char *)"LDC", 2, 0, 6, (char *)"Set return to 0");
 	emitRM((char *)"LD", 3, -1, 1, (char *)"Load return address");
 	emitRM((char *)"LD", 1, 0, 1, (char *)"Adjust frame pointer");
 	emitRM((char *)"LDA", 7, 0, 3, (char *)"Return");
 
 	// main body of code
-	emitComment((char *)"================                ================");
-	// at this point the symbol table only contains the global scope, so functions and globals
-	// tree->generate(globals, goffset);
-	// somehow tie to locations above to their locations in the global scope
-	emitComment((char *)"================                ================");
+	emitComment((char *)"=================================================");
+	tree->generate(globals);
+	emitComment((char *)"=================================================");
 
 	// init code
 	emitComment((char *)"INIT");
 	backPatchAJumpToHere(entry, (char *)"Jump to init [backpatch]");
 	emitRM((char *)"LD", 0, 0, 0, (char *)"Set global pointer");
-	// init globals and statics
-	emitRM((char *)"LDA", 1, -22/*+goffset? at end of globals*/, 0, (char *)"Set frame pointer");
+	// init globals, as statics have been omitted
+	emitRM((char *)"LDA", 1, goffset, 0, (char *)"Set frame pointer");
 	emitRM((char *)"ST", 1, 0, 1, (char *)"Store old frame pointer");
 	emitRM((char *)"LDA", 3, 1, 7, (char *)"Return address");
-	emitRM((char *)"LDA", 7, -22/*addr of main*/, 7, (char *)"Jump to main");
+	int loc = ((FunDeclaration *)globals->lookupGlobal((char *)"main"))->loc - emitSkip(0) - 1;
+	emitRM((char *)"LDA", 7, loc, 7, (char *)"Jump to main");
 
 }

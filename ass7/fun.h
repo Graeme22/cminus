@@ -18,6 +18,7 @@ public:
 class FunDeclaration: public Var {
 
 public:
+	int loc;
 	FunDeclaration(TokenData *, TokenData *, AST *, AST *);
 	FunDeclaration(TokenData *, AST *, AST *);
 	FunDeclaration(char *, TokenData *, AST *);
