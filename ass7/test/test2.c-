@@ -1,0 +1,17 @@
+int gcd(int u; int v)
+{
+if (v == 0) // note you can’t say: if (v)
+return u;
+else
+return gcd(v, u - u/v*v);
+}
+main()
+{
+int x, y;
+int result;
+x = input();
+y = input();
+result = gcd(x, y);
+output(result);
+outnl();
+}

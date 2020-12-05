@@ -96,6 +96,18 @@ void FunDeclaration::propagateScopes(SymbolTable *table) {
 	AST::propagateScopesSibling(table);
 }
 
+void FunDeclaration::generate(SymbolTable *globals) {
+	emitComment((char *)"FUNCTION", name);
+	loc = emitSkip(0);
+	emitRM((char *)"ST", 3, -1, 1, (char *)"Store return address");
+	AST::generateChildren(globals);
+	emitRM((char *)"LDC", 2, 0, 6, (char *)"Set return value to 0");
+	emitRM((char *)"LD", 3, -1, 1, (char *)"Load return address");
+	emitRM((char *)"LD", 1, 0, 1, (char *)"Adjust frame pointer");
+	emitRM((char *)"LDA", 7, 0, 3, (char *)"Return ");
+	AST::generateSibling(globals);
+}
+
 // Call
 
 Call::Call(TokenData *data, AST *args) {

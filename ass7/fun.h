@@ -24,6 +24,7 @@ public:
 	FunDeclaration(char *, TokenData *, AST *);
 	virtual void print(bool);
 	virtual void propagateScopes(SymbolTable *);
+	virtual void generate(SymbolTable *);
 
 };
 

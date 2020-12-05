@@ -96,9 +96,17 @@ void AST::initialize(SymbolTable *table) {
 }
 
 void AST::generate(SymbolTable *globals) {
+	generateChildren(globals);
+	generateSibling(globals);
+}
+
+void AST::generateChildren(SymbolTable *globals) {
 	for(int i = 0; i < MAX_CHILDREN; i++)
 		if(children[i] != NULL)
-			children[i]->initialize(globals);
+			children[i]->generate(globals);
+}
+
+void AST::generateSibling(SymbolTable *globals) {
 	if(sibling != NULL)
-		sibling->initialize(globals);
+		sibling->generate(globals);
 }

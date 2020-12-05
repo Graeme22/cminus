@@ -188,9 +188,9 @@ void generate(char *filename, AST *tree, SymbolTable *globals) {
 	emitRM((char *)"LDA", 7, 0, 3, (char *)"Return");
 
 	// main body of code
-	emitComment((char *)"=============================================");
+	emitComment((char *)"=========================================");
 	tree->generate(globals);
-	emitComment((char *)"=============================================");
+	emitComment((char *)"=========================================");
 
 	// init code
 	emitComment((char *)"INIT");

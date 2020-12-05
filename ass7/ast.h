@@ -5,6 +5,7 @@
 
 #include <string.h>
 #include <stdio.h>
+#include "emitcode.h"
 #include "symbolTable.h"
 
 extern int n_errors;
@@ -38,6 +39,8 @@ public:
 	void propagateScopesSibling(SymbolTable *);
 	virtual void initialize(SymbolTable *);
 	virtual void generate(SymbolTable *);
+	void generateChildren(SymbolTable *);
+	void generateSibling(SymbolTable *);
 
 };
 
