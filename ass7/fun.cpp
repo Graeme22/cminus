@@ -65,6 +65,7 @@ FunDeclaration::FunDeclaration(char *t, TokenData *n, AST *pars): Var(n) {
 	else
 		type = (char *)"void";
 	isFunction = true;
+	mOffset = -2;
 	addChild(pars, 0);
 }
 
@@ -86,6 +87,8 @@ void FunDeclaration::propagateScopes(SymbolTable *table) {
 	table->enter("Function");
 	// function takes up one word of memory
 	foffset -= 2;
+	mOffset = foffset;
+	printf("Setting fun %s mOffset to %d\n", name, mOffset);
 	AST::propagateScopesChildren(table);
 	if(!hasReturn && strcmp(type, (char *)"void") != 0) {
 		printf("WARNING(%d): Expecting to return type %s but function '%s' has no return statement.\n", line, type, name);
@@ -182,6 +185,19 @@ void Call::propagateScopes(SymbolTable *table) {
 		}
 	}
 	AST::propagateScopesSibling(table);
+}
+
+void Call::generate(SymbolTable *globals) {
+	FunDeclaration *fun = (FunDeclaration *)globals->lookupGlobal(name);
+	printf("Grabbing mOffset %d from %s\n", fun->mOffset, fun->name);
+	emitRM((char *)"ST", 1, fun->mOffset, 1, (char *)"save old frame pointer");
+	AST::generateChildren(globals);
+	emitRM((char *)"LDA", 1, fun->mOffset, 1, (char *)"move frame pointer to new frame");
+	emitRM((char *)"LDA", 3, 1, 7, (char *)"compute return address");
+	int loc = fun->loc - emitSkip(0) - 1;
+	emitRM((char *)"LDA", 7, loc, 7, (char *)"call", fun->name);
+	emitRM((char *)"LDA", 3, 0, 2, (char *)"save the result");
+	AST::generateSibling(globals);
 }
 
 // Return
