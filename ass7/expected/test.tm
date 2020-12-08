@@ -7,7 +7,6 @@
 45: LDC 3,111(6) Load constant
 46: LD 4,-5(1) Load left into ac1
 47: MUL 3,4,3 Op *
-13
 48: ST 3,-5(1) Save left side
 49: LDC 3,222(6) Load constant
 50: LD 4,-5(1) Load left into ac1
@@ -62,7 +61,6 @@
 80: LDA 3,1(7) Return address in ac
 81: LDA 7,-45(7) CALL outnl
 82: LDA 3,0(2) Save the result in ac
-14
 * End call to outnl
 * END COMPOUND
 * Add standard closing in case there is no return statement

@@ -188,6 +188,11 @@ bool Operation::validateR(char *right) {
 	return strcmp(children[1]->type, right) == 0 || strcmp(children[1]->type, (char *)"undefined") == 0;
 }
 
+void Operation::generate(SymbolTable *globals) {
+	emitComment((char *)"EXP");
+	AST::generate(globals);
+}
+
 // Assignment
 
 Assignment::Assignment(TokenData *data, AST *left, AST *right): Operation(data, left, right) {}
@@ -241,6 +246,14 @@ void Assignment::propagateScopes(SymbolTable *table) {
 
 	children[0]->initialize(table);
 	AST::propagateScopesSibling(table);
+}
+
+void Assignment::generate(SymbolTable *globals) {
+	emitComment((char *)"EXP");
+	children[1]->generate(globals);
+	Id *id = (Id *)children[0];
+	emitRM((char *)"ST", 3, id->mOffset, (id->isGlobal ? 0 : 1), (char *)"Store variable", id->name);
+	AST::generateSibling(globals);
 }
 
 // ShortcutAssignment
@@ -323,4 +336,20 @@ void Constant::propagateScopes(SymbolTable *table) {
 		goffset -= mSize;
 	}
 	AST::propagateScopes(table);
+}
+
+void Constant::generate(SymbolTable *globals) {
+	switch(data->tokenClass) {
+	case CHARCONST:
+		emitRM((char *)"LDC", 3, (int)data->cValue, 6, (char *)"Load constant");
+		break;
+	case STRINGCONST:
+		// omitted for sake of time
+		break;
+	case NUMCONST:
+	case BOOLCONST:
+		emitRM((char *)"LDC", 3, data->nValue, 6, (char *)"Load constant");
+		break;
+	}
+	AST::propagateScopes(globals);
 }

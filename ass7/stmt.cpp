@@ -25,6 +25,11 @@ void CompoundStatement::propagateScopes(SymbolTable *table) {
 	AST::propagateScopesSibling(table);
 }
 
+void CompoundStatement::generate(SymbolTable *globals) {
+	emitComment((char *)"COMPOUND");
+	AST::generate(globals);
+}
+
 // If
 
 If::If(int l, AST *condition, AST *stmt) {
@@ -65,6 +70,18 @@ void If::propagateScopes(SymbolTable *table) {
 	AST::propagateScopesSibling(table);
 }
 
+void If::generate(SymbolTable *globals) {
+	emitComment((char *)"IF");
+	children[0]->generate(globals);
+	if(children[1] != NULL)
+		children[1]->generate(globals);
+	if(children[2] != NULL) {
+		emitComment((char *)"ELSE");
+		children[2]->generate(globals);
+	}
+	AST::generateSibling(globals);
+}
+
 // While
 
 While::While(int l, AST *cond, AST *stmt) {
@@ -101,6 +118,11 @@ void While::propagateScopes(SymbolTable *table) {
 	AST::propagateScopesSibling(table);
 }
 
+void While::generate(SymbolTable *globals) {
+	emitComment((char *)"WHILE");
+	AST::generate(globals);
+}
+
 // Break
 
 Break::Break(int l) {
@@ -120,6 +142,11 @@ void Break::propagateScopes(SymbolTable *table) {
 		n_errors++;
 	}
 	AST::propagateScopesSibling(table);
+}
+
+void Break::generate(SymbolTable *globals) {
+	emitComment((char *)"BREAK");
+	AST::generate(globals);
 }
 
 // For
@@ -159,4 +186,9 @@ void For::propagateScopes(SymbolTable *table) {
 	table->leave();
 	loopDepth--;
 	AST::propagateScopesSibling(table);
+}
+
+void For::generate(SymbolTable *globals) {
+	emitComment((char *)"FOR");
+	AST::generate(globals);
 }

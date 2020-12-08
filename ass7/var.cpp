@@ -10,6 +10,7 @@ Var::Var(TokenData *data) {
 	isFunction = false;
 	used = false;
 	notified = false;
+	isGlobal = false;
 	mSize = 1;
 }
 
@@ -83,10 +84,12 @@ void Var::propagateScopes(SymbolTable *table) {
 			mType = (char *)"Global";
 		mOffset = goffset - (isArray ? 1 : 0); // the first index of an array is the size, we'll treat it as location -1
 		goffset -= mSize;
+		isGlobal = true;
 	} else {
 		mType = (char *)"Local";
 		mOffset = foffset - (isArray ? 1 : 0);
 		foffset -= mSize;
+		isGlobal = false;
 	}
 	AST::propagateScopesSibling(table);
 }
@@ -145,6 +148,7 @@ void Id::propagateScopes(SymbolTable *table) {
 			isArray = var->isArray;
 			isStatic = var->isStatic;
 			isFunction = var->isFunction;
+			isGlobal = var->isGlobal;
 			mType = var->mType != NULL ? strdup(var->mType) : NULL;
 			mSize = var->mSize;
 			mOffset = var->mOffset;
@@ -156,8 +160,7 @@ void Id::propagateScopes(SymbolTable *table) {
 				n_warnings++;
 				var->notified = true;
 			}
-		}
-		
+		}	
 	}
 	AST::propagateScopes(table);
 }

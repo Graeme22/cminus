@@ -188,6 +188,7 @@ void Call::propagateScopes(SymbolTable *table) {
 
 void Call::generate(SymbolTable *globals) {
 	FunDeclaration *fun = (FunDeclaration *)globals->lookupGlobal(name);
+	emitComment((char *)"CALL", name);
 	emitRM((char *)"ST", 1, fun->mOffset, 1, (char *)"save old frame pointer");
 	AST::generateChildren(globals);
 	emitRM((char *)"LDA", 1, fun->mOffset, 1, (char *)"move frame pointer to new frame");
@@ -235,4 +236,14 @@ void Return::propagateScopes(SymbolTable *table) {
 	}
 	hasReturn = true;
 	AST::propagateScopesSibling(table);
+}
+
+void Return::generate(SymbolTable *globals) {
+	emitComment((char *)"RETURN");
+	AST::generateChildren(globals); // this should end up in register 3
+	emitRM((char *)"LDA", 2, 0, 3, (char *)"put answer in return register");
+	emitRM((char *)"LD", 3, -1, 1, (char *)"recover old PC");
+	emitRM((char *)"LD", 1, 0, 1, (char *)"pop the frame");
+	emitRM((char *)"LDA", 7, 0, 3, (char *)"jump to old PC");
+	AST::generateSibling(globals);
 }

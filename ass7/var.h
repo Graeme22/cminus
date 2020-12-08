@@ -10,7 +10,7 @@ class Var: public AST {
 public:
 	char *name;
 	int arraySize;
-	bool isStatic, isFunction;
+	bool isStatic, isFunction, isGlobal;
 	bool used, notified;
 	Var(TokenData *);
 	Var(TokenData *, TokenData *);

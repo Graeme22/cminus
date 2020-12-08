@@ -12,6 +12,7 @@ AST::AST() {
 	isSolo = false;
 	isConstant = false;
 	initialized = false;
+	isGlobal = false;
 	line = -1;
 	type = (char *)"undefined";
 	hasScopeException = false;
