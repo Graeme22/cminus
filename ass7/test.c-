@@ -1,0 +1,13 @@
+main(char a, b) {
+    int x, y, z;  // when done processing decl I know know end of frame!!! save it.
+    
+    {
+       bool q, r, s;  // when done processing decl I know know end of frame!!! save it.
+
+       444 + 555; 
+       111 + 222 * 333;
+    }
+    
+    111 + 222 * (333 + 444);
+    (333 + 444) * 222 + 111;
+}

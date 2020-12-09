@@ -21,8 +21,8 @@ public:
 	int index, depth;
 	bool isChild, isFirst, isArray, isConstant, isSolo, isGlobal;
 	char *type;
-	int line;
-	bool hasScopeException, initialized;
+	int line, size;
+	bool hasScopeException, initialized, generated;
 
 	char *mType;
 	int mSize;
@@ -41,7 +41,7 @@ public:
 	virtual void generate(SymbolTable *);
 	void generateChildren(SymbolTable *);
 	void generateSibling(SymbolTable *);
-
+	
 };
 
 #endif

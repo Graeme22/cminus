@@ -20,13 +20,17 @@ void CompoundStatement::propagateScopes(SymbolTable *table) {
 	AST::propagateScopesChildren(table);
 	if(!hasScopeException) {
 		table->applyToAll(checkUsage);
-		table->leave();
+		size = table->leave();
 	}
 	AST::propagateScopesSibling(table);
 }
 
 void CompoundStatement::generate(SymbolTable *globals) {
-	emitComment((char *)"COMPOUND");
+	if(generated)
+		return;
+	generated = true;
+	if(!hasScopeException)
+		emitComment((char *)"COMPOUND");
 	AST::generate(globals);
 }
 
@@ -64,13 +68,16 @@ void If::propagateScopes(SymbolTable *table) {
 	if(children[1] != NULL)
 		children[1]->propagateScopes(table);
 	table->applyToAll(checkUsage);
-	table->leave();
+	size = table->leave();
 	if(children[2] != NULL)
 		children[2]->propagateScopes(table);
 	AST::propagateScopesSibling(table);
 }
 
 void If::generate(SymbolTable *globals) {
+	if(generated)
+		return;
+	generated = true;
 	emitComment((char *)"IF");
 	children[0]->generate(globals);
 	if(children[1] != NULL)
@@ -113,12 +120,15 @@ void While::propagateScopes(SymbolTable *table) {
 	if(children[1] != NULL)
 		children[1]->propagateScopes(table);
 	table->applyToAll(checkUsage);
-	table->leave();
+	size = table->leave();
 	loopDepth--;
 	AST::propagateScopesSibling(table);
 }
 
 void While::generate(SymbolTable *globals) {
+	if(generated)
+		return;
+	generated = true;
 	emitComment((char *)"WHILE");
 	AST::generate(globals);
 }
@@ -145,6 +155,9 @@ void Break::propagateScopes(SymbolTable *table) {
 }
 
 void Break::generate(SymbolTable *globals) {
+	if(generated)
+		return;
+	generated = true;
 	emitComment((char *)"BREAK");
 	AST::generate(globals);
 }
@@ -183,12 +196,15 @@ void For::propagateScopes(SymbolTable *table) {
 	if(children[2] != NULL)
 		children[2]->propagateScopes(table);
 	table->applyToAll(checkUsage);
-	table->leave();
+	size = table->leave();
 	loopDepth--;
 	AST::propagateScopesSibling(table);
 }
 
 void For::generate(SymbolTable *globals) {
+	if(generated)
+		return;
+	generated = true;
 	emitComment((char *)"FOR");
 	AST::generate(globals);
 }

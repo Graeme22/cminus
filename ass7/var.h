@@ -19,6 +19,7 @@ public:
 	virtual void print(bool);
 	virtual void propagateScopes(SymbolTable *);
 	virtual void initialize(SymbolTable *);
+	virtual void generate(SymbolTable *);
 
 };
 

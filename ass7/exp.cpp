@@ -249,6 +249,9 @@ void Assignment::propagateScopes(SymbolTable *table) {
 }
 
 void Assignment::generate(SymbolTable *globals) {
+	if(generated)
+		return;
+	generated = true;
 	emitComment((char *)"EXP");
 	children[1]->generate(globals);
 	Id *id = (Id *)children[0];
@@ -339,6 +342,9 @@ void Constant::propagateScopes(SymbolTable *table) {
 }
 
 void Constant::generate(SymbolTable *globals) {
+	if(generated)
+		return;
+	generated = true;
 	switch(data->tokenClass) {
 	case CHARCONST:
 		emitRM((char *)"LDC", 3, (int)data->cValue, 6, (char *)"Load constant");

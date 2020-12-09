@@ -102,6 +102,16 @@ void Var::initialize(SymbolTable *table) {
 	}
 }
 
+void Var::generate(SymbolTable *globals) {
+	if(generated)
+		return;
+	generated = true;
+	// this should go in var init code
+	// emitRM((char *)"LDC", 3, var->mSize - 1, 6, (char *)"load size of array", (char *)var->name);
+	// emitRM((char *)"ST", 3, var->mOffset + 1, 0, (char *)"save size of array", (char *)var->name);
+	AST::generate(globals);
+}
+
 // Id
 
 Id::Id(TokenData *data): Var(data) {}

@@ -53,7 +53,7 @@ public:
     int depth();                                     // what is the depth of the scope stack?
     void print(void (*printData)(void *));           // print all scopes using data printing function
     void enter(std::string);                         // enter a scope with given name
-    void leave();                                    // leave a scope (not allowed to leave global)
+    int leave();                                     // leave a scope (not allowed to leave global), then return its size
     void *lookup(std::string);                       // returns ptr associated with sym anywhere in symbol table
                                                      // returns NULL if symbol not found
     void *lookupGlobal(std::string);                 // returns ptr associated with sym in globals

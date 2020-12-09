@@ -8,7 +8,7 @@ FunDeclaration *currentFunction;
 bool hasReturn = false;
 int foffset = 0, goffset = 0;
 
-char *VERSION = (char *)"0.7.1";
+char *VERSION = (char *)"0.7.2";
 
 int main(int argc, char *argv[]) {
 	tree = new AST();
@@ -188,29 +188,25 @@ void generate(char *filename, AST *tree, SymbolTable *globals) {
 	emitRM((char *)"LDA", 7, 0, 3, (char *)"Return");
 
 	// main body of code
-	emitComment((char *)"=========================================");
-	tree->generate(globals);
-	emitComment((char *)"=========================================");
+	AST *itr;
+	for(itr = tree; itr != NULL; itr = itr->sibling)
+		if(((Var *)itr)->isFunction)
+			itr->generate(globals);
 
 	// init code
 	emitComment((char *)"INIT");
 	backPatchAJumpToHere(entry, (char *)"Jump to init [backpatch]");
 	emitRM((char *)"LD", 0, 0, 0, (char *)"Set global pointer");
 	// init globals, as statics have been omitted
-	globals->applyToAllGlobal(initGlobals);
+	for(itr = tree; itr != NULL; itr = itr->sibling)
+		if(!((Var *)itr)->isFunction)
+			itr->generate(globals);
+
+	// call main
 	emitRM((char *)"LDA", 1, goffset, 0, (char *)"Set frame pointer");
 	emitRM((char *)"ST", 1, 0, 1, (char *)"Store old frame pointer");
 	emitRM((char *)"LDA", 3, 1, 7, (char *)"Return address");
 	int loc = ((FunDeclaration *)globals->lookupGlobal((char *)"main"))->loc - emitSkip(0) - 1;
 	emitRM((char *)"LDA", 7, loc, 7, (char *)"Jump to main");
 
-}
-
-void initGlobals(std::string sym, void *node) {
-	Var *var = (Var *)node;
-	// only arrays need initialization.
-	if(var->isArray) {
-		emitRM((char *)"LDC", 3, var->mSize - 1, 6, (char *)"load size of array", (char *)var->name);
-		emitRM((char *)"ST", 3, var->mOffset + 1, 0, (char *)"save size of array", (char *)var->name);
-	}
 }

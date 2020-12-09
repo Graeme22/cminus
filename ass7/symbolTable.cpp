@@ -107,14 +107,18 @@ void SymbolTable::enter(std::string name) {
 }
 
 // Leave a scope (not allowed to leave global)
-void SymbolTable::leave() {
-    if (debugFlg) printf("DEBUG(SymbolTable): leave scope \"%s\", resetting foffset to %d.\n", (stack.back()->scopeName()).c_str(), stack.back()->initialOffset);
-    if (stack.size()>1) {
+int SymbolTable::leave() {
+    if (debugFlg) printf("DEBUG(SymbolTable): leave scope \"%s\" of size %d, resetting foffset to %d.\n", (stack.back()->scopeName()).c_str(), foffset, stack.back()->initialOffset);
+    if (stack.size() > 1) {
+        int finalOffset = foffset;
         foffset = stack.back()->initialOffset; // reset foffset
         delete stack.back();
         stack.pop_back();
-    } else
+        return finalOffset;
+    } else {
         printf("ERROR(SymbolTable): You cannot leave global scope.  Number of scopes: %d.\n", (int)stack.size());
+        return -1;
+    }
 }
 
 // Lookup a symbol anywhere in the stack of scopes

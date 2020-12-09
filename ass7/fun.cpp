@@ -94,11 +94,14 @@ void FunDeclaration::propagateScopes(SymbolTable *table) {
 		n_warnings++;
 	}
 	table->applyToAll(checkUsage);
-	table->leave();
+	size = table->leave();
 	AST::propagateScopesSibling(table);
 }
 
 void FunDeclaration::generate(SymbolTable *globals) {
+	if(generated)
+		return;
+	generated = true;
 	emitComment((char *)"FUNCTION", name);
 	loc = emitSkip(0);
 	emitRM((char *)"ST", 3, -1, 1, (char *)"Store return address");
@@ -187,6 +190,9 @@ void Call::propagateScopes(SymbolTable *table) {
 }
 
 void Call::generate(SymbolTable *globals) {
+	if(generated)
+		return;
+	generated = true;
 	FunDeclaration *fun = (FunDeclaration *)globals->lookupGlobal(name);
 	emitComment((char *)"CALL", name);
 	emitRM((char *)"ST", 1, fun->mOffset, 1, (char *)"save old frame pointer");
@@ -239,6 +245,9 @@ void Return::propagateScopes(SymbolTable *table) {
 }
 
 void Return::generate(SymbolTable *globals) {
+	if(generated)
+		return;
+	generated = true;
 	emitComment((char *)"RETURN");
 	AST::generateChildren(globals); // this should end up in register 3
 	emitRM((char *)"LDA", 2, 0, 3, (char *)"put answer in return register");

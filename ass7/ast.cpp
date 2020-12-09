@@ -14,8 +14,10 @@ AST::AST() {
 	initialized = false;
 	isGlobal = false;
 	line = -1;
+	size = 0;
 	type = (char *)"undefined";
 	hasScopeException = false;
+	generated = false;
 }
 
 void AST::append(AST *node) {
@@ -97,6 +99,9 @@ void AST::initialize(SymbolTable *table) {
 }
 
 void AST::generate(SymbolTable *globals) {
+	if(generated)
+		return;
+	generated = true;
 	generateChildren(globals);
 	generateSibling(globals);
 }

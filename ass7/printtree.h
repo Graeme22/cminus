@@ -18,6 +18,5 @@ FILE *code;
 
 void usage();
 void generate(char *, AST *, SymbolTable *);
-void initGlobals(std::string, void *);
 
 #endif

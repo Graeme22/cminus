@@ -1,7 +1,7 @@
 BIN = parser
 CC = g++
 OUT = c-
-LIBS = ourgetopt.h ast.h scanType.h
+LIBS = ourgetopt.h ast.h exp.h stmt.h var.h fun.h semantic.h printtree.h symbolTable.h yyerror.h emitcode.h scanType.h
 FLAGS = -DCPLUSPLUS -g
 OBJS = ourgetopt.o ast.o exp.o stmt.o var.o fun.o semantic.o printtree.o symbolTable.o yyerror.o emitcode.o
 
