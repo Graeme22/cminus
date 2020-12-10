@@ -20,7 +20,7 @@ public:
 	virtual void propagateScopes(SymbolTable *);
 	virtual void initialize(SymbolTable *);
 	virtual void generate(SymbolTable *);
-
+	
 };
 
 class Id: public Var {
@@ -29,6 +29,7 @@ public:
 	Id(TokenData *);
 	virtual void print(bool);
 	virtual void propagateScopes(SymbolTable *);
+	virtual void generate(SymbolTable *);
 
 };
 

@@ -102,11 +102,8 @@ void Var::initialize(SymbolTable *table) {
 	}
 }
 
-void Var::generate(SymbolTable *globals) {
-	// this should go in var init code
-	// emitRM((char *)"LDC", 3, var->mSize - 1, 6, (char *)"load size of array", (char *)var->name);
-	// emitRM((char *)"ST", 3, var->mOffset + 1, 0, (char *)"save size of array", (char *)var->name);
-	AST::generate(globals);
+void Var::generate(SymbolTable *table) {
+	AST::generate(table);
 }
 
 // Id
@@ -170,4 +167,8 @@ void Id::propagateScopes(SymbolTable *table) {
 		}	
 	}
 	AST::propagateScopes(table);
+}
+
+void Id::generate(SymbolTable *globals) {
+	emitRM((char *)"LD", 3, mOffset, 1, (char *)"Load variable", name);
 }

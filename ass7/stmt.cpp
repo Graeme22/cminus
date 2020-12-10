@@ -81,11 +81,16 @@ void If::propagateScopes(SymbolTable *table) {
 void If::generate(SymbolTable *globals) {
 	emitComment((char *)"IF");
 	children[0]->generate(globals);
+	int if_loc = emitSkip(1), else_loc; // backpatch a jump to here
 	if(children[1] != NULL)
 		children[1]->generate(globals);
+	if(children[2] != NULL)
+		else_loc = emitSkip(1);
+	backPatchAJumpToHere((char *)"JZR", 3, if_loc, (char *)"Jump if false [backpatch]");
 	if(children[2] != NULL) {
 		emitComment((char *)"ELSE");
 		children[2]->generate(globals);
+		backPatchAJumpToHere(else_loc, (char *)"Jump past if statement [backpatch]");
 	}
 	AST::generateSibling(globals);
 }

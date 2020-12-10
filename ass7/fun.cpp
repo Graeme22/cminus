@@ -106,9 +106,6 @@ void FunDeclaration::generate(SymbolTable *globals) {
 	toffset = size;
 	emitRM((char *)"ST", 3, -1, 1, (char *)"Store return address");
 	AST::generateChildren(globals);
-	// do this for all params
-	//emitRM((char *)"LD", 4, mOffset, 1, (char *)"Load variable", name);
-	//emitRM((char *)"ST", 4, toffset + mOffset, 1, (char *)"Store in parameter space");
 	emitRM((char *)"LDC", 2, 0, 6, (char *)"Set return value to 0");
 	emitRM((char *)"LD", 3, -1, 1, (char *)"Load return address");
 	emitRM((char *)"LD", 1, 0, 1, (char *)"Adjust frame pointer");
@@ -197,7 +194,13 @@ void Call::generate(SymbolTable *globals) {
 	FunDeclaration *fun = (FunDeclaration *)globals->lookupGlobal(name);
 	emitComment((char *)"CALL", name);
 	emitRM((char *)"ST", 1, toffset, 1, (char *)"save old frame pointer");
-	AST::generateChildren(globals);
+	int toffset_old = toffset;
+	toffset -= 2;
+	for(AST *itr = children[0]; itr != NULL; itr = itr->sibling) {
+		itr->generate(globals);
+		emitRM((char *)"ST", 3, toffset--, 1, (char *)"Store parameter");
+	}
+	toffset = toffset_old;
 	emitRM((char *)"LDA", 1, toffset, 1, (char *)"move frame pointer to new frame");
 	emitRM((char *)"LDA", 3, 1, 7, (char *)"compute return address");
 	int loc = fun->loc - emitSkip(0) - 1;

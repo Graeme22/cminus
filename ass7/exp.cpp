@@ -192,7 +192,7 @@ void Operation::generate(SymbolTable *globals) {
 	children[0]->generate(globals);
 	emitRM((char *)"ST", 3, toffset--, 1, (char *)"Push left side");
 	children[1]->generate(globals);
-	emitRM((char *)"ST", 4, ++toffset, 1, (char *)"Pop left into ac1");
+	emitRM((char *)"LD", 4, ++toffset, 1, (char *)"Pop left into ac1");
 	switch(id) {
 	case ADD:
 		emitRO((char *)"ADD", 3, 4, 3, (char *)"Op +");
@@ -207,10 +207,18 @@ void Operation::generate(SymbolTable *globals) {
 		emitRO((char *)"DIV", 3, 4, 3, (char *)"Op /");
 		break;
 	case MOD:
+		emitRO((char *)"MOD", 3, 4, 3, (char *)"Op %");
+		break;
 	case RAND:
 	case AND:
+		emitRO((char *)"AND", 3, 4, 3, (char *)"Op &");
+		break;
 	case OR:
+		emitRO((char *)"OR", 3, 4, 3, (char *)"Op |");
+		break;
 	case EQ:
+		emitRO((char *)"TEQ", 3, 4, 3, (char *)"Op ==");
+		break;
 	case NEQ:
 	case GEQ:
 	case LEQ:
