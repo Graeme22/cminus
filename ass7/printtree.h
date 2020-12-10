@@ -15,6 +15,7 @@
 extern FILE *yyin;
 AST *tree;
 FILE *code;
+extern bool functionGenerated;
 
 void usage();
 void generate(char *, AST *, SymbolTable *);

@@ -26,12 +26,16 @@ void CompoundStatement::propagateScopes(SymbolTable *table) {
 }
 
 void CompoundStatement::generate(SymbolTable *globals) {
-	if(generated)
-		return;
-	generated = true;
-	if(!hasScopeException)
+	int toffset_old;
+	if(!hasScopeException) {
 		emitComment((char *)"COMPOUND");
-	AST::generate(globals);
+		toffset_old = toffset;
+		toffset = size;
+	}
+	AST::generateChildren(globals);
+	if(!hasScopeException)
+		toffset = toffset_old;
+	AST::generateSibling(globals);
 }
 
 // If
@@ -75,9 +79,6 @@ void If::propagateScopes(SymbolTable *table) {
 }
 
 void If::generate(SymbolTable *globals) {
-	if(generated)
-		return;
-	generated = true;
 	emitComment((char *)"IF");
 	children[0]->generate(globals);
 	if(children[1] != NULL)
@@ -126,9 +127,6 @@ void While::propagateScopes(SymbolTable *table) {
 }
 
 void While::generate(SymbolTable *globals) {
-	if(generated)
-		return;
-	generated = true;
 	emitComment((char *)"WHILE");
 	AST::generate(globals);
 }
@@ -155,9 +153,6 @@ void Break::propagateScopes(SymbolTable *table) {
 }
 
 void Break::generate(SymbolTable *globals) {
-	if(generated)
-		return;
-	generated = true;
 	emitComment((char *)"BREAK");
 	AST::generate(globals);
 }
@@ -202,9 +197,6 @@ void For::propagateScopes(SymbolTable *table) {
 }
 
 void For::generate(SymbolTable *globals) {
-	if(generated)
-		return;
-	generated = true;
 	emitComment((char *)"FOR");
 	AST::generate(globals);
 }

@@ -52,6 +52,6 @@ public:
 };
 
 extern FunDeclaration *currentFunction;
-extern bool hasReturn;
+extern bool hasReturn, functionsGenerated;
 
 #endif

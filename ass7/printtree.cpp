@@ -6,7 +6,8 @@ bool checkInitialization = true;
 int loopDepth = 0;
 FunDeclaration *currentFunction;
 bool hasReturn = false;
-int foffset = 0, goffset = 0;
+int foffset = 0, goffset = 0, toffset = 0;
+bool functionsGenerated = false;
 
 char *VERSION = (char *)"0.7.2";
 
@@ -131,6 +132,7 @@ void generate(char *filename, AST *tree, SymbolTable *globals) {
 	emitRM((char *)"ST", 3, -1, 1, (char *)"Store return address");
 	emitRM((char *)"LD", 3, -2, 1, (char *)"Load parameter");
 	emitRO((char *)"OUT", 3, 3, 3, (char *)"Output integer");
+	emitRM((char *)"LDC", 2, 0, 6, (char *)"Set return value to 0");
 	emitRM((char *)"LD", 3, -1, 1, (char *)"Load return address");
 	emitRM((char *)"LD", 1, 0, 1, (char *)"Adjust frame pointer");
 	emitRM((char *)"LDA", 7, 0, 3, (char *)"Return");
@@ -152,6 +154,7 @@ void generate(char *filename, AST *tree, SymbolTable *globals) {
 	emitRM((char *)"ST", 3, -1, 1, (char *)"Store return address");
 	emitRM((char *)"LD", 3, -2, 1, (char *)"Load parameter");
 	emitRO((char *)"OUTB", 3, 3, 3, (char *)"Output bool");
+	emitRM((char *)"LDC", 2, 0, 6, (char *)"Set return value to 0");
 	emitRM((char *)"LD", 3, -1, 1, (char *)"Load return address");
 	emitRM((char *)"LD", 1, 0, 1, (char *)"Adjust frame pointer");
 	emitRM((char *)"LDA", 7, 0, 3, (char *)"Return");
@@ -173,6 +176,7 @@ void generate(char *filename, AST *tree, SymbolTable *globals) {
 	emitRM((char *)"ST", 3, -1, 1, (char *)"Store return address");
 	emitRM((char *)"LD", 3, -2, 1, (char *)"Load parameter");
 	emitRO((char *)"OUTC", 3, 3, 3, (char *)"Output char");
+	emitRM((char *)"LDC", 2, 0, 6, (char *)"Set return value to 0");
 	emitRM((char *)"LD", 3, -1, 1, (char *)"Load return address");
 	emitRM((char *)"LD", 1, 0, 1, (char *)"Adjust frame pointer");
 	emitRM((char *)"LDA", 7, 0, 3, (char *)"Return");
@@ -188,10 +192,13 @@ void generate(char *filename, AST *tree, SymbolTable *globals) {
 	emitRM((char *)"LDA", 7, 0, 3, (char *)"Return");
 
 	// main body of code
+	emitComment((char *)"=========================================");
 	AST *itr;
 	for(itr = tree; itr != NULL; itr = itr->sibling)
 		if(((Var *)itr)->isFunction)
 			itr->generate(globals);
+	functionsGenerated = true;
+	emitComment((char *)"=========================================");
 
 	// init code
 	emitComment((char *)"INIT");
@@ -199,8 +206,7 @@ void generate(char *filename, AST *tree, SymbolTable *globals) {
 	emitRM((char *)"LD", 0, 0, 0, (char *)"Set global pointer");
 	// init globals, as statics have been omitted
 	for(itr = tree; itr != NULL; itr = itr->sibling)
-		if(!((Var *)itr)->isFunction)
-			itr->generate(globals);
+		itr->generate(globals);
 
 	// call main
 	emitRM((char *)"LDA", 1, goffset, 0, (char *)"Set frame pointer");

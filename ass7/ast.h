@@ -12,6 +12,7 @@ extern int n_errors;
 extern int n_warnings;
 extern int foffset;
 extern int goffset;
+extern int toffset;
 
 class AST {
 
@@ -22,7 +23,7 @@ public:
 	bool isChild, isFirst, isArray, isConstant, isSolo, isGlobal;
 	char *type;
 	int line, size;
-	bool hasScopeException, initialized, generated;
+	bool hasScopeException, initialized;
 
 	char *mType;
 	int mSize;

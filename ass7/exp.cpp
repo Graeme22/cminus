@@ -189,8 +189,38 @@ bool Operation::validateR(char *right) {
 }
 
 void Operation::generate(SymbolTable *globals) {
-	emitComment((char *)"EXP");
-	AST::generate(globals);
+	children[0]->generate(globals);
+	emitRM((char *)"ST", 3, toffset--, 1, (char *)"Push left side");
+	children[1]->generate(globals);
+	emitRM((char *)"ST", 4, ++toffset, 1, (char *)"Pop left into ac1");
+	switch(id) {
+	case ADD:
+		emitRO((char *)"ADD", 3, 4, 3, (char *)"Op +");
+		break;
+	case SUB: // TODO: add unary functionality
+		emitRO((char *)"SUB", 3, 4, 3, (char *)"Op -");
+		break;
+	case MUL: // TODO: add unary functionality
+		emitRO((char *)"MUL", 3, 4, 3, (char *)"Op *");
+		break;
+	case DIV:
+		emitRO((char *)"DIV", 3, 4, 3, (char *)"Op /");
+		break;
+	case MOD:
+	case RAND:
+	case AND:
+	case OR:
+	case EQ:
+	case NEQ:
+	case GEQ:
+	case LEQ:
+	case LT:
+	case GT:
+	case ASS:
+	case ACCESS:
+		break;
+	}
+	AST::generateSibling(globals);
 }
 
 // Assignment
@@ -249,9 +279,6 @@ void Assignment::propagateScopes(SymbolTable *table) {
 }
 
 void Assignment::generate(SymbolTable *globals) {
-	if(generated)
-		return;
-	generated = true;
 	emitComment((char *)"EXP");
 	children[1]->generate(globals);
 	Id *id = (Id *)children[0];
@@ -342,9 +369,6 @@ void Constant::propagateScopes(SymbolTable *table) {
 }
 
 void Constant::generate(SymbolTable *globals) {
-	if(generated)
-		return;
-	generated = true;
 	switch(data->tokenClass) {
 	case CHARCONST:
 		emitRM((char *)"LDC", 3, (int)data->cValue, 6, (char *)"Load constant");
