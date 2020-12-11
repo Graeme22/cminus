@@ -12,6 +12,7 @@ public:
 	Par(TokenData *, bool);
 	virtual void print(bool);
 	virtual void propagateScopes(SymbolTable *);
+	virtual void generate(SymbolTable *);
 
 };
 

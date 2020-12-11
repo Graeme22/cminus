@@ -8,8 +8,9 @@ FunDeclaration *currentFunction;
 bool hasReturn = false;
 int foffset = 0, goffset = 0, toffset = 0;
 bool functionsGenerated = false;
+int break_loc = 0;
 
-char *VERSION = (char *)"0.7.2";
+char *VERSION = (char *)"0.7.3";
 
 int main(int argc, char *argv[]) {
 	tree = new AST();

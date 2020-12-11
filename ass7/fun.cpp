@@ -44,6 +44,8 @@ void Par::propagateScopes(SymbolTable *table) {
 	AST::propagateScopesSibling(table);
 }
 
+void Par::generate(SymbolTable *globals) {}
+
 // FunDeclaration
 
 FunDeclaration::FunDeclaration(TokenData *n, AST *pars, AST *stmt): Var(n) {

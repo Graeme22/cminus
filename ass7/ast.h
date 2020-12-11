@@ -13,6 +13,7 @@ extern int n_warnings;
 extern int foffset;
 extern int goffset;
 extern int toffset;
+extern int break_loc;
 
 class AST {
 

@@ -133,7 +133,18 @@ void While::propagateScopes(SymbolTable *table) {
 
 void While::generate(SymbolTable *globals) {
 	emitComment((char *)"WHILE");
-	AST::generate(globals);
+	int entry = emitSkip(0);
+	// evaluate expression
+	children[0]->generate(globals);
+	emitRM((char *)"JNZ", 3, 1, 7, (char *)"Jump into loop");
+	int old_break_loc = break_loc;
+	break_loc = emitSkip(1);
+	if(children[1] != NULL)
+		children[1]->generate(globals);
+	emitGotoAbs(entry, (char *)"Go to beginning of loop");
+	backPatchAJumpToHere(break_loc, (char *)"Jump past loop [backpatch]");
+	break_loc = old_break_loc;
+	AST::generateSibling(globals);
 }
 
 // Break
@@ -159,7 +170,8 @@ void Break::propagateScopes(SymbolTable *table) {
 
 void Break::generate(SymbolTable *globals) {
 	emitComment((char *)"BREAK");
-	AST::generate(globals);
+	emitGotoAbs(break_loc, (char *)"Break");
+	AST::generateSibling(globals);
 }
 
 // For
@@ -203,5 +215,6 @@ void For::propagateScopes(SymbolTable *table) {
 
 void For::generate(SymbolTable *globals) {
 	emitComment((char *)"FOR");
+	// not implemented due to lack of time
 	AST::generate(globals);
 }

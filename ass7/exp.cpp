@@ -190,18 +190,26 @@ bool Operation::validateR(char *right) {
 
 void Operation::generate(SymbolTable *globals) {
 	children[0]->generate(globals);
-	emitRM((char *)"ST", 3, toffset--, 1, (char *)"Push left side");
-	children[1]->generate(globals);
-	emitRM((char *)"LD", 4, ++toffset, 1, (char *)"Pop left into ac1");
+	if(children[1] != NULL) {
+		emitRM((char *)"ST", 3, toffset--, 1, (char *)"Push left side");
+		children[1]->generate(globals);
+		emitRM((char *)"LD", 4, ++toffset, 1, (char *)"Pop left into ac1");
+	}
 	switch(id) {
 	case ADD:
 		emitRO((char *)"ADD", 3, 4, 3, (char *)"Op +");
 		break;
-	case SUB: // TODO: add unary functionality
-		emitRO((char *)"SUB", 3, 4, 3, (char *)"Op -");
+	case SUB:
+		if(children[1] == NULL) // unary
+			emitRO((char *)"NEG", 3, 3, 3, (char *)"Op -");
+		else
+			emitRO((char *)"SUB", 3, 4, 3, (char *)"Op -");
 		break;
-	case MUL: // TODO: add unary functionality
-		emitRO((char *)"MUL", 3, 4, 3, (char *)"Op *");
+	case MUL:
+		if(children[1] == NULL) // unary
+			emitRM((char *)"LD", 3, 1, 3, (char *)"Load array size"); // size is 1 above index
+		else
+			emitRO((char *)"MUL", 3, 4, 3, (char *)"Op *");
 		break;
 	case DIV:
 		emitRO((char *)"DIV", 3, 4, 3, (char *)"Op /");
@@ -210,6 +218,8 @@ void Operation::generate(SymbolTable *globals) {
 		emitRO((char *)"MOD", 3, 4, 3, (char *)"Op %");
 		break;
 	case RAND:
+		emitRO((char *)"RND", 3, 3, 3, (char *)"Op ?");
+		break;
 	case AND:
 		emitRO((char *)"AND", 3, 4, 3, (char *)"Op &");
 		break;
@@ -220,12 +230,26 @@ void Operation::generate(SymbolTable *globals) {
 		emitRO((char *)"TEQ", 3, 4, 3, (char *)"Op ==");
 		break;
 	case NEQ:
+		emitRO((char *)"TNE", 3, 4, 3, (char *)"Op !=");
+		break;
 	case GEQ:
+		emitRO((char *)"TGE", 3, 4, 3, (char *)"Op >=");
+		break;
 	case LEQ:
+		emitRO((char *)"TLE", 3, 4, 3, (char *)"Op <=");
+		break;
 	case LT:
+		emitRO((char *)"TLT", 3, 4, 3, (char *)"Op <");
+		break;
 	case GT:
-	case ASS:
+		emitRO((char *)"TGT", 3, 4, 3, (char *)"Op >");
+		break;
+	case NOT:
+		emitRO((char *)"NOT", 3, 3, 3, (char *)"Op !");
+		break;
 	case ACCESS:
+		emitRO((char *)"SUB", 3, 4, 3, (char *)"Compute element location");
+		emitRM((char *)"LD", 3, 0, 3, (char *)"Load array element");
 		break;
 	}
 	AST::generateSibling(globals);
@@ -287,7 +311,8 @@ void Assignment::propagateScopes(SymbolTable *table) {
 }
 
 void Assignment::generate(SymbolTable *globals) {
-	emitComment((char *)"EXP");
+	// TODO: add += -= *= /= etc
+	// evaluate right-hand side
 	children[1]->generate(globals);
 	Id *id = (Id *)children[0];
 	emitRM((char *)"ST", 3, id->mOffset, (id->isGlobal ? 0 : 1), (char *)"Store variable", id->name);
@@ -373,7 +398,7 @@ void Constant::propagateScopes(SymbolTable *table) {
 		mOffset = goffset - 1;
 		goffset -= mSize;
 	}
-	AST::propagateScopes(table);
+	AST::propagateScopesSibling(table);
 }
 
 void Constant::generate(SymbolTable *globals) {
@@ -389,5 +414,5 @@ void Constant::generate(SymbolTable *globals) {
 		emitRM((char *)"LDC", 3, data->nValue, 6, (char *)"Load constant");
 		break;
 	}
-	AST::propagateScopes(globals);
+	AST::generateSibling(globals);
 }
