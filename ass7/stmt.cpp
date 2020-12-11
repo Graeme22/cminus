@@ -33,8 +33,10 @@ void CompoundStatement::generate(SymbolTable *globals) {
 		toffset = size;
 	}
 	AST::generateChildren(globals);
-	if(!hasScopeException)
+	if(!hasScopeException) {
 		toffset = toffset_old;
+		emitComment((char *)"END COMPOUND");
+	}
 	AST::generateSibling(globals);
 }
 
@@ -92,6 +94,7 @@ void If::generate(SymbolTable *globals) {
 		children[2]->generate(globals);
 		backPatchAJumpToHere(else_loc, (char *)"Jump past if statement [backpatch]");
 	}
+	emitComment((char *)"END IF");
 	AST::generateSibling(globals);
 }
 
@@ -144,6 +147,7 @@ void While::generate(SymbolTable *globals) {
 	emitGotoAbs(entry, (char *)"Go to beginning of loop");
 	backPatchAJumpToHere(break_loc, (char *)"Jump past loop [backpatch]");
 	break_loc = old_break_loc;
+	emitComment((char *)"END WHILE");
 	AST::generateSibling(globals);
 }
 
@@ -169,7 +173,6 @@ void Break::propagateScopes(SymbolTable *table) {
 }
 
 void Break::generate(SymbolTable *globals) {
-	emitComment((char *)"BREAK");
 	emitGotoAbs(break_loc, (char *)"Break");
 	AST::generateSibling(globals);
 }
@@ -214,7 +217,7 @@ void For::propagateScopes(SymbolTable *table) {
 }
 
 void For::generate(SymbolTable *globals) {
-	emitComment((char *)"FOR");
+	//emitComment((char *)"FOR");
 	// not implemented due to lack of time
 	AST::generate(globals);
 }

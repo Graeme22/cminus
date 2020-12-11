@@ -112,6 +112,7 @@ void FunDeclaration::generate(SymbolTable *globals) {
 	emitRM((char *)"LD", 3, -1, 1, (char *)"Load return address");
 	emitRM((char *)"LD", 1, 0, 1, (char *)"Adjust frame pointer");
 	emitRM((char *)"LDA", 7, 0, 3, (char *)"Return");
+	emitComment((char *)"END FUNCTION", name);
 	// we don't do this here because it will be done for us
 	//AST::generateSibling(globals);
 }
@@ -208,6 +209,7 @@ void Call::generate(SymbolTable *globals) {
 	int loc = fun->loc - emitSkip(0) - 1;
 	emitRM((char *)"LDA", 7, loc, 7, (char *)"call", fun->name);
 	emitRM((char *)"LDA", 3, 0, 2, (char *)"save the result");
+	emitComment((char *)"END CALL", name);
 	AST::generateSibling(globals);
 }
 
@@ -257,5 +259,6 @@ void Return::generate(SymbolTable *globals) {
 	emitRM((char *)"LD", 3, -1, 1, (char *)"recover old PC");
 	emitRM((char *)"LD", 1, 0, 1, (char *)"pop the frame");
 	emitRM((char *)"LDA", 7, 0, 3, (char *)"jump to old PC");
+	emitComment((char *)"END RETURN");
 	AST::generateSibling(globals);
 }

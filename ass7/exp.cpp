@@ -249,7 +249,7 @@ void Operation::generate(SymbolTable *globals) {
 		break;
 	case ACCESS:
 		emitRO((char *)"SUB", 3, 4, 3, (char *)"Compute element location");
-		emitRM((char *)"LD", 3, 0, 3, (char *)"Load array element");
+		emitRM((char *)"LD", 3, 0, 3, (char *)"Store array element");
 		break;
 	}
 	AST::generateSibling(globals);
@@ -311,11 +311,55 @@ void Assignment::propagateScopes(SymbolTable *table) {
 }
 
 void Assignment::generate(SymbolTable *globals) {
-	// TODO: add += -= *= /= etc
-	// evaluate right-hand side
-	children[1]->generate(globals);
-	Id *id = (Id *)children[0];
-	emitRM((char *)"ST", 3, id->mOffset, (id->isGlobal ? 0 : 1), (char *)"Store variable", id->name);
+	// if the child has a child, left-hand side is an array access operation
+	if(children[0]->children[0] == NULL) {
+		children[1]->generate(globals);
+		Id *lhs = (Id *)children[0];
+		if(id != ASS)
+			emitRM((char *)"LD", 4, lhs->mOffset, (lhs->isGlobal ? 0 : 1), (char *)"Load variable", lhs->name);
+		switch (id) {
+		case ADDASS:
+			emitRO((char *)"ADD", 3, 4, 3, (char *)"Op", str);
+			break;
+		case SUBASS:
+			emitRO((char *)"SUB", 3, 4, 3, (char *)"Op", str);
+			break;
+		case MULASS:
+			emitRO((char *)"MUL", 3, 4, 3, (char *)"Op", str);
+			break;
+		case DIVASS:
+			emitRO((char *)"DIV", 3, 4, 3, (char *)"Op", str);
+			break;
+		}
+		emitRM((char *)"ST", 3, lhs->mOffset, (lhs->isGlobal ? 0 : 1), (char *)"Store variable", lhs->name);
+	} else {
+		// left-hand side of access operation is the variable
+		Id *lhs = (Id *)children[0]->children[0];
+		// and the right hand side is the index, which is an expression
+		children[0]->children[1]->generate(globals);
+		emitRM((char *)"ST", 3, toffset--, 1, (char *)"Push left side");
+		children[1]->generate(globals);
+		emitRM((char *)"LD", 4, ++toffset, 1, (char *)"Pop left into ac1");
+		emitRM((char *)"LDA", 5, lhs->mOffset, (lhs->isGlobal ? 0 : 1), (char *)"Load address of array", lhs->name);
+		emitRO((char *)"SUB", 5, 5, 4, (char *)"Compute element location");
+		if(id != ASS)
+			emitRM((char *)"LD", 4, 0, 5, (char *)"Load copy of element");
+		switch (id) {
+		case ADDASS:
+			emitRO((char *)"ADD", 3, 4, 3, (char *)"Op", str);
+			break;
+		case SUBASS:
+			emitRO((char *)"SUB", 3, 4, 3, (char *)"Op", str);
+			break;
+		case MULASS:
+			emitRO((char *)"MUL", 3, 4, 3, (char *)"Op", str);
+			break;
+		case DIVASS:
+			emitRO((char *)"DIV", 3, 4, 3, (char *)"Op", str);
+			break;
+		}
+		emitRM((char *)"ST", 3, 0, 5, (char *)"Store array element");
+	}
 	AST::generateSibling(globals);
 }
 
@@ -344,6 +388,15 @@ void ShortcutAssignment::propagateScopes(SymbolTable *table) {
 		n_errors++;
 	}
 	AST::propagateScopesSibling(table);
+}
+
+void ShortcutAssignment::generate(SymbolTable *globals) {
+	AST::generateChildren(globals);
+	int value = (strcmp(str, "++") == 0) ? 1 : -1;
+	emitRM((char *)"LDA", 3, value, 3, (char *)"Op", str);
+	Id *id = (Id *)children[0];
+	emitRM((char *)"ST", 3, id->mOffset, (id->isGlobal ? 0 : 1), (char *)"Store variable", id->name);
+	AST::generateSibling(globals);
 }
 
 // Constant
