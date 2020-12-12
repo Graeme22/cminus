@@ -25,7 +25,7 @@ void CompoundStatement::propagateScopes(SymbolTable *table) {
 	AST::propagateScopesSibling(table);
 }
 
-void CompoundStatement::generate(SymbolTable *globals) {
+void CompoundStatement::generate(SymbolTable *globals, bool doSibling) {
 	int toffset_old;
 	if(!hasScopeException) {
 		emitComment((char *)"COMPOUND");
@@ -37,7 +37,8 @@ void CompoundStatement::generate(SymbolTable *globals) {
 		toffset = toffset_old;
 		emitComment((char *)"END COMPOUND");
 	}
-	AST::generateSibling(globals);
+	if(doSibling)
+		AST::generateSibling(globals);
 }
 
 // If
@@ -80,7 +81,7 @@ void If::propagateScopes(SymbolTable *table) {
 	AST::propagateScopesSibling(table);
 }
 
-void If::generate(SymbolTable *globals) {
+void If::generate(SymbolTable *globals, bool doSibling) {
 	emitComment((char *)"IF");
 	children[0]->generate(globals);
 	int if_loc = emitSkip(1), else_loc; // backpatch a jump to here
@@ -95,7 +96,8 @@ void If::generate(SymbolTable *globals) {
 		backPatchAJumpToHere(else_loc, (char *)"Jump past if statement [backpatch]");
 	}
 	emitComment((char *)"END IF");
-	AST::generateSibling(globals);
+	if(doSibling)
+		AST::generateSibling(globals);
 }
 
 // While
@@ -134,7 +136,7 @@ void While::propagateScopes(SymbolTable *table) {
 	AST::propagateScopesSibling(table);
 }
 
-void While::generate(SymbolTable *globals) {
+void While::generate(SymbolTable *globals, bool doSibling) {
 	emitComment((char *)"WHILE");
 	int entry = emitSkip(0);
 	// evaluate expression
@@ -148,7 +150,8 @@ void While::generate(SymbolTable *globals) {
 	backPatchAJumpToHere(break_loc, (char *)"Jump past loop [backpatch]");
 	break_loc = old_break_loc;
 	emitComment((char *)"END WHILE");
-	AST::generateSibling(globals);
+	if(doSibling)
+		AST::generateSibling(globals);
 }
 
 // Break
@@ -172,9 +175,10 @@ void Break::propagateScopes(SymbolTable *table) {
 	AST::propagateScopesSibling(table);
 }
 
-void Break::generate(SymbolTable *globals) {
+void Break::generate(SymbolTable *globals, bool doSibling) {
 	emitGotoAbs(break_loc, (char *)"Break");
-	AST::generateSibling(globals);
+	if(doSibling)
+		AST::generateSibling(globals);
 }
 
 // For
@@ -216,7 +220,7 @@ void For::propagateScopes(SymbolTable *table) {
 	AST::propagateScopesSibling(table);
 }
 
-void For::generate(SymbolTable *globals) {
+void For::generate(SymbolTable *globals, bool doSibling) {
 	//emitComment((char *)"FOR");
 	// not implemented due to lack of time
 	AST::generate(globals);

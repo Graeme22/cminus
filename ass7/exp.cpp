@@ -188,7 +188,7 @@ bool Operation::validateR(char *right) {
 	return strcmp(children[1]->type, right) == 0 || strcmp(children[1]->type, (char *)"undefined") == 0;
 }
 
-void Operation::generate(SymbolTable *globals) {
+void Operation::generate(SymbolTable *globals, bool doSibling) {
 	children[0]->generate(globals);
 	if(children[1] != NULL) {
 		emitRM((char *)"ST", 3, toffset--, 1, (char *)"Push left side");
@@ -253,7 +253,8 @@ void Operation::generate(SymbolTable *globals) {
 		emitRM((char *)"LD", 3, 0, 3, (char *)"Store array element");
 		break;
 	}
-	AST::generateSibling(globals);
+	if(doSibling)
+		AST::generateSibling(globals);
 }
 
 // Assignment
@@ -311,7 +312,7 @@ void Assignment::propagateScopes(SymbolTable *table) {
 	AST::propagateScopesSibling(table);
 }
 
-void Assignment::generate(SymbolTable *globals) {
+void Assignment::generate(SymbolTable *globals, bool doSibling) {
 	// if the child has a child, left-hand side is an array access operation
 	if(children[0]->children[0] == NULL) {
 		children[1]->generate(globals);
@@ -364,7 +365,8 @@ void Assignment::generate(SymbolTable *globals) {
 		}
 		emitRM((char *)"ST", 3, 0, 5, (char *)"Store array element");
 	}
-	AST::generateSibling(globals);
+	if(doSibling)
+		AST::generateSibling(globals);
 }
 
 // ShortcutAssignment
@@ -394,13 +396,30 @@ void ShortcutAssignment::propagateScopes(SymbolTable *table) {
 	AST::propagateScopesSibling(table);
 }
 
-void ShortcutAssignment::generate(SymbolTable *globals) {
-	AST::generateChildren(globals);
+void ShortcutAssignment::generate(SymbolTable *globals, bool doSibling) {
 	int value = (strcmp(str, "++") == 0) ? 1 : -1;
-	emitRM((char *)"LDA", 3, value, 3, (char *)"Op", str);
-	Id *id = (Id *)children[0];
-	emitRM((char *)"ST", 3, id->mOffset, (id->isGlobal ? 0 : 1), (char *)"Store variable", id->name);
-	AST::generateSibling(globals);
+	// if the child has a child, left-hand side is an array access operation
+	if(children[0]->children[0] == NULL) {
+		AST::generateChildren(globals);
+		emitRM((char *)"LDA", 3, value, 3, (char *)"Op", str);
+		Id *id = (Id *)children[0];
+		emitRM((char *)"ST", 3, id->mOffset, (id->isGlobal ? 0 : 1), (char *)"Store variable", id->name);
+	} else {
+		// left-hand side of access operation is the variable
+		Id *lhs = (Id *)children[0]->children[0];
+		// and the right hand side is the index, which is an expression
+		children[0]->children[1]->generate(globals);
+		if(strcmp(lhs->mType, "Param") == 0)
+			emitRM((char *)"LD", 5, lhs->mOffset, 1, (char *)"Load address of array", lhs->name);
+		else
+			emitRM((char *)"LDA", 5, lhs->mOffset, (lhs->isGlobal ? 0 : 1), (char *)"Load address of array", lhs->name);
+		emitRO((char *)"SUB", 5, 5, 3, (char *)"Compute element location");
+		emitRM((char *)"LD", 3, 0, 5, (char *)"Load copy of element");
+		emitRO((char *)"LDA", 3, value, 3, (char *)"Op", str);
+		emitRM((char *)"ST", 3, 0, 5, (char *)"Store array element");
+	}
+	if(doSibling)
+		AST::generateSibling(globals);
 }
 
 // Constant
@@ -458,7 +477,7 @@ void Constant::propagateScopes(SymbolTable *table) {
 	AST::propagateScopesSibling(table);
 }
 
-void Constant::generate(SymbolTable *globals) {
+void Constant::generate(SymbolTable *globals, bool doSibling) {
 	switch(data->tokenClass) {
 	case CHARCONST:
 		emitRM((char *)"LDC", 3, (int)data->cValue, 6, (char *)"Load constant");
@@ -471,5 +490,6 @@ void Constant::generate(SymbolTable *globals) {
 		emitRM((char *)"LDC", 3, data->nValue, 6, (char *)"Load constant");
 		break;
 	}
-	AST::generateSibling(globals);
+	if(doSibling)
+		AST::generateSibling(globals);
 }

@@ -14,7 +14,7 @@ public:
 	CompoundStatement(int, AST *, AST *);
 	virtual void print(bool);
 	virtual void propagateScopes(SymbolTable *);
-	virtual void generate(SymbolTable *);
+	virtual void generate(SymbolTable *, bool);
 
 };
 
@@ -27,7 +27,7 @@ public:
 	If(int, AST *, AST *);
 	virtual void print(bool);
 	virtual void propagateScopes(SymbolTable *);
-	virtual void generate(SymbolTable *);
+	virtual void generate(SymbolTable *, bool);
 
 };
 
@@ -37,7 +37,7 @@ public:
 	While(int, AST *, AST *);
 	virtual void print(bool);
 	virtual void propagateScopes(SymbolTable *);
-	virtual void generate(SymbolTable *);
+	virtual void generate(SymbolTable *, bool);
 
 };
 
@@ -47,7 +47,7 @@ public:
 	For(int, TokenData *, TokenData *, AST *);
 	virtual void print(bool);
 	virtual void propagateScopes(SymbolTable *);
-	virtual void generate(SymbolTable *);
+	virtual void generate(SymbolTable *, bool);
 
 };
 
@@ -57,7 +57,7 @@ public:
 	Break(int);
 	virtual void print(bool);
 	virtual void propagateScopes(SymbolTable *);
-	virtual void generate(SymbolTable *);
+	virtual void generate(SymbolTable *, bool);
 
 };
 

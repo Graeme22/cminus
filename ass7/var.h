@@ -19,7 +19,7 @@ public:
 	virtual void print(bool);
 	virtual void propagateScopes(SymbolTable *);
 	virtual void initialize(SymbolTable *);
-	virtual void generate(SymbolTable *);
+	virtual void generate(SymbolTable *, bool);
 	
 };
 
@@ -29,7 +29,7 @@ public:
 	Id(TokenData *);
 	virtual void print(bool);
 	virtual void propagateScopes(SymbolTable *);
-	virtual void generate(SymbolTable *);
+	virtual void generate(SymbolTable *, bool);
 
 };
 

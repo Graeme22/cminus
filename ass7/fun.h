@@ -12,7 +12,7 @@ public:
 	Par(TokenData *, bool);
 	virtual void print(bool);
 	virtual void propagateScopes(SymbolTable *);
-	virtual void generate(SymbolTable *);
+	virtual void generate(SymbolTable *, bool);
 
 };
 
@@ -25,7 +25,7 @@ public:
 	FunDeclaration(char *, TokenData *, AST *);
 	virtual void print(bool);
 	virtual void propagateScopes(SymbolTable *);
-	virtual void generate(SymbolTable *);
+	virtual void generate(SymbolTable *, bool);
 
 };
 
@@ -37,7 +37,7 @@ public:
 	Call(TokenData *, AST *);
 	virtual void print(bool);
 	virtual void propagateScopes(SymbolTable *);
-	virtual void generate(SymbolTable *);
+	virtual void generate(SymbolTable *, bool);
 
 };
 
@@ -48,7 +48,7 @@ public:
 	Return(int, AST *);
 	virtual void print(bool);
 	virtual void propagateScopes(SymbolTable *);
-	virtual void generate(SymbolTable *);
+	virtual void generate(SymbolTable *, bool);
 
 };
 

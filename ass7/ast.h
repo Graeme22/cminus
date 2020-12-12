@@ -40,7 +40,8 @@ public:
 	void propagateScopesChildren(SymbolTable *);
 	void propagateScopesSibling(SymbolTable *);
 	virtual void initialize(SymbolTable *);
-	virtual void generate(SymbolTable *);
+	void generate(SymbolTable *);
+	virtual void generate(SymbolTable *, bool);
 	void generateChildren(SymbolTable *);
 	void generateSibling(SymbolTable *);
 	

@@ -20,7 +20,7 @@ public:
 	virtual void propagateScopes(SymbolTable *);
 	bool validateL(char *);
 	bool validateR(char *);
-	virtual void generate(SymbolTable *);
+	virtual void generate(SymbolTable *, bool);
 
 };
 
@@ -31,7 +31,7 @@ public:
 	Assignment(TokenData *, AST *);
 	virtual void print(bool);
 	virtual void propagateScopes(SymbolTable *);
-	virtual void generate(SymbolTable *);
+	virtual void generate(SymbolTable *, bool);
 
 };
 
@@ -41,7 +41,7 @@ public:
 	ShortcutAssignment(TokenData *, AST *);
 	virtual void print(bool);
 	virtual void propagateScopes(SymbolTable *);
-	virtual void generate(SymbolTable *);
+	virtual void generate(SymbolTable *, bool);
 
 };
 
@@ -53,7 +53,7 @@ public:
 	Constant(TokenData *);
 	virtual void print(bool);
 	virtual void propagateScopes(SymbolTable *);
-	virtual void generate(SymbolTable *);
+	virtual void generate(SymbolTable *, bool);
 
 };
 

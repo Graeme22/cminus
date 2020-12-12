@@ -98,8 +98,13 @@ void AST::initialize(SymbolTable *table) {
 }
 
 void AST::generate(SymbolTable *globals) {
+	generate(globals, true);
+}
+
+void AST::generate(SymbolTable *globals, bool doSibling) {
 	generateChildren(globals);
-	generateSibling(globals);
+	if(doSibling)
+		generateSibling(globals);
 }
 
 void AST::generateChildren(SymbolTable *globals) {

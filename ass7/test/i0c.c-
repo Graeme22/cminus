@@ -1,0 +1,7 @@
+// C-F20
+main(){
+    {
+        bool ss: ! true;
+        outputb(ss);
+    }
+}

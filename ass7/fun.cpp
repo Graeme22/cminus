@@ -44,7 +44,7 @@ void Par::propagateScopes(SymbolTable *table) {
 	AST::propagateScopesSibling(table);
 }
 
-void Par::generate(SymbolTable *globals) {}
+void Par::generate(SymbolTable *globals, bool doSibling) {}
 
 // FunDeclaration
 
@@ -100,7 +100,7 @@ void FunDeclaration::propagateScopes(SymbolTable *table) {
 	AST::propagateScopesSibling(table);
 }
 
-void FunDeclaration::generate(SymbolTable *globals) {
+void FunDeclaration::generate(SymbolTable *globals, bool doSibling) {
 	if(functionsGenerated)
 		return;
 	emitComment((char *)"FUNCTION", name);
@@ -193,14 +193,14 @@ void Call::propagateScopes(SymbolTable *table) {
 	AST::propagateScopesSibling(table);
 }
 
-void Call::generate(SymbolTable *globals) {
+void Call::generate(SymbolTable *globals, bool doSibling) {
 	FunDeclaration *fun = (FunDeclaration *)globals->lookupGlobal(name);
 	emitComment((char *)"CALL", name);
 	emitRM((char *)"ST", 1, toffset, 1, (char *)"save old frame pointer");
 	int toffset_old = toffset;
 	toffset -= 2;
 	for(AST *itr = children[0]; itr != NULL; itr = itr->sibling) {
-		itr->generate(globals);
+		itr->generate(globals, false);
 		emitRM((char *)"ST", 3, toffset--, 1, (char *)"Store parameter");
 	}
 	toffset = toffset_old;
@@ -210,7 +210,8 @@ void Call::generate(SymbolTable *globals) {
 	emitRM((char *)"LDA", 7, loc, 7, (char *)"call", fun->name);
 	emitRM((char *)"LDA", 3, 0, 2, (char *)"save the result");
 	emitComment((char *)"END CALL", name);
-	AST::generateSibling(globals);
+	if(doSibling)
+		AST::generateSibling(globals);
 }
 
 // Return
@@ -252,7 +253,7 @@ void Return::propagateScopes(SymbolTable *table) {
 	AST::propagateScopesSibling(table);
 }
 
-void Return::generate(SymbolTable *globals) {
+void Return::generate(SymbolTable *globals, bool doSibling) {
 	emitComment((char *)"RETURN");
 	AST::generateChildren(globals); // this should end up in register 3
 	emitRM((char *)"LDA", 2, 0, 3, (char *)"put answer in return register");
@@ -260,5 +261,6 @@ void Return::generate(SymbolTable *globals) {
 	emitRM((char *)"LD", 1, 0, 1, (char *)"pop the frame");
 	emitRM((char *)"LDA", 7, 0, 3, (char *)"jump to old PC");
 	emitComment((char *)"END RETURN");
-	AST::generateSibling(globals);
+	if(doSibling)
+		AST::generateSibling(globals);
 }

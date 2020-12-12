@@ -210,13 +210,14 @@ void generate(char *filename, AST *tree, SymbolTable *globals) {
 	emitComment((char *)"INIT");
 	backPatchAJumpToHere(entry, (char *)"Jump to init [backpatch]");
 	emitRM((char *)"LD", 0, 0, 0, (char *)"Set global pointer");
-	// init globals, as statics have been omitted
-	for(itr = tree->sibling; itr != NULL; itr = itr->sibling)
-		itr->generate(globals);
-
-	// call main
 	emitRM((char *)"LDA", 1, goffset, 0, (char *)"Set frame pointer");
 	emitRM((char *)"ST", 1, 0, 1, (char *)"Store old frame pointer");
+	// init globals, as statics have been omitted
+	toffset = -2;
+	for(itr = tree->sibling; itr != NULL; itr = itr->sibling)
+		itr->generate(globals, false);
+
+	// call main
 	emitRM((char *)"LDA", 3, 1, 7, (char *)"Return address");
 	int loc = ((FunDeclaration *)globals->lookupGlobal((char *)"main"))->loc - emitSkip(0) - 1;
 	emitRM((char *)"LDA", 7, loc, 7, (char *)"Jump to main");
