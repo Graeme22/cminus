@@ -245,7 +245,8 @@ void Operation::generate(SymbolTable *globals) {
 		emitRO((char *)"TGT", 3, 4, 3, (char *)"Op >");
 		break;
 	case NOT:
-		emitRO((char *)"NOT", 3, 3, 3, (char *)"Op !");
+		emitRM((char *)"LDC", 4, 1, 6, (char *)"Load 1");
+		emitRO((char *)"XOR", 3, 3, 4, (char *)"Logical not");
 		break;
 	case ACCESS:
 		emitRO((char *)"SUB", 3, 4, 3, (char *)"Compute element location");
@@ -340,7 +341,10 @@ void Assignment::generate(SymbolTable *globals) {
 		emitRM((char *)"ST", 3, toffset--, 1, (char *)"Push left side");
 		children[1]->generate(globals);
 		emitRM((char *)"LD", 4, ++toffset, 1, (char *)"Pop left into ac1");
-		emitRM((char *)"LDA", 5, lhs->mOffset, (lhs->isGlobal ? 0 : 1), (char *)"Load address of array", lhs->name);
+		if(strcmp(lhs->mType, "Param") == 0)
+			emitRM((char *)"LD", 5, lhs->mOffset, 1, (char *)"Load address of array", lhs->name);
+		else
+			emitRM((char *)"LDA", 5, lhs->mOffset, (lhs->isGlobal ? 0 : 1), (char *)"Load address of array", lhs->name);
 		emitRO((char *)"SUB", 5, 5, 4, (char *)"Compute element location");
 		if(id != ASS)
 			emitRM((char *)"LD", 4, 0, 5, (char *)"Load copy of element");

@@ -102,16 +102,17 @@ void Var::initialize(SymbolTable *table) {
 	}
 }
 
-void Var::generate(SymbolTable *table) {
+void Var::generate(SymbolTable *globals) {
 	if(isArray) {
 		emitRM((char *)"LDC", 3, arraySize, 6, (char *)"Load size of array", name);
 		// size is stored at 0th element
 		emitRM((char *)"ST", 3, mOffset + 1, (isGlobal ? 0 : 1), (char *)"Store size of array", name);
 	}
 	if(children[0] != NULL) {
-		children[0]->generate(table);
+		children[0]->generate(globals);
 		emitRM((char *)"ST", 3, mOffset, (isGlobal ? 0 : 1), (char *)"Initialize variable", name);
 	}
+	AST::generateSibling(globals);
 }
 
 // Id
@@ -178,8 +179,11 @@ void Id::propagateScopes(SymbolTable *table) {
 }
 
 void Id::generate(SymbolTable *globals) {
-	if(isArray)
-		emitRM((char *)"LDA", 3, mOffset, (isGlobal ? 0 : 1), (char *)"Load address of array", name);
-	else
+	if(isArray) {
+		if(strcmp(mType, "Param") == 0)
+			emitRM((char *)"LD", 3, mOffset, 1, (char *)"Load address of array", name);
+		else
+			emitRM((char *)"LDA", 3, mOffset, (isGlobal ? 0 : 1), (char *)"Load address of array", name);
+	} else
 		emitRM((char *)"LD", 3, mOffset, (isGlobal ? 0 : 1), (char *)"Load variable", name);
 }
