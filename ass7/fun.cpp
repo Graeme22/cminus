@@ -24,10 +24,6 @@ void Par::print(bool showMemory) {
 void Par::propagateScopes(SymbolTable *table) {
 	AST::propagateScopesChildren(table);
 	bool success = table->insert(name, this);
-	if(children[0] != NULL && !children[0]->isConstant) {
-		printf("ERROR(%d): Initializer for variable '%s' is not a constant expression.\n", line, name);
-		n_errors++;
-	}
 	if(!success) {
 		AST *existing = (AST *)table->lookup(name);
 		printf("ERROR(%d): Symbol '%s' is already declared at line %d.\n", line, name, existing->line);
@@ -107,7 +103,8 @@ void FunDeclaration::generate(SymbolTable *globals, bool doSibling) {
 	loc = emitSkip(0);
 	toffset = size;
 	emitRM((char *)"ST", 3, -1, 1, (char *)"Store return address");
-	AST::generateChildren(globals);
+	if(children[1] != NULL)
+		children[1]->generate(globals, true);
 	emitRM((char *)"LDC", 2, 0, 6, (char *)"Set return value to 0");
 	emitRM((char *)"LD", 3, -1, 1, (char *)"Load return address");
 	emitRM((char *)"LD", 1, 0, 1, (char *)"Adjust frame pointer");

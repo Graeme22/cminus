@@ -26,10 +26,9 @@ void CompoundStatement::propagateScopes(SymbolTable *table) {
 }
 
 void CompoundStatement::generate(SymbolTable *globals, bool doSibling) {
-	int toffset_old;
+	int toffset_old = toffset;
 	if(!hasScopeException) {
 		emitComment((char *)"COMPOUND");
-		toffset_old = toffset;
 		toffset = size;
 	}
 	AST::generateChildren(globals);
@@ -82,6 +81,8 @@ void If::propagateScopes(SymbolTable *table) {
 }
 
 void If::generate(SymbolTable *globals, bool doSibling) {
+	int toffset_old = toffset;
+	toffset = size;
 	emitComment((char *)"IF");
 	children[0]->generate(globals);
 	int if_loc = emitSkip(1), else_loc; // backpatch a jump to here
@@ -96,6 +97,7 @@ void If::generate(SymbolTable *globals, bool doSibling) {
 		backPatchAJumpToHere(else_loc, (char *)"Jump past if statement [backpatch]");
 	}
 	emitComment((char *)"END IF");
+	toffset = toffset_old;
 	if(doSibling)
 		AST::generateSibling(globals);
 }
@@ -137,6 +139,8 @@ void While::propagateScopes(SymbolTable *table) {
 }
 
 void While::generate(SymbolTable *globals, bool doSibling) {
+	int toffset_old = toffset;
+	toffset = size;
 	emitComment((char *)"WHILE");
 	int entry = emitSkip(0);
 	// evaluate expression
@@ -150,6 +154,7 @@ void While::generate(SymbolTable *globals, bool doSibling) {
 	backPatchAJumpToHere(break_loc, (char *)"Jump past loop [backpatch]");
 	break_loc = old_break_loc;
 	emitComment((char *)"END WHILE");
+	toffset = toffset_old;
 	if(doSibling)
 		AST::generateSibling(globals);
 }
@@ -221,6 +226,7 @@ void For::propagateScopes(SymbolTable *table) {
 }
 
 void For::generate(SymbolTable *globals, bool doSibling) {
+	// also do toffset
 	//emitComment((char *)"FOR");
 	// not implemented due to lack of time
 	AST::generate(globals);

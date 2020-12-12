@@ -63,10 +63,6 @@ void Var::setInitialized() {
 void Var::propagateScopes(SymbolTable *table) {
 	AST::propagateScopesChildren(table);
 	bool success = table->insert(name, this);
-	if(children[0] != NULL && !children[0]->isConstant) {
-		printf("ERROR(%d): Initializer for variable '%s' is not a constant expression.\n", line, name);
-		n_errors++;
-	}
 	if(!success) {
 		AST *existing = (AST *)table->lookup(name);
 		printf("ERROR(%d): Symbol '%s' is already declared at line %d.\n", line, name, existing->line);
@@ -187,4 +183,6 @@ void Id::generate(SymbolTable *globals, bool doSibling) {
 			emitRM((char *)"LDA", 3, mOffset, (isGlobal ? 0 : 1), (char *)"Load address of array", name);
 	} else
 		emitRM((char *)"LD", 3, mOffset, (isGlobal ? 0 : 1), (char *)"Load variable", name);
+	if(doSibling)
+		AST::generateSibling(globals);
 }
