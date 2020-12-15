@@ -97,8 +97,6 @@ void FunDeclaration::propagateScopes(SymbolTable *table) {
 }
 
 void FunDeclaration::generate(SymbolTable *globals, bool doSibling) {
-	if(functionsGenerated)
-		return;
 	emitComment((char *)"FUNCTION", name);
 	loc = emitSkip(0);
 	toffset = size;
@@ -110,8 +108,8 @@ void FunDeclaration::generate(SymbolTable *globals, bool doSibling) {
 	emitRM((char *)"LD", 1, 0, 1, (char *)"Adjust frame pointer");
 	emitRM((char *)"LDA", 7, 0, 3, (char *)"Return");
 	emitComment((char *)"END FUNCTION", name);
-	// we don't do this here because it will be done for us
-	//AST::generateSibling(globals);
+	if(doSibling)
+		AST::generateSibling(globals);
 }
 
 // Call
@@ -162,10 +160,8 @@ void Call::propagateScopes(SymbolTable *table) {
 					printf("ERROR(%d): Too many parameters passed for function '%s' declared on line %d.\n", line, name, fun->line);
 					n_errors++;
 				}
-				if(passed != NULL) {
-					passed->isSolo = true;
+				if(passed != NULL)
 					passed->propagateScopes(table);
-				}
 				if(passed != NULL && expected != NULL) {
 					// type checking
 					if(strcmp(passed->type, (char *)"undefined") != 0 && strcmp(passed->type, expected->type) != 0) {
@@ -204,7 +200,7 @@ void Call::generate(SymbolTable *globals, bool doSibling) {
 	emitRM((char *)"LDA", 1, toffset, 1, (char *)"move frame pointer to new frame");
 	emitRM((char *)"LDA", 3, 1, 7, (char *)"compute return address");
 	int loc = fun->loc - emitSkip(0) - 1;
-	emitRM((char *)"LDA", 7, loc, 7, (char *)"call", fun->name);
+	emitRM((char *)"JMP", 7, loc, 7, (char *)"call", fun->name);
 	emitRM((char *)"LDA", 3, 0, 2, (char *)"save the result");
 	emitComment((char *)"END CALL", name);
 	if(doSibling)
@@ -256,7 +252,7 @@ void Return::generate(SymbolTable *globals, bool doSibling) {
 	emitRM((char *)"LDA", 2, 0, 3, (char *)"put answer in return register");
 	emitRM((char *)"LD", 3, -1, 1, (char *)"recover old PC");
 	emitRM((char *)"LD", 1, 0, 1, (char *)"pop the frame");
-	emitRM((char *)"LDA", 7, 0, 3, (char *)"jump to old PC");
+	emitRM((char *)"JMP", 7, 0, 3, (char *)"jump to old PC");
 	emitComment((char *)"END RETURN");
 	if(doSibling)
 		AST::generateSibling(globals);

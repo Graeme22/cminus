@@ -1,13 +1,25 @@
 #include "printtree.h"
 
+// global counters for warnings and errors
 int n_errors = 0;
 int n_warnings = 0;
+// whether or not to check initialization errors
 bool checkInitialization = true;
+// used for semantic error message for break
+// statement, which can't be used outside a loop
 int loopDepth = 0;
+// points to the current function if inside one
 FunDeclaration *currentFunction;
+// whether or not the current function has a return
+// statement. used for semantic error messages
 bool hasReturn = false;
+// memory offset variables.
+// goffset is offset from global pointer,
+// foffset is offset from local frame pointer,
+// and toffset is offset from end of current
+// frame (used for temporary vars and params)
 int foffset = 0, goffset = 0, toffset = 0;
-bool functionsGenerated = false;
+// location for break statements to jump to
 int break_loc = 0;
 
 char *VERSION = (char *)"0.7.3";
@@ -202,8 +214,7 @@ void generate(char *filename, AST *tree, SymbolTable *globals) {
 	AST *itr;
 	for(itr = tree->sibling; itr != NULL; itr = itr->sibling)
 		if(((Var *)itr)->isFunction)
-			itr->generate(globals);
-	functionsGenerated = true;
+			itr->generate(globals, false);
 	emitComment((char *)"=========================================");
 
 	// init code
@@ -215,12 +226,13 @@ void generate(char *filename, AST *tree, SymbolTable *globals) {
 	// init globals, as statics have been omitted
 	toffset = -2;
 	for(itr = tree->sibling; itr != NULL; itr = itr->sibling)
-		itr->generate(globals, false);
+		if(!((Var *)itr)->isFunction)
+			itr->generate(globals, false);
 
 	// call main
 	emitRM((char *)"LDA", 3, 1, 7, (char *)"Return address");
 	int loc = ((FunDeclaration *)globals->lookupGlobal((char *)"main"))->loc - emitSkip(0) - 1;
-	emitRM((char *)"LDA", 7, loc, 7, (char *)"Jump to main");
+	emitRM((char *)"JMP", 7, loc, 7, (char *)"Jump to main");
 	emitComment((char *)"END INIT");
 
 }

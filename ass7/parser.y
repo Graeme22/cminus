@@ -24,6 +24,7 @@ extern void yyerror(const char *);
 
 %locations
 
+// a terminal is one of these two
 %union {
 	TokenData *tokenData;
 	AST *ast;
@@ -42,6 +43,8 @@ extern void yyerror(const char *);
 %type <ast> relExpression sumExpression mulExpression unaryExpression factor mutable immutable call args argList
 %type <tokenData> constant typeSpecifier relop unaryop mulop sumop
 
+// the grammar pretty much just comes straight from the language
+// description pdf
 %%
 /*
 

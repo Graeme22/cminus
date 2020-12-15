@@ -11,7 +11,9 @@ extern int loopDepth;
 class CompoundStatement: public AST {
 
 public:
+	// creates a compound node
 	CompoundStatement(int, AST *, AST *);
+	// overridden
 	virtual void print(bool);
 	virtual void propagateScopes(SymbolTable *);
 	virtual void generate(SymbolTable *, bool);
@@ -21,10 +23,11 @@ public:
 class If: public AST {
 
 public:
-	// if-else
+	// creates an if/else node
 	If(int, AST *, AST *, AST *);
-	// if
+	// creates just an if node
 	If(int, AST *, AST *);
+	// overridden
 	virtual void print(bool);
 	virtual void propagateScopes(SymbolTable *);
 	virtual void generate(SymbolTable *, bool);
@@ -34,7 +37,9 @@ public:
 class While: public AST {
 
 public:
+	// creates a while node
 	While(int, AST *, AST *);
+	// overridden
 	virtual void print(bool);
 	virtual void propagateScopes(SymbolTable *);
 	virtual void generate(SymbolTable *, bool);
@@ -44,7 +49,9 @@ public:
 class For: public AST {
 
 public:
+	// creates a for node
 	For(int, TokenData *, TokenData *, AST *);
+	// overridden
 	virtual void print(bool);
 	virtual void propagateScopes(SymbolTable *);
 	virtual void generate(SymbolTable *, bool);
@@ -54,7 +61,9 @@ public:
 class Break: public AST {
 
 public:
+	// creates a break node
 	Break(int);
+	// overridden
 	virtual void print(bool);
 	virtual void propagateScopes(SymbolTable *);
 	virtual void generate(SymbolTable *, bool);

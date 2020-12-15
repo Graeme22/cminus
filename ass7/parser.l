@@ -6,11 +6,14 @@
 #include "ast.h"
 #include "parser.tab.h"
 
+// allows us to get line number from terminals not in our %union
 #define YY_USER_ACTION yylloc.first_line = yylloc.last_line = yylineno;
 
+// points to previous token
 char *lastToken = NULL;
 
-// returns an array of ints.
+// returns an c string from the given token
+// handles escaping and calculates length
 std::string sValueFrom(char *raw) {
 	int len = strlen(raw);
 	std::string s;
@@ -40,6 +43,9 @@ std::string sValueFrom(char *raw) {
 	return s;
 }
 
+// gets a char value from the given string
+// handles escaping and does some
+// syntactic analysis
 int cValueFrom(char *raw) {
 	char c;
 	int len = strlen(raw);
@@ -81,6 +87,8 @@ int cValueFrom(char *raw) {
 	return (int)c;
 }
 
+// create a TokenData* struct, set yylval to it,
+// allocate extracted information, and return its class
 static int buildToken(int tokenClass, char *tokenString) {
 	yylval.tokenData = new TokenData;
 	yylval.tokenData->tokenClass = tokenClass;
@@ -107,6 +115,8 @@ static int buildToken(int tokenClass, char *tokenString) {
 	lastToken = strdup(tokenString);
 	return tokenClass;
 }
+
+// yylineno is a super easy way to do line numbers
 %}
 
 %option noyywrap

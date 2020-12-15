@@ -9,7 +9,6 @@ AST::AST() {
 	isChild = false;
 	isFirst = false;
 	isArray = false;
-	isSolo = false;
 	isConstant = false;
 	initialized = false;
 	isGlobal = false;
@@ -85,7 +84,7 @@ void AST::propagateScopesChildren(SymbolTable *table) {
 }
 
 void AST::propagateScopesSibling(SymbolTable *table) {
-	if(sibling != NULL && !isSolo)
+	if(sibling != NULL)
 		sibling->propagateScopes(table);
 }
 
