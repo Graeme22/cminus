@@ -21,8 +21,8 @@ This will produce a .tm output file with the Tiny assembly code, which can then 
 echo "gq" | ./tm test.tm
 ```
 Valid flags for c-:
--d    Turn on yydebug for parser debugging
--S    Turn on symbol table debugging
--P    Print the abstract syntax tree
--M    Print the abstract syntax tree with memory allocation information
--h    Help
+- d: Turn on yydebug for parser debugging
+- S: Turn on symbol table debugging
+- P: Print the abstract syntax tree
+- M: Print the abstract syntax tree with memory allocation information
+- h: Help
