@@ -40,6 +40,18 @@ void CompoundStatement::generate(SymbolTable *globals, bool doSibling) {
 		AST::generateSibling(globals);
 }
 
+llvm::Value *CompoundStatement::codegen() {
+	llvm::Value *toReturn = nullptr;
+	if(children[0] != NULL)
+		children[0]->codegen();
+	if(children[1] != NULL)
+		toReturn = children[1]->codegen();
+	if(sibling != NULL)
+		sibling->codegen();
+
+	return toReturn;
+}
+
 // If
 
 If::If(int l, AST *condition, AST *stmt) {

@@ -116,3 +116,11 @@ void AST::generateSibling(SymbolTable *globals) {
 	if(sibling != NULL)
 		sibling->generate(globals);
 }
+
+llvm::Value *AST::codegen() {
+	for(int i = 0; i < MAX_CHILDREN; i++)
+		if(children[i] != NULL)
+			children[i]->codegen();
+	if(sibling != NULL)
+		sibling->codegen();
+}

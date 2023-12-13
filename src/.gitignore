@@ -1,0 +1,11 @@
+.vscode/
+test/
+*.o
+*.tm
+*.ll
+*.c-
+parser.output
+parser.tab.*
+lex.yy.c
+c-
+tm

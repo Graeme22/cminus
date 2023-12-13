@@ -112,6 +112,42 @@ void FunDeclaration::generate(SymbolTable *globals, bool doSibling) {
 		AST::generateSibling(globals);
 }
 
+llvm::Function* FunDeclaration::codegen() {
+	llvm::FunctionType *functionType;
+	llvm::Type *llvmType;
+	// set return type first
+	if(strcmp(type, (char *)"bool") == 0)
+		llvmType = llvm::Type::getInt1Ty(*context);
+	else if(strcmp(type, (char *)"char") == 0)
+		llvmType = llvm::Type::getInt8Ty(*context);
+	else if(strcmp(type, (char *)"int") == 0)
+		llvmType = llvm::Type::getInt32Ty(*context);
+	else
+		llvmType = llvm::Type::getVoidTy(*context);
+	// there are no params
+	if(children[0] == NULL)
+		functionType = llvm::FunctionType::get(llvmType, false);
+	else {
+		std::vector<llvm::Type *> parTypes;
+		for(auto par = children[0]; par = par->sibling; par != NULL) {
+			Par *toAdd = (Par *)par;
+			//parTypes.push_back(toAdd->llvmType);
+		}
+		functionType = llvm::FunctionType::get(llvmType, parTypes, false);
+	}
+	llvm::Function *fn = llvm::Function::Create(functionType, llvm::Function::ExternalLinkage, name, *llvmModule);
+	llvm::BasicBlock *bb = llvm::BasicBlock::Create(*context, "entry", fn);
+	builder->SetInsertPoint(bb);
+	llvm::Value *res = children[1]->codegen();
+	if(llvmType->isVoidTy())
+		builder->CreateRetVoid();
+	else {
+		builder->CreateRet(res);
+	}
+	llvm::verifyFunction(*fn);
+	return fn;
+}
+
 // Call
 
 Call::Call(TokenData *data, AST *args) {
@@ -205,6 +241,13 @@ void Call::generate(SymbolTable *globals, bool doSibling) {
 	emitComment((char *)"END CALL", name);
 	if(doSibling)
 		AST::generateSibling(globals);
+}
+
+llvm::Value *Call::codegen() {
+	// currently only works for functions without arguments
+	llvm::Function *fn = llvmModule->getFunction(name);
+	std::vector<llvm::Value*> args;
+	return builder->CreateCall(fn, args);
 }
 
 // Return

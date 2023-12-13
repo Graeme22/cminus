@@ -493,3 +493,16 @@ void Constant::generate(SymbolTable *globals, bool doSibling) {
 	if(doSibling)
 		AST::generateSibling(globals);
 }
+
+llvm::Value *Constant::codegen() {
+	switch(data->tokenClass) {
+	case CHARCONST:
+		return llvm::ConstantInt::get(*context, llvm::APInt(8, uint8_t(data->cValue), false));
+	case STRINGCONST:
+		return llvm::ConstantDataArray::getString(*context, data->sValue, true);
+	case NUMCONST:
+		return llvm::ConstantInt::get(*context, llvm::APInt(32, data->nValue, true));
+	case BOOLCONST:
+		return llvm::ConstantInt::get(*context, llvm::APInt(1, data->nValue));
+	}
+}

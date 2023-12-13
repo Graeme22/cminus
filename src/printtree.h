@@ -11,13 +11,13 @@
 #include "yyerror.h"
 #include "parser.tab.h"
 #include "emitcode.h"
+#include "llvm.h"
 
 extern FILE *yyin;
 // the abstract syntax tree head!
 AST *tree;
 // the file to put the assembly code in
 FILE *code;
-extern bool functionGenerated;
 
 // prints a usage message in console
 void usage();
@@ -25,5 +25,7 @@ void usage();
 // loading in the I/O library, then by
 // calling generate() on the head.
 void generate(char *, AST *, SymbolTable *);
+// LLVM generation
+void generateLLVM(AST *);
 
 #endif

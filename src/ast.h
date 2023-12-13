@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include "emitcode.h"
 #include "symbolTable.h"
+#include "llvm.h"
 
 extern int n_errors;
 extern int n_warnings;
@@ -132,6 +133,8 @@ public:
 	void generateChildren(SymbolTable *);
 	// generate the sibling if it exists
 	void generateSibling(SymbolTable *);
+	// LLVM codegen
+	virtual llvm::Value *codegen();
 	
 };
 

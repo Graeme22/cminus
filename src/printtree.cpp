@@ -21,38 +21,44 @@ bool hasReturn = false;
 int foffset = 0, goffset = 0, toffset = 0;
 // location for break statements to jump to
 int break_loc = 0;
+// LLVM globals
+std::unique_ptr<llvm::LLVMContext> context;
+std::unique_ptr<llvm::Module> llvmModule;
+std::unique_ptr<llvm::IRBuilder<>> builder;
+std::map<std::string, llvm::Value *> namedValues;
 
-char *VERSION = (char *)"0.7.3";
+char *VERSION = (char *)"0.8";
 
 int main(int argc, char *argv[]) {
 	tree = new AST();
 	tree->index = -1;
 
 	// -d: turn on yydebug
-	// -p: print parse tree
-	// -P: print AST & node types
-	int dflag = 0, Pflag = 0, hflag = 0, Sflag = 0, Mflag = 0;
+	// -p: print AST
+	// -l: generate LLVM code
+	int dflag = 0, pflag = 0, hflag = 0, sflag = 0, mflag = 0, lflag = 0;
 	int c;
 
-	while((c = ourGetopt(argc, argv, (char *)"dPhSM")) != -1) {
+	while((c = ourGetopt(argc, argv, (char *)"dphsml")) != -1) {
 		switch(c) {
 		case 'd':
 			dflag = 1;
 			break;
-		case 'P':
-			Pflag = 1;
+		case 'p':
+			pflag = 1;
 			break;
-		case 'h':
-			hflag = 1;
+		case 's':
+			sflag = 1;
 			break;
-		case 'S':
-			Sflag = 1;
+		case 'm':
+			mflag = 1;
+			pflag = 1;
 			break;
-		case 'M':
-			Mflag = 1;
-			Pflag = 1;
+		case 'l':
+			lflag = 1;
 			break;
 		case '?':
+		case 'h':
 			usage();
 			return -1;
 		}
@@ -61,9 +67,10 @@ int main(int argc, char *argv[]) {
 	if(dflag)
 		yydebug = 1;
 
-	if(hflag)
-		usage();
-
+	// init LLVM things
+	context = std::make_unique<llvm::LLVMContext>();
+	llvmModule = std::make_unique<llvm::Module>("cminus", *context);
+	builder = std::make_unique<llvm::IRBuilder<>>(*context);
 	// create map
 	initErrorProcessing();
 
@@ -76,7 +83,7 @@ int main(int argc, char *argv[]) {
 
 	// create symbol table
 	SymbolTable *table = new SymbolTable();
-	table->debug(Sflag);
+	table->debug(sflag);
 
 	if(n_errors == 0) {
 		tree->propagateInfo();
@@ -84,8 +91,8 @@ int main(int argc, char *argv[]) {
 		// semantic analysis
 		analyze(tree, table);
 
-		if(Pflag)
-			tree->print(Mflag == 1);
+		if(pflag)
+			tree->print(mflag == 1);
 	}
 
 	printf("Number of warnings: %d\n", n_warnings);
@@ -106,17 +113,56 @@ int main(int argc, char *argv[]) {
 			printf("Number of errors: %d\n", n_errors);
 			return -1;
 		}
-		
-		code = fopen(path, "w+");
-		generate(argv[optind], tree, table);
-		fclose(code);
+
+		if(lflag) {
+			// do LLVM codegen
+			generateLLVM(tree);
+			// write LLVM output to .ll file
+			path[n - 2] = 'l';
+			path[n - 1] = 'l';
+			std::string fileName = path;
+			std::error_code errorCode;
+			llvm::raw_fd_ostream outLL(fileName, errorCode);
+			// print to stdout also
+			llvmModule->print(llvm::outs(), nullptr);
+			llvmModule->print(outLL, nullptr);
+		} else {
+			// do normal codegen
+			code = fopen(path, "w+");
+			generate(argv[optind], tree, table);
+			fclose(code);
+		}
 	}
 
 	return 0;
 }
 
 void usage() {
-	printf("Usage: c- [options] [sourceFile]\n  -d  turn on Bison debugging\n  -h  this usage message\n  -P  print abstract syntax tree + types\n  -S  turn on syntax table debugging\n  -M  show memory usage\n");
+	printf("Usage: c- [options] [sourceFile]\n  -d  turn on Bison debugging\n  -h  this usage message\n  -p  print abstract syntax tree + types\n  -s  turn on syntax table debugging\n  -m  show memory usage\n  -l  generate LLVM code\n");
+}
+
+void generateLLVM(AST *tree) {
+	//int printf(const char *format, ...);
+	auto ptrTy = builder->getInt8PtrTy();
+	llvmModule->getOrInsertFunction("printf", llvm::FunctionType::get(builder->getInt32Ty(), ptrTy, true));
+	//int scanf(const char *format, ...);
+	llvmModule->getOrInsertFunction("scanf", llvm::FunctionType::get(builder->getInt32Ty(), ptrTy, true));
+	// outnl
+	auto outnlType = llvm::FunctionType::get(builder->getVoidTy(), false);
+	auto outnl = llvm::Function::Create(outnlType, llvm::Function::ExternalLinkage, "outnl", *llvmModule);
+	llvm::BasicBlock *bb = llvm::BasicBlock::Create(*context, "entry", outnl);
+	builder->SetInsertPoint(bb);
+	llvm::Value *nl = builder->CreateGlobalStringPtr("\n");
+	std::vector<llvm::Value*> args{nl};
+	auto printf = llvmModule->getFunction("printf");
+	builder->CreateCall(printf, args);
+	builder->CreateRetVoid();
+	llvm::verifyFunction(*outnl);
+	// output
+	//std::vector<llvm::Type*> outputPars;
+	//auto outputType = llvm::FunctionType::get(builder->getInt32Ty(), )
+
+	tree->sibling->codegen();
 }
 
 // at this point the symbol table only contains the global scope, so functions and globals

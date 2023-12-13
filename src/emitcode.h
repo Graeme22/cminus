@@ -6,13 +6,13 @@
 //  routines below.
 //
 #define GP   0	//  The global pointer
-#define FP   1	//  The local frame pointer
-#define RT   2	//  Return value
-#define AC   3  //  Accumulator
-#define AC1  4  //  Accumulator
-#define AC2  5  //  Accumulator
-#define AC3  6  //  Accumulator
-#define PC   7	//  The program counter
+#define FP     1  //  The local frame pointer
+#define RT     2  //  Return value
+#define AC     3  //  Accumulator
+#define AC1    4  //  Accumulator
+#define AC2    5  //  Accumulator
+#define AC3    6  //  Accumulator
+#define PROGC  7  //  The program counter
 
 //
 //  No comment please...

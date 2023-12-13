@@ -83,7 +83,7 @@ void emitRM(char *op,long long int r,long long int d,long long int s, char *c)
 
 void emitGoto(int d,long long int s, char *c, char *cc)
 {
-    emitRM((char *)"JMP", (long long int)PC, d, s, c, cc);
+    emitRM((char *)"JMP", (long long int)PROGC, d, s, c, cc);
 }
 
 
@@ -105,7 +105,7 @@ void emitGoto(int d,long long int s, char *c)
 void emitRMAbs(char *op, long long int r, long long int a, char *c, char *cc)
 {
     fprintf(code, "%3d:  %5s  %lld,%lld(%lld)\t%s %s\n", emitLoc, op, r, a - (long long int)(emitLoc + 1),
-	    (long long int)PC, c, cc);
+	    (long long int)PROGC, c, cc);
     fflush(code);
     emitLoc++;
 }
@@ -119,7 +119,7 @@ void emitRMAbs(char *op,long long int r,long long int a, char *c)
 
 void emitGotoAbs(int a, char *c, char *cc)
 {
-    emitRMAbs((char *)"JMP", (long long int)PC, a, c, cc);
+    emitRMAbs((char *)"JMP", (long long int)PROGC, a, c, cc);
 }
 
 

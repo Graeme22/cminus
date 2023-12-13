@@ -1,6 +1,7 @@
 #ifndef _FUN_H_
 #define _FUN_H_
 
+#include <vector>
 #include "ast.h"
 #include "semantic.h"
 #include "scanType.h"
@@ -39,6 +40,7 @@ public:
 	virtual void print(bool);
 	virtual void propagateScopes(SymbolTable *);
 	virtual void generate(SymbolTable *, bool);
+	llvm::Function* codegen() override;
 
 };
 
@@ -53,6 +55,7 @@ public:
 	virtual void print(bool);
 	virtual void propagateScopes(SymbolTable *);
 	virtual void generate(SymbolTable *, bool);
+	llvm::Value *codegen() override;
 
 };
 
