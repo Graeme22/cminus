@@ -30,6 +30,7 @@ public:
 	virtual void generate(SymbolTable *, bool);
 	virtual void print(bool);
 	virtual void propagateScopes(SymbolTable *);
+	llvm::Value *codegen() override;
 
 };
 

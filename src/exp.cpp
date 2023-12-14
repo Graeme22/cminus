@@ -257,6 +257,54 @@ void Operation::generate(SymbolTable *globals, bool doSibling) {
 		AST::generateSibling(globals);
 }
 
+llvm::Value *Operation::codegen() {
+	llvm::Value *lhs = children[0]->codegen();
+	llvm::Value *rhs;
+	if(children[1] != NULL)
+		rhs = children[1]->codegen();
+	switch(id) {
+	case ADD:
+		return builder->CreateAdd(lhs, rhs);
+	case SUB:
+		if(children[1] == NULL) // unary negation
+			return builder->CreateNeg(lhs);
+		else // subtraction
+			return builder->CreateSub(lhs, rhs);
+	case MUL:
+		if(children[1] == NULL) // unary array size
+			break; // size is 1 above index
+		else // multiplication
+			return builder->CreateMul(lhs, rhs);
+	case DIV:
+		return builder->CreateSDiv(lhs, rhs);
+	case MOD:
+		return builder->CreateURem(lhs, rhs);
+	case RAND:
+		break;
+	case AND:
+		return builder->CreateAnd(lhs, rhs);
+	case OR:
+		return builder->CreateOr(lhs, rhs);
+	case EQ:
+		return builder->CreateICmpEQ(lhs, rhs);
+	case NEQ:
+		return builder->CreateICmpNE(lhs, rhs);
+	case GEQ:
+		return builder->CreateICmpSGE(lhs, rhs);
+	case LEQ:
+		return builder->CreateICmpSLE(lhs, rhs);
+	case LT:
+		return builder->CreateICmpSLT(lhs, rhs);
+	case GT:
+		return builder->CreateICmpSGT(lhs, rhs);
+	case NOT:
+		return builder->CreateNot(lhs);
+	case ACCESS:
+		break;
+	}
+	return lhs;
+}
+
 // Assignment
 
 Assignment::Assignment(TokenData *data, AST *left, AST *right): Operation(data, left, right) {}
@@ -505,4 +553,6 @@ llvm::Value *Constant::codegen() {
 	case BOOLCONST:
 		return llvm::ConstantInt::get(*context, llvm::APInt(1, data->nValue));
 	}
+	// unreachable
+	return nullptr;
 }
