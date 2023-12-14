@@ -244,10 +244,15 @@ void Call::generate(SymbolTable *globals, bool doSibling) {
 }
 
 llvm::Value *Call::codegen() {
-	// currently only works for functions without arguments
+	llvm::Value *last = nullptr;
 	llvm::Function *fn = llvmModule->getFunction(name);
 	std::vector<llvm::Value*> args;
-	return builder->CreateCall(fn, args);
+	if(children[0] != NULL)
+		args.push_back(children[0]->codegen());
+	last = builder->CreateCall(fn, args);
+	if(sibling != NULL)
+		last = sibling->codegen();
+	return last;
 }
 
 // Return
@@ -299,4 +304,13 @@ void Return::generate(SymbolTable *globals, bool doSibling) {
 	emitComment((char *)"END RETURN");
 	if(doSibling)
 		AST::generateSibling(globals);
+}
+
+llvm::Value *Return::codegen() {
+	llvm::Value *last = nullptr;
+	if(children[0] != NULL)
+		last = children[0]->codegen();
+	if(sibling != NULL)
+		last = sibling->codegen();
+	return last;
 }
