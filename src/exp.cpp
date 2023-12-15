@@ -280,6 +280,7 @@ llvm::Value *Operation::codegen() {
 	case MOD:
 		return builder->CreateURem(lhs, rhs);
 	case RAND:
+		//handle arrays and non-arrays
 		break;
 	case AND:
 		return builder->CreateAnd(lhs, rhs);

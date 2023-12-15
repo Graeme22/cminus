@@ -40,8 +40,6 @@ void Par::propagateScopes(SymbolTable *table) {
 	AST::propagateScopesSibling(table);
 }
 
-void Par::generate(SymbolTable *globals, bool doSibling) {}
-
 // FunDeclaration
 
 FunDeclaration::FunDeclaration(TokenData *n, AST *pars, AST *stmt): Var(n) {
@@ -114,30 +112,35 @@ void FunDeclaration::generate(SymbolTable *globals, bool doSibling) {
 
 llvm::Function* FunDeclaration::codegen() {
 	llvm::FunctionType *functionType;
-	llvm::Type *llvmType;
-	// set return type first
-	if(strcmp(type, (char *)"bool") == 0)
-		llvmType = llvm::Type::getInt1Ty(*context);
-	else if(strcmp(type, (char *)"char") == 0)
-		llvmType = llvm::Type::getInt8Ty(*context);
-	else if(strcmp(type, (char *)"int") == 0)
-		llvmType = llvm::Type::getInt32Ty(*context);
-	else
-		llvmType = llvm::Type::getVoidTy(*context);
+	llvm::Type *llvmType = getType();
 	// there are no params
 	if(children[0] == NULL)
 		functionType = llvm::FunctionType::get(llvmType, false);
 	else {
 		std::vector<llvm::Type *> parTypes;
-		for(auto par = children[0]; par = par->sibling; par != NULL) {
-			Par *toAdd = (Par *)par;
-			//parTypes.push_back(toAdd->llvmType);
-		}
+		auto par = children[0];
+		do {
+			Par *arg = (Par *)par;
+			parTypes.push_back(arg->getType());
+			std::string argName = arg->name;
+			argNames.push_back(argName);
+			par = par->sibling;
+		} while(par != NULL);
 		functionType = llvm::FunctionType::get(llvmType, parTypes, false);
 	}
 	llvm::Function *fn = llvm::Function::Create(functionType, llvm::Function::ExternalLinkage, name, *llvmModule);
+	// set par names
+	unsigned i = 0;
+	for(auto &arg : fn->args())
+		arg.setName(argNames[i++]);
+	// entry point to function
 	llvm::BasicBlock *bb = llvm::BasicBlock::Create(*context, "entry", fn);
 	builder->SetInsertPoint(bb);
+	// add named values
+	namedValues.clear();
+	for(auto &arg : fn->args())
+		namedValues[std::string(arg.getName())] = &arg;
+	// do function block
 	llvm::Value *res = children[1]->codegen();
 	if(llvmType->isVoidTy())
 		builder->CreateRetVoid();
@@ -145,6 +148,8 @@ llvm::Function* FunDeclaration::codegen() {
 		builder->CreateRet(res);
 	}
 	llvm::verifyFunction(*fn);
+	if(sibling != NULL)
+		sibling->codegen();
 	return fn;
 }
 
@@ -244,15 +249,20 @@ void Call::generate(SymbolTable *globals, bool doSibling) {
 }
 
 llvm::Value *Call::codegen() {
-	llvm::Value *last = nullptr;
+	llvm::Value *toReturn = nullptr;
 	llvm::Function *fn = llvmModule->getFunction(name);
 	std::vector<llvm::Value*> args;
-	if(children[0] != NULL)
-		args.push_back(children[0]->codegen());
-	last = builder->CreateCall(fn, args);
+	if(children[0] != NULL) {
+		auto par = children[0];
+		do {
+			args.push_back(par->codegen());
+			par = par->sibling;
+		} while(par != NULL);
+	}
+	toReturn = builder->CreateCall(fn, args);
 	if(sibling != NULL)
-		last = sibling->codegen();
-	return last;
+		toReturn = sibling->codegen();
+	return toReturn;
 }
 
 // Return
@@ -307,10 +317,10 @@ void Return::generate(SymbolTable *globals, bool doSibling) {
 }
 
 llvm::Value *Return::codegen() {
-	llvm::Value *last = nullptr;
+	llvm::Value *toReturn = nullptr;
 	if(children[0] != NULL)
-		last = children[0]->codegen();
+		toReturn = children[0]->codegen();
 	if(sibling != NULL)
-		last = sibling->codegen();
-	return last;
+		toReturn = sibling->codegen();
+	return toReturn;
 }

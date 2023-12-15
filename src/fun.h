@@ -16,7 +16,6 @@ public:
 	// overridden
 	virtual void print(bool);
 	virtual void propagateScopes(SymbolTable *);
-	virtual void generate(SymbolTable *, bool);
 
 };
 
@@ -26,6 +25,8 @@ public:
 	// address in memory of function
 	// so we can call it later
 	int loc;
+	// for LLVM pars
+	std::vector<std::string> argNames;
 	// create a function node with given return
 	// type (overloaded)
 	FunDeclaration(TokenData *, TokenData *, AST *, AST *);

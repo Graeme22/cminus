@@ -112,6 +112,27 @@ void Var::generate(SymbolTable *globals, bool doSibling) {
 		AST::generateSibling(globals);
 }
 
+llvm::Value *Var::codegen() {
+	// todo: handle arrays
+	llvm::Value *toReturn;
+	
+	if(sibling != NULL)
+		toReturn = sibling->codegen();
+	return toReturn;
+}
+
+llvm::Type *Var::getType() {
+	// set return type first
+	if(strcmp(type, (char *)"bool") == 0)
+		return llvm::Type::getInt1Ty(*context);
+	else if(strcmp(type, (char *)"char") == 0)
+		return llvm::Type::getInt8Ty(*context);
+	else if(strcmp(type, (char *)"int") == 0)
+		return llvm::Type::getInt32Ty(*context);
+	else
+		return llvm::Type::getVoidTy(*context);
+}
+
 // Id
 
 Id::Id(TokenData *data): Var(data) {}
@@ -185,4 +206,9 @@ void Id::generate(SymbolTable *globals, bool doSibling) {
 		emitRM((char *)"LD", 3, mOffset, (isGlobal ? 0 : 1), (char *)"Load variable", name);
 	if(doSibling)
 		AST::generateSibling(globals);
+}
+
+llvm::Value *Id::codegen() {
+	// todo: handle arrays
+	return namedValues[name];
 }

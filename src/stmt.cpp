@@ -47,7 +47,7 @@ llvm::Value *CompoundStatement::codegen() {
 	if(children[1] != NULL)
 		toReturn = children[1]->codegen();
 	if(sibling != NULL)
-		sibling->codegen();
+		toReturn = sibling->codegen();
 
 	return toReturn;
 }

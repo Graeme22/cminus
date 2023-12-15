@@ -36,6 +36,9 @@ public:
 	virtual void propagateScopes(SymbolTable *);
 	virtual void initialize(SymbolTable *);
 	virtual void generate(SymbolTable *, bool);
+	llvm::Value *codegen() override;
+	// LLVM type
+	llvm::Type *getType();
 	
 };
 
@@ -48,6 +51,7 @@ public:
 	virtual void print(bool);
 	virtual void propagateScopes(SymbolTable *);
 	virtual void generate(SymbolTable *, bool);
+	llvm::Value *codegen() override;
 
 };
 
