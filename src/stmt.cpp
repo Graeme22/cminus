@@ -43,7 +43,7 @@ void CompoundStatement::generate(SymbolTable *globals, bool doSibling) {
 llvm::Value *CompoundStatement::codegen() {
 	llvm::Value *toReturn = nullptr;
 	if(children[0] != NULL)
-		children[0]->codegen();
+		toReturn = children[0]->codegen();
 	if(children[1] != NULL)
 		toReturn = children[1]->codegen();
 	if(sibling != NULL)
@@ -114,6 +114,39 @@ void If::generate(SymbolTable *globals, bool doSibling) {
 		AST::generateSibling(globals);
 }
 
+llvm::Value *If::codegen() {
+	llvm::Value *condition = children[0]->codegen();
+	condition = builder->CreateICmpNE(condition, llvm::ConstantInt::get(*context, llvm::APInt(1, 0)));
+	// if body
+	llvm::Function *fn = builder->GetInsertBlock()->getParent();
+	llvm::BasicBlock *thenBB = llvm::BasicBlock::Create(*context, "then", fn);
+	llvm::BasicBlock *elseBB = llvm::BasicBlock::Create(*context, "else");
+	llvm::BasicBlock *mergeBB = llvm::BasicBlock::Create(*context, "fi");
+	builder->CreateCondBr(condition, thenBB, elseBB);
+
+	// then body
+	builder->SetInsertPoint(thenBB);
+	llvm::Value *toReturn = children[1]->codegen();
+	builder->CreateBr(mergeBB);
+	thenBB = builder->GetInsertBlock();
+
+	// else body
+	fn->insert(fn->end(), elseBB);
+	builder->SetInsertPoint(elseBB);
+	if(children[2] != NULL)
+		toReturn = children[2]->codegen();
+	builder->CreateBr(mergeBB);
+	elseBB = builder->GetInsertBlock();
+
+	// merge body
+	fn->insert(fn->end(), mergeBB);
+	builder->SetInsertPoint(mergeBB);
+
+	if(sibling != NULL)
+		toReturn = sibling->codegen();
+	return toReturn;
+}
+
 // While
 
 While::While(int l, AST *cond, AST *stmt) {
@@ -171,6 +204,33 @@ void While::generate(SymbolTable *globals, bool doSibling) {
 		AST::generateSibling(globals);
 }
 
+llvm::Value *While::codegen() {
+	llvm::Function *fn = builder->GetInsertBlock()->getParent();
+	llvm::BasicBlock *condBB = llvm::BasicBlock::Create(*context, "while", fn);
+	llvm::BasicBlock *loopBB = llvm::BasicBlock::Create(*context, "loop");
+	llvm::BasicBlock *endBB = llvm::BasicBlock::Create(*context, "end");
+	builder->CreateBr(condBB);
+	builder->SetInsertPoint(condBB);
+	// loop condition
+	llvm::Value *toReturn = children[0]->codegen();
+	llvm::Value *condition = builder->CreateICmpNE(toReturn, llvm::ConstantInt::get(*context, llvm::APInt(1, 0)));
+	builder->CreateCondBr(condition, loopBB, endBB);
+	condBB = builder->GetInsertBlock();
+	fn->insert(fn->end(), loopBB);
+	// loop body
+	builder->SetInsertPoint(loopBB);
+	toReturn = children[1]->codegen();
+	builder->CreateBr(condBB);
+	loopBB = builder->GetInsertBlock();
+	// end
+	fn->insert(fn->end(), endBB);
+	builder->SetInsertPoint(endBB);
+
+	if(sibling != NULL)
+		toReturn = sibling->codegen();
+	return toReturn;
+}
+
 // Break
 
 Break::Break(int l) {
@@ -196,6 +256,11 @@ void Break::generate(SymbolTable *globals, bool doSibling) {
 	emitGotoAbs(break_loc, (char *)"Break");
 	if(doSibling)
 		AST::generateSibling(globals);
+}
+
+llvm::Value *Break::codegen() {
+	// implement
+	//builder->CreateBr(?);
 }
 
 // For
@@ -239,7 +304,7 @@ void For::propagateScopes(SymbolTable *table) {
 
 void For::generate(SymbolTable *globals, bool doSibling) {
 	// also do toffset
-	//emitComment((char *)"FOR");
+	emitComment((char *)"FOR");
 	// not implemented due to lack of time
 	AST::generate(globals);
 }
