@@ -7,6 +7,7 @@
 #include "semantic.h"
 
 extern int loopDepth;
+extern std::vector<llvm::BasicBlock *> breakBlocks;
 
 class CompoundStatement: public AST {
 

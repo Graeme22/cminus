@@ -21,6 +21,7 @@ bool hasReturn = false;
 int foffset = 0, goffset = 0, toffset = 0;
 // location for break statements to jump to
 int break_loc = 0;
+std::vector<llvm::BasicBlock *> breakBlocks;
 // LLVM globals
 std::unique_ptr<llvm::LLVMContext> context;
 std::unique_ptr<llvm::Module> llvmModule;

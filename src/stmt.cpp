@@ -218,10 +218,12 @@ llvm::Value *While::codegen() {
 	condBB = builder->GetInsertBlock();
 	fn->insert(fn->end(), loopBB);
 	// loop body
+	breakBlocks.push_back(endBB); // doesn't work when there are nested breaks
 	builder->SetInsertPoint(loopBB);
 	toReturn = children[1]->codegen();
 	builder->CreateBr(condBB);
 	loopBB = builder->GetInsertBlock();
+	breakBlocks.pop_back();
 	// end
 	fn->insert(fn->end(), endBB);
 	builder->SetInsertPoint(endBB);
@@ -259,8 +261,10 @@ void Break::generate(SymbolTable *globals, bool doSibling) {
 }
 
 llvm::Value *Break::codegen() {
-	// implement
-	//builder->CreateBr(?);
+	llvm::Value *toReturn = builder->CreateBr(breakBlocks.back());
+	if(sibling != NULL)
+		toReturn = sibling->codegen();
+	return toReturn;
 }
 
 // For
