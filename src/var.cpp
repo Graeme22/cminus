@@ -1,5 +1,14 @@
 #include "var.h"
 
+llvm::AllocaInst *createEntryBlockAlloca(
+	llvm::Function *fn,
+	const std::string &varName,
+	llvm::Type *varType
+) {
+  llvm::IRBuilder<> tmpB(&fn->getEntryBlock(), fn->getEntryBlock().begin());
+  return tmpB.CreateAlloca(varType, nullptr, varName);
+}
+
 // Var
 
 Var::Var(TokenData *data) {
@@ -114,8 +123,11 @@ void Var::generate(SymbolTable *globals, bool doSibling) {
 
 llvm::Value *Var::codegen() {
 	// todo: handle arrays
-	llvm::Value *toReturn;
-	
+	llvm::Function *fn = builder->GetInsertBlock()->getParent();
+	std::string nm = name;
+	llvm::AllocaInst *alloca = createEntryBlockAlloca(fn, nm, getType());
+	namedValues[nm] = alloca;
+	llvm::Value *toReturn = nullptr;
 	if(sibling != NULL)
 		toReturn = sibling->codegen();
 	return toReturn;
@@ -210,5 +222,7 @@ void Id::generate(SymbolTable *globals, bool doSibling) {
 
 llvm::Value *Id::codegen() {
 	// todo: handle arrays
-	return namedValues[name];
+	std::string nm = name;
+	llvm::AllocaInst *alloca = namedValues[nm];
+	return builder->CreateLoad(alloca->getAllocatedType(), alloca, name);
 }

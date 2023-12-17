@@ -18,6 +18,6 @@
 extern std::unique_ptr<llvm::LLVMContext> context;
 extern std::unique_ptr<llvm::Module> llvmModule;
 extern std::unique_ptr<llvm::IRBuilder<>> builder;
-extern std::map<std::string, llvm::Value *> namedValues;
+extern std::map<std::string, llvm::AllocaInst *> namedValues;
 
 #endif

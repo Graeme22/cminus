@@ -418,6 +418,20 @@ void Assignment::generate(SymbolTable *globals, bool doSibling) {
 		AST::generateSibling(globals);
 }
 
+llvm::Value *Assignment::codegen() {
+	llvm::Value *toReturn;
+	if(id == ASS) {
+		Id *lhs = (Id *)children[0];
+		llvm::Value *rhs = children[1]->codegen();
+		std::string nm = lhs->name;
+		builder->CreateStore(rhs, namedValues[nm]);
+		toReturn = rhs;
+	}
+	if(sibling != NULL)
+		toReturn = sibling->codegen();
+	return toReturn;
+}
+
 // ShortcutAssignment
 
 ShortcutAssignment::ShortcutAssignment(TokenData *data, AST *left): Assignment(data, left) {}

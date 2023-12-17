@@ -5,6 +5,8 @@
 #include "exp.h"
 #include "scanType.h"
 
+llvm::AllocaInst *createEntryBlockAlloca(llvm::Function *, const std::string &, llvm::Type *);
+
 class Var: public AST {
 
 public:

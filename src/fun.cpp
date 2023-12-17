@@ -113,6 +113,7 @@ void FunDeclaration::generate(SymbolTable *globals, bool doSibling) {
 llvm::Function* FunDeclaration::codegen() {
 	llvm::FunctionType *functionType;
 	llvm::Type *llvmType = getType();
+	std::map<std::string, llvm::Type *> parTypeMap;
 	// there are no params
 	if(children[0] == NULL)
 		functionType = llvm::FunctionType::get(llvmType, false);
@@ -124,6 +125,7 @@ llvm::Function* FunDeclaration::codegen() {
 			parTypes.push_back(arg->getType());
 			std::string argName = arg->name;
 			argNames.push_back(argName);
+			parTypeMap[argName] = arg->getType();
 			par = par->sibling;
 		} while(par != NULL);
 		functionType = llvm::FunctionType::get(llvmType, parTypes, false);
@@ -138,8 +140,12 @@ llvm::Function* FunDeclaration::codegen() {
 	builder->SetInsertPoint(bb);
 	// add named values
 	namedValues.clear();
-	for(auto &arg : fn->args())
-		namedValues[std::string(arg.getName())] = &arg;
+	for(auto &arg : fn->args()) {
+		std::string nm = arg.getName().str();
+		llvm::AllocaInst *alloca = createEntryBlockAlloca(fn, nm, parTypeMap[nm]);
+		builder->CreateStore(&arg, alloca);
+		namedValues[std::string(arg.getName())] = alloca;
+	}
 	// do function block
 	llvm::Value *res = children[1]->codegen();
 	if(llvmType->isVoidTy())

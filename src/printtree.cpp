@@ -26,7 +26,9 @@ std::vector<llvm::BasicBlock *> breakBlocks;
 std::unique_ptr<llvm::LLVMContext> context;
 std::unique_ptr<llvm::Module> llvmModule;
 std::unique_ptr<llvm::IRBuilder<>> builder;
-std::map<std::string, llvm::Value *> namedValues;
+std::map<std::string, llvm::AllocaInst *> namedValues;
+// save for optimization, JIT
+//std::unique_ptr<llvm::FunctionPassManager> fpm;
 
 char *VERSION = (char *)"0.8";
 
