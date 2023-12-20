@@ -27,7 +27,7 @@ std::unique_ptr<llvm::LLVMContext> context;
 std::unique_ptr<llvm::Module> llvmModule;
 std::unique_ptr<llvm::IRBuilder<>> builder;
 std::map<std::string, llvm::AllocaInst *> namedValues;
-// save for optimization, JIT
+// save for optimization
 //std::unique_ptr<llvm::FunctionPassManager> fpm;
 
 char *VERSION = (char *)"0.8";
@@ -143,11 +143,18 @@ void usage() {
 }
 
 void generateLLVM(AST *tree) {
-	//int printf(const char *format, ...);
 	auto charPtrTy = builder->getInt8PtrTy();
-	llvmModule->getOrInsertFunction("printf", llvm::FunctionType::get(builder->getInt32Ty(), charPtrTy, true));
+	auto uintTy = builder->getInt32Ty();
+	//int printf(const char *format, ...);
+	llvmModule->getOrInsertFunction("printf", llvm::FunctionType::get(uintTy, charPtrTy, true));
 	//int scanf(const char *format, ...);
-	llvmModule->getOrInsertFunction("scanf", llvm::FunctionType::get(builder->getInt32Ty(), charPtrTy, true));
+	llvmModule->getOrInsertFunction("scanf", llvm::FunctionType::get(uintTy, charPtrTy, true));
+	// int rand();
+	llvmModule->getOrInsertFunction("rand", llvm::FunctionType::get(uintTy, false));
+	// void srand(int);
+	llvmModule->getOrInsertFunction("srand", llvm::FunctionType::get(builder->getVoidTy(), uintTy, false));
+	// time_t time(time_t*);
+	llvmModule->getOrInsertFunction("time", llvm::FunctionType::get(uintTy, builder->getPtrTy(), false));
 	// outnl
 	auto outnlType = llvm::FunctionType::get(builder->getVoidTy(), false);
 	auto outnl = llvm::Function::Create(outnlType, llvm::Function::ExternalLinkage, "outnl", *llvmModule);
@@ -233,6 +240,23 @@ void generateLLVM(AST *tree) {
 	auto resbCast = builder->CreateIntCast(resb, llvm::Type::getInt1Ty(*context), false);
 	builder->CreateRet(resbCast);
 	llvm::verifyFunction(*inputb);
+	// seed rand
+	auto seedType = llvm::FunctionType::get(builder->getVoidTy(), false);
+	auto seed = llvm::Function::Create(seedType, llvm::Function::ExternalLinkage, "__seed", *llvmModule);
+	llvm::BasicBlock *seedBB = llvm::BasicBlock::Create(*context, "entry", seed);
+	builder->SetInsertPoint(seedBB);
+	auto fnSrand = llvmModule->getFunction("srand");
+	auto fnTime = llvmModule->getFunction("time");
+	auto nullPtr = llvm::PointerType::getInt32PtrTy(*context);
+	std::vector<llvm::Value *> timeArgs{llvm::ConstantPointerNull::get(nullPtr)};
+	auto time = builder->CreateCall(fnTime, timeArgs);
+	std::vector<llvm::Value *> srandArgs{time};
+	builder->CreateCall(fnSrand, srandArgs);
+	builder->CreateRetVoid();
+	llvm::verifyFunction(*seed);
+	// call before main
+	llvm::appendToGlobalCtors(*llvmModule, seed, 0);
+
 
 	tree->sibling->codegen();
 }
