@@ -123,4 +123,5 @@ llvm::Value *AST::codegen() {
 			children[i]->codegen();
 	if(sibling != NULL)
 		sibling->codegen();
+	return nullptr;
 }

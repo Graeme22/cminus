@@ -280,8 +280,13 @@ llvm::Value *Operation::codegen() {
 	case MOD:
 		return builder->CreateURem(lhs, rhs);
 	case RAND:
-		//handle arrays and non-arrays
-		break;
+		// doesn't support arrays
+		{
+			auto fnRand = llvmModule->getFunction("rand");
+			// rand % lhs
+			llvm::Value *rng = builder->CreateCall(fnRand);
+			return builder->CreateURem(rng, lhs);
+		}
 	case AND:
 		return builder->CreateAnd(lhs, rhs);
 	case OR:

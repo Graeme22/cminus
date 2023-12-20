@@ -12,6 +12,7 @@
 #include "parser.tab.h"
 #include "emitcode.h"
 #include "llvm.h"
+#include "llvm/Transforms/Utils/ModuleUtils.h"
 
 extern FILE *yyin;
 // the abstract syntax tree head!
